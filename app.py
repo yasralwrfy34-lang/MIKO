@@ -31,6 +31,9 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 ADMIN_USERNAME = "elmodmen"
 ADMIN_PASSWORD_RAW = "amar1212"
 
+# ============== إعدادات reCAPTCHA ==============
+RECAPTCHA_SECRET_KEY = "6Lf8X7QsAAAAAPEsCbSnsGsmeDJL_W7p1jcjZ3IF"
+
 # ============== قاعدة البيانات ==============
 DB_FILE = os.path.join(BASE_DIR, "db.json")
 
@@ -207,6 +210,26 @@ def get_public_ip():
         except:
             return "127.0.0.1"
 
+# ============== دالة التحقق من reCAPTCHA ==============
+def verify_recaptcha(token):
+    """التحقق من صحة رمز reCAPTCHA"""
+    if not token:
+        return False
+    try:
+        response = requests.post(
+            "https://www.google.com/recaptcha/api/siteverify",
+            data={
+                "secret": RECAPTCHA_SECRET_KEY,
+                "response": token
+            },
+            timeout=10
+        )
+        result = response.json()
+        return result.get("success", False)
+    except Exception as e:
+        print(f"reCAPTCHA error: {e}")
+        return False
+
 # ============== الصفحات ==============
 @app.route('/')
 def home():
@@ -241,6 +264,12 @@ def api_register():
     data = request.get_json()
     username = data.get("username", "").strip()
     password = data.get("password", "").strip()
+    captcha_token = data.get("captcha_token", "")
+    
+    # التحقق من reCAPTCHA (للتسجيل فقط)
+    if not verify_recaptcha(captcha_token):
+        return jsonify({"success": False, "message": "فشل التحقق الأمني. يرجى المحاولة مرة أخرى"})
+    
     if not username or not password:
         return jsonify({"success": False, "message": "جميع الحقول مطلوبة"})
     if len(username) < 3:
@@ -251,6 +280,7 @@ def api_register():
         return jsonify({"success": False, "message": "اسم المستخدم موجود"})
     if username == ADMIN_USERNAME:
         return jsonify({"success": False, "message": "لا يمكن استخدام هذا الاسم"})
+    
     db["users"][username] = {
         "password": hashlib.sha256(password.encode()).hexdigest(),
         "is_admin": False,
@@ -260,9 +290,11 @@ def api_register():
         "last_login": None
     }
     save_db(db)
+    
     user_dir = os.path.join(USERS_DIR, username)
     os.makedirs(user_dir, exist_ok=True)
     os.makedirs(os.path.join(user_dir, "SERVERS"), exist_ok=True)
+    
     return jsonify({"success": True, "message": "تم إنشاء الحساب"})
 
 @app.route('/api/login', methods=['POST'])
@@ -514,7 +546,7 @@ def get_server_stats(folder):
         "ip": get_public_ip()
     })
 
-# ============== API الملفات (مختصر لكن كامل) ==============
+# ============== API الملفات ==============
 @app.route('/api/files/list/<folder>')
 def list_server_files(folder):
     if "username" not in session:
