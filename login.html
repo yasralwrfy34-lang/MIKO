@@ -6,7 +6,6 @@
     <title>تسجيل الدخول | MIKO HOST</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         * {
             margin: 0;
@@ -111,7 +110,7 @@
             padding: 48px 40px;
         }
 
-        /* تم حذف قسم logo بالكامل بناءً على طلب المستخدم */
+        /* تم حذف اللوجو القديم بناءً على طلب المستخدم */
 
         .tabs {
             display: flex;
@@ -200,55 +199,6 @@
             cursor: pointer;
         }
 
-        /* حقل المسألة الحسابية البسيطة (جمع/طرح) */
-        .math-group {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50px;
-            padding: 8px 16px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .math-question {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #00e5ff;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 8px 16px;
-            border-radius: 40px;
-            display: inline-block;
-        }
-
-        .math-input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(45, 122, 255, 0.2);
-            border-radius: 40px;
-            padding: 10px 16px;
-            color: white;
-            font-size: 14px;
-            font-family: 'Tajawal', sans-serif;
-            outline: none;
-            width: 120px;
-            text-align: center;
-        }
-
-        .math-input:focus {
-            border-color: #2d7aff;
-        }
-
-        /* reCAPTCHA (للتسجيل فقط) */
-        .captcha-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            transform: scale(0.95);
-        }
-
         .action-btn {
             width: 100%;
             padding: 14px;
@@ -268,11 +218,6 @@
         .action-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 28px rgba(45, 122, 255, 0.5);
-        }
-
-        .action-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
 
         .message {
@@ -355,13 +300,6 @@
             .form-section {
                 padding: 32px 24px;
             }
-            .math-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .math-input {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -389,7 +327,7 @@
                 <button class="tab-btn" id="registerTabBtn">إنشاء حساب</button>
             </div>
 
-            <!-- نموذج تسجيل الدخول (مع مسألة حسابية بسيطة) -->
+            <!-- نموذج تسجيل الدخول (بدون أي تحقق إضافي) -->
             <div id="loginForm" class="form active">
                 <div id="loginMessage" class="message"></div>
                 <div class="input-group">
@@ -401,15 +339,10 @@
                     <input type="password" id="loginPassword" placeholder="كلمة المرور">
                     <button type="button" class="toggle-pwd" onclick="togglePassword('loginPassword')"><i class="fas fa-eye"></i></button>
                 </div>
-                <!-- مسألة حسابية بسيطة (جمع أو طرح) -->
-                <div class="math-group">
-                    <span class="math-question" id="mathQuestion">5 + 3 = ?</span>
-                    <input type="number" id="mathAnswer" class="math-input" placeholder="الحل" autocomplete="off">
-                </div>
                 <button class="action-btn" onclick="login()">دخول</button>
             </div>
 
-            <!-- نموذج إنشاء حساب (مع Google reCAPTCHA) -->
+            <!-- نموذج إنشاء حساب (بدون أي تحقق إضافي) -->
             <div id="registerForm" class="form">
                 <div id="registerMessage" class="message"></div>
                 <div class="input-group">
@@ -421,11 +354,7 @@
                     <input type="password" id="regPassword" placeholder="كلمة المرور (4 أحرف على الأقل)">
                     <button type="button" class="toggle-pwd" onclick="togglePassword('regPassword')"><i class="fas fa-eye"></i></button>
                 </div>
-                <!-- Google reCAPTCHA - تم إضافة المفتاح الصحيح -->
-                <div class="captcha-container">
-                    <div class="g-recaptcha" data-sitekey="6Lf8X7QsAAAAABiUAdfTieWuRxolXsmDzA4LVK5s" data-callback="onCaptchaSuccess" data-expired-callback="onCaptchaExpired"></div>
-                </div>
-                <button class="action-btn" id="registerBtn" disabled onclick="register()">إنشاء حساب</button>
+                <button class="action-btn" onclick="register()">إنشاء حساب</button>
             </div>
 
             <div class="footer">
@@ -440,52 +369,7 @@
     </div>
 
     <script>
-        // ========== المتغيرات العامة ==========
-        let captchaVerified = false;
-        let currentMathQuestion = null;
-        let currentMathAnswer = null;
-
-        // ========== توليد مسألة حسابية بسيطة (جمع أو طرح) ==========
-        function generateMathQuestion() {
-            const isAddition = Math.random() < 0.5;
-            let a, b, answer;
-            
-            if (isAddition) {
-                a = Math.floor(Math.random() * 15) + 1;
-                b = Math.floor(Math.random() * 15) + 1;
-                answer = a + b;
-                currentMathQuestion = `${a} + ${b} = ?`;
-            } else {
-                a = Math.floor(Math.random() * 15) + 1;
-                b = Math.floor(Math.random() * a) + 1;
-                answer = a - b;
-                currentMathQuestion = `${a} - ${b} = ?`;
-            }
-            
-            currentMathAnswer = answer;
-            document.getElementById('mathQuestion').innerText = currentMathQuestion;
-            document.getElementById('mathAnswer').value = '';
-        }
-
-        function verifyMathAnswer() {
-            const userAnswer = parseInt(document.getElementById('mathAnswer').value, 10);
-            if (isNaN(userAnswer)) return false;
-            return userAnswer === currentMathAnswer;
-        }
-
-        // ========== دوال reCAPTCHA (للتسجيل فقط) ==========
-        function onCaptchaSuccess() {
-            captchaVerified = true;
-            document.getElementById('registerBtn').disabled = false;
-        }
-
-        function onCaptchaExpired() {
-            captchaVerified = false;
-            document.getElementById('registerBtn').disabled = true;
-            showMessage('registerMessage', '⚠️ انتهت صلاحية التحقق، يرجى إعادة التحقق', 'error');
-        }
-
-        // ========== دوال عامة ==========
+        // دوال عامة
         function togglePassword(fieldId) {
             const field = document.getElementById(fieldId);
             field.type = field.type === 'password' ? 'text' : 'password';
@@ -513,7 +397,6 @@
             document.getElementById('registerForm').classList.remove('active');
             document.getElementById('loginTabBtn').classList.add('active');
             document.getElementById('registerTabBtn').classList.remove('active');
-            generateMathQuestion();
         });
 
         document.getElementById('registerTabBtn').addEventListener('click', () => {
@@ -521,24 +404,15 @@
             document.getElementById('loginForm').classList.remove('active');
             document.getElementById('registerTabBtn').classList.add('active');
             document.getElementById('loginTabBtn').classList.remove('active');
-            if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
-            captchaVerified = false;
-            document.getElementById('registerBtn').disabled = true;
         });
 
-        // ========== تسجيل الدخول (التحقق من المسألة الحسابية) ==========
+        // تسجيل الدخول
         async function login() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
 
             if (!username || !password) {
                 showMessage('loginMessage', '⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور', 'error');
-                return;
-            }
-
-            if (!verifyMathAnswer()) {
-                showMessage('loginMessage', '❌ إجابة السؤال غير صحيحة، حاول مرة أخرى', 'error');
-                generateMathQuestion();
                 return;
             }
 
@@ -557,23 +431,16 @@
                     }, 1000);
                 } else {
                     showMessage('loginMessage', '❌ ' + (data.message || 'بيانات غير صحيحة'), 'error');
-                    generateMathQuestion();
                 }
             } catch (err) {
                 showMessage('loginMessage', '❌ خطأ في الاتصال بالخادم', 'error');
-                generateMathQuestion();
             } finally {
                 showLoading(false);
             }
         }
 
-        // ========== إنشاء حساب (التحقق من reCAPTCHA) ==========
+        // إنشاء حساب
         async function register() {
-            if (!captchaVerified) {
-                showMessage('registerMessage', '⚠️ الرجاء إكمال التحقق أنك لست روبوت', 'error');
-                return;
-            }
-
             const username = document.getElementById('regUsername').value.trim();
             const password = document.getElementById('regPassword').value;
 
@@ -590,22 +457,12 @@
                 return;
             }
 
-            const captchaToken = grecaptcha.getResponse();
-            if (!captchaToken) {
-                showMessage('registerMessage', '⚠️ الرجاء إكمال التحقق أنك لست روبوت', 'error');
-                return;
-            }
-
             showLoading(true);
             try {
                 const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        username, 
-                        password,
-                        captcha_token: captchaToken 
-                    })
+                    body: JSON.stringify({ username, password })
                 });
                 const data = await response.json();
                 if (data.success) {
@@ -614,22 +471,12 @@
                         document.getElementById('loginTabBtn').click();
                         document.getElementById('loginUsername').value = username;
                         document.getElementById('loginPassword').value = '';
-                        grecaptcha.reset();
-                        captchaVerified = false;
-                        document.getElementById('registerBtn').disabled = true;
-                        generateMathQuestion();
                     }, 2000);
                 } else {
                     showMessage('registerMessage', '❌ ' + (data.message || 'حدث خطأ'), 'error');
-                    grecaptcha.reset();
-                    captchaVerified = false;
-                    document.getElementById('registerBtn').disabled = true;
                 }
             } catch (err) {
                 showMessage('registerMessage', '❌ خطأ في الاتصال بالخادم', 'error');
-                grecaptcha.reset();
-                captchaVerified = false;
-                document.getElementById('registerBtn').disabled = true;
             } finally {
                 showLoading(false);
             }
@@ -645,9 +492,6 @@
                 }
             } catch(e) {}
         })();
-
-        // توليد أول مسألة حسابية عند تحميل الصفحة
-        generateMathQuestion();
     </script>
 </body>
 </html>

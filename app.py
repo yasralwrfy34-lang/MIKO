@@ -31,9 +31,6 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 ADMIN_USERNAME = "elmodmen"
 ADMIN_PASSWORD_RAW = "amar1212"
 
-# ============== إعدادات reCAPTCHA ==============
-RECAPTCHA_SECRET_KEY = "6Lf8X7QsAAAAAPEsCbSnsGsmeDJL_W7p1jcjZ3IF"
-
 # ============== قاعدة البيانات ==============
 DB_FILE = os.path.join(BASE_DIR, "db.json")
 
@@ -210,26 +207,6 @@ def get_public_ip():
         except:
             return "127.0.0.1"
 
-# ============== دالة التحقق من reCAPTCHA ==============
-def verify_recaptcha(token):
-    """التحقق من صحة رمز reCAPTCHA"""
-    if not token:
-        return False
-    try:
-        response = requests.post(
-            "https://www.google.com/recaptcha/api/siteverify",
-            data={
-                "secret": RECAPTCHA_SECRET_KEY,
-                "response": token
-            },
-            timeout=10
-        )
-        result = response.json()
-        return result.get("success", False)
-    except Exception as e:
-        print(f"reCAPTCHA error: {e}")
-        return False
-
 # ============== الصفحات ==============
 @app.route('/')
 def home():
@@ -264,11 +241,6 @@ def api_register():
     data = request.get_json()
     username = data.get("username", "").strip()
     password = data.get("password", "").strip()
-    captcha_token = data.get("captcha_token", "")
-    
-    # التحقق من reCAPTCHA (للتسجيل فقط)
-    if not verify_recaptcha(captcha_token):
-        return jsonify({"success": False, "message": "فشل التحقق الأمني. يرجى المحاولة مرة أخرى"})
     
     if not username or not password:
         return jsonify({"success": False, "message": "جميع الحقول مطلوبة"})
@@ -346,7 +318,6 @@ def list_servers():
     total_disk_limit = 0
     for folder, srv in db["servers"].items():
         if srv["owner"] == session["username"]:
-            # حساب المساحة المستخدمة
             disk_used = 0
             if os.path.exists(srv["path"]):
                 for root, dirs, files in os.walk(srv["path"]):
@@ -404,15 +375,14 @@ def add_server():
     user = db["users"].get(session["username"])
     if not user:
         return jsonify({"success": False, "message": "مستخدم غير موجود"})
-    # سيرفر واحد فقط
     user_srv_count = len([s for s in db["servers"].values() if s["owner"] == session["username"]])
     if user_srv_count >= 1:
         return jsonify({"success": False, "message": "يمكنك امتلاك خادم واحد فقط. قم بحذف الخادم الحالي أولاً."})
     data = request.get_json()
     name = data.get("name", "My Server").strip()
     plan_id = data.get("plan", "free")
-    storage_limit = int(data.get("storage", 100))  # MB
-    ram_limit = int(data.get("ram", 256))  # MB
+    storage_limit = int(data.get("storage", 100))
+    ram_limit = int(data.get("ram", 256))
     cpu_limit = float(data.get("cpu", 0.5))
     if not name:
         name = "Server_" + secrets.token_hex(2)
