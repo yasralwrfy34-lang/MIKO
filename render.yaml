@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: omar-host
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: MONGODB_URI
+        value: mongodb+srv://omar_admin:OmarHost2026@cluster0.mongodb.net/omar_host_db?retryWrites=true&w=majority

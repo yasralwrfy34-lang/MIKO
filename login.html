@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تسجيل الدخول | MIKO HOST</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --blue: #2d7aff;
+            --blue-glow: rgba(45,122,255,0.4);
+            --cyan: #00e5ff;
+            --cyan-glow: rgba(0,229,255,0.3);
+            --dark: #080b10;
+            --card-bg: rgba(10,13,22,0.88);
+            --border: rgba(45,122,255,0.25);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family:'Tajawal',sans-serif;
+            background:var(--dark);
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            overflow-x:hidden;
+        }
+        .bg-base { position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,#0d0620,#080b10 60%);z-index:-3; }
+        .grid-overlay {
+            position:fixed;inset:0;
+            background-image:linear-gradient(rgba(45,122,255,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(45,122,255,0.06) 1px,transparent 1px);
+            background-size:44px 44px;z-index:-2;pointer-events:none;
+        }
+        .glow-top {
+            position:fixed;width:600px;height:600px;
+            background:radial-gradient(circle,rgba(45,122,255,0.15),transparent 70%);
+            border-radius:50%;top:-250px;left:50%;transform:translateX(-50%);
+            z-index:-1;animation:orb 8s infinite ease-in-out;
+        }
+        .glow-bottom {
+            position:fixed;width:500px;height:500px;
+            background:radial-gradient(circle,rgba(0,229,255,0.12),transparent 70%);
+            border-radius:50%;bottom:-200px;left:50%;transform:translateX(-50%);
+            z-index:-1;animation:orb 10s infinite ease-in-out reverse;
+        }
+        @keyframes orb {
+            0%,100% { opacity:.6;transform:translateX(-50%) scale(1); }
+            50% { opacity:1;transform:translateX(-50%) scale(1.1); }
+        }
+        .login-container { position:relative;z-index:10;width:100%;max-width:440px;margin:20px;animation:fadeUp .6s ease; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        .login-card {
+            background:var(--card-bg);
+            backdrop-filter:blur(24px);
+            border:1px solid var(--border);
+            border-radius:28px;
+            padding:44px 36px;
+            box-shadow:0 0 0 1px rgba(45,122,255,.08),0 30px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04);
+            transition:border-color .3s;
+        }
+        .login-card:hover { border-color:rgba(45,122,255,.45); }
+        .logo-section { text-align:center;margin-bottom:38px; }
+        .logo-icon-wrap {
+            width:80px;height:80px;
+            background:linear-gradient(145deg,#0d1320,#0a0e1a);
+            border:2px solid var(--cyan);
+            border-radius:22px;
+            display:flex;align-items:center;justify-content:center;
+            margin:0 auto 18px;
+            font-size:36px;color:var(--cyan);
+            box-shadow:0 0 20px var(--cyan-glow),0 0 40px rgba(0,229,255,.1),inset 0 0 20px rgba(0,229,255,.05);
+            animation:iconPulse 2.5s infinite ease-in-out;
+            position:relative;
+        }
+        .logo-icon-wrap::before {
+            content:'';position:absolute;inset:-5px;border-radius:27px;
+            border:1px solid rgba(0,229,255,.2);
+            animation:iconRing 2.5s infinite ease-in-out;
+        }
+        @keyframes iconPulse {
+            0%,100% { box-shadow:0 0 20px var(--cyan-glow),0 0 40px rgba(0,229,255,.1),inset 0 0 20px rgba(0,229,255,.05); }
+            50% { box-shadow:0 0 35px var(--cyan-glow),0 0 60px rgba(0,229,255,.2),inset 0 0 30px rgba(0,229,255,.08); }
+        }
+        @keyframes iconRing {
+            0%,100% { opacity:.3;transform:scale(1); }
+            50% { opacity:.7;transform:scale(1.04); }
+        }
+        .logo-name {
+            font-family:'Orbitron',sans-serif;
+            font-size:22px;font-weight:900;letter-spacing:3px;
+            color:var(--blue);
+            text-shadow:0 0 20px var(--blue-glow),0 0 40px rgba(45,122,255,.2);
+            margin-bottom:6px;
+        }
+        .logo-dev {
+            font-size:11px;color:var(--cyan);opacity:.7;letter-spacing:2px;
+            text-shadow:0 0 10px var(--cyan-glow);
+            margin-bottom:8px;
+        }
+        .logo-sub-line {
+            display:flex;align-items:center;justify-content:center;gap:8px;
+            color:var(--cyan);font-size:10px;font-weight:600;letter-spacing:3px;opacity:.8;
+        }
+        .diamond { color:var(--blue);font-size:8px; }
+        .section-label {
+            display:flex;align-items:center;gap:10px;margin-bottom:22px;
+        }
+        .section-label span { color:var(--blue);font-size:14px;font-weight:700; }
+        .section-label .line { flex:1;height:1px;background:linear-gradient(90deg,var(--blue),transparent);opacity:.4; }
+        .section-label i { color:var(--blue);font-size:14px; }
+        .form-group { margin-bottom:18px; }
+        .field-label { font-size:12px;color:rgba(255,255,255,.45);margin-bottom:8px;display:block;text-align:right; }
+        .input-wrapper { position:relative;display:flex;align-items:center; }
+        .input-icon { position:absolute;right:16px;color:rgba(255,255,255,.22);font-size:14px;pointer-events:none;transition:color .3s; }
+        .toggle-pwd { position:absolute;left:14px;background:none;border:none;color:rgba(255,255,255,.22);cursor:pointer;font-size:14px;transition:color .3s;padding:0; }
+        .toggle-pwd:hover { color:var(--cyan); }
+        .form-group input {
+            width:100%;padding:13px 46px 13px 42px;
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:50px;color:#fff;font-size:13px;
+            font-family:'Tajawal',sans-serif;outline:none;transition:all .3s;text-align:right;
+        }
+        .form-group input:focus {
+            border-color:var(--blue);
+            background:rgba(45,122,255,.05);
+            box-shadow:0 0 0 3px rgba(45,122,255,.1),0 0 15px rgba(45,122,255,.05);
+        }
+        .form-group input::placeholder { color:rgba(255,255,255,.2); }
+        .btn-login {
+            width:100%;padding:14px;
+            background:linear-gradient(135deg,var(--blue),#1a5cd8);
+            border:none;border-radius:50px;color:#fff;
+            font-weight:800;font-size:15px;cursor:pointer;transition:all .3s;
+            font-family:'Tajawal',sans-serif;
+            display:flex;align-items:center;justify-content:center;gap:10px;
+            margin-top:22px;
+            box-shadow:0 8px 24px rgba(45,122,255,.35);
+            letter-spacing:1px;
+        }
+        .btn-login:hover { transform:translateY(-2px);box-shadow:0 14px 32px rgba(45,122,255,.5); }
+        .btn-login:active { transform:translateY(0); }
+        .no-register-note { text-align:center;margin-top:24px;color:rgba(255,255,255,.22);font-size:11px; }
+        .no-register-note a { color:var(--cyan);text-decoration:none; }
+        .error-msg {
+            display:none;
+            background:rgba(45,122,255,.1);
+            border:1px solid rgba(45,122,255,.3);
+            color:#80aaff;padding:12px 16px;border-radius:50px;
+            margin-bottom:18px;font-size:12px;text-align:center;
+            animation:shake .4s ease;
+        }
+        .success-msg { background:rgba(0,229,255,.08);border-color:rgba(0,229,255,.3);color:var(--cyan); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+        .footer {
+            text-align:center;margin-top:28px;padding-top:20px;
+            border-top:1px solid rgba(45,122,255,.1);
+            font-size:10px;color:rgba(255,255,255,.2);letter-spacing:1px;
+        }
+        .footer .dev-tag { color:var(--cyan);opacity:.5;text-shadow:0 0 8px var(--cyan-glow); }
+        .loading-overlay {
+            position:fixed;inset:0;background:rgba(8,11,16,.92);
+            backdrop-filter:blur(10px);z-index:9999;
+            display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;
+        }
+        .loading-spinner { width:48px;height:48px;border:3px solid rgba(45,122,255,.15);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite; }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .loading-text { color:var(--blue);font-size:13px;letter-spacing:2px; }
+        .animated-emoji { display:inline-block;animation:bounce 1s infinite ease-in-out;margin-left:4px; }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+        @media(max-width:480px) { .login-card{padding:32px 22px;} .logo-name{font-size:18px;letter-spacing:2px;} }
+    </style>
+</head>
+<body>
+    <div class="bg-base"></div>
+    <div class="grid-overlay"></div>
+    <div class="glow-top"></div>
+    <div class="glow-bottom"></div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo-section">
+                <div class="logo-icon-wrap"><i class="fas fa-server"></i></div>
+                <div class="logo-name">MIKO HOST</div>
+                <div class="logo-dev">by <span style="color:var(--blue);text-shadow:0 0 12px var(--blue-glow)">@I_tt_6</span></div>
+                <div class="logo-sub-line"><span class="diamond">◇</span> SECURE HOSTING PLATFORM <span class="diamond">◇</span></div>
+            </div>
+            <div class="section-label"><i class="fas fa-shield-alt"></i><span>تسجيل الدخول</span><div class="line"></div></div>
+            <div class="error-msg" id="errorMsg"></div>
+            <form id="loginForm">
+                <div class="form-group"><label class="field-label">اسم المستخدم</label><div class="input-wrapper"><input type="text" id="username" placeholder="أدخل اسم المستخدم" autocomplete="username" required><i class="fas fa-user input-icon"></i></div></div>
+                <div class="form-group"><label class="field-label">كلمة المرور</label><div class="input-wrapper"><input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="current-password" required><i class="fas fa-lock input-icon"></i><button type="button" class="toggle-pwd" onclick="togglePwd()"><i class="fas fa-eye" id="eyeIcon"></i></button></div></div>
+                <button type="submit" class="btn-login"><i class="fas fa-bolt"></i> دخول</button>
+            </form>
+            <div class="no-register-note"><a href="#" onclick="showRegister(true)">ليس لديك حساب؟ إنشاء حساب جديد</a></div>
+            <div id="registerForm" style="display:none">
+                <div class="section-label"><i class="fas fa-user-plus"></i><span>إنشاء حساب جديد</span><div class="line"></div></div>
+                <form id="regForm">
+                    <div class="form-group"><label class="field-label">اسم المستخدم</label><div class="input-wrapper"><input type="text" id="regUsername" placeholder="اختر اسم مستخدم" required><i class="fas fa-user input-icon"></i></div></div>
+                    <div class="form-group"><label class="field-label">كلمة المرور</label><div class="input-wrapper"><input type="password" id="regPassword" placeholder="اختر كلمة مرور" required><i class="fas fa-lock input-icon"></i></div></div>
+                    <button type="submit" class="btn-login" style="background:linear-gradient(135deg,var(--cyan),#00b8cc);box-shadow:0 8px 24px rgba(0,229,255,.25)"><i class="fas fa-user-check"></i> إنشاء الحساب</button>
+                    <button type="button" class="btn-login" style="background:transparent;border:1px solid rgba(255,255,255,.1);box-shadow:none;margin-top:10px" onclick="showRegister(false)">العودة للدخول</button>
+                </form>
+            </div>
+            <div class="footer">MIKO HOST © 2026 — <span class="dev-tag">@I_tt_6</span> <span class="animated-emoji">✨</span></div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner"></div><div class="loading-text">جاري الدخول...</div></div>
+
+    <script>
+        function togglePwd() { const p=document.getElementById('password'), i=document.getElementById('eyeIcon'); p.type=p.type==='password'?'text':'password'; i.className=p.type==='password'?'fas fa-eye':'fas fa-eye-slash'; }
+        function showMessage(msg,isError=true){ const el=document.getElementById('errorMsg'); el.textContent=msg; el.className='error-msg '+(isError?'':'success-msg'); el.style.display='block'; setTimeout(()=>el.style.display='none',4000); }
+        function showLoading(s){ document.getElementById('loadingOverlay').style.display=s?'flex':'none'; }
+        document.getElementById('loginForm').onsubmit=async(e)=>{ e.preventDefault(); const u=document.getElementById('username').value.trim(), p=document.getElementById('password').value; if(!u||!p){ showMessage('⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور'); return; } showLoading(true); try{ const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p,remember_me:false})}); const data=await res.json(); if(data.success){ showMessage('✅ تم تسجيل الدخول بنجاح...',false); setTimeout(()=>window.location.href=data.redirect,1000); } else showMessage('❌ '+data.message); } catch(err){ showMessage('❌ خطأ في الاتصال بالخادم'); } finally{ showLoading(false); } };
+        function showRegister(s){ document.getElementById('loginForm').style.display=s?'none':'block'; document.getElementById('registerForm').style.display=s?'block':'none'; document.querySelector('.no-register-note').style.display=s?'none':'block'; }
+        document.getElementById('regForm').onsubmit=async(e)=>{ e.preventDefault(); const u=document.getElementById('regUsername').value.trim(), p=document.getElementById('regPassword').value; if(!u||!p){ showMessage('⚠️ الرجاء إكمال البيانات'); return; } showLoading(true); try{ const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})}); const data=await res.json(); if(data.success){ showMessage('✅ تم إنشاء الحساب بنجاح! يمكنك الدخول الآن',false); showRegister(false); } else showMessage('❌ '+data.message); } catch(err){ showMessage('❌ خطأ في الاتصال'); } finally{ showLoading(false); } };
+        (async()=>{ try{ const r=await fetch('/api/current_user'), d=await r.json(); if(d.success&&d.username) window.location.href=d.is_admin?'/admin':'/dashboard'; } catch(e){} })();
+    </script>
+</body>
+</html>
