@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 USERS_DIR = os.path.join(BASE_DIR, "USERS")
 os.makedirs(USERS_DIR, exist_ok=True)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=BASE_DIR)
 app.secret_key = secrets.token_hex(32)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
@@ -221,31 +221,19 @@ def home():
 def login_page():
     if 'username' in session:
         return redirect('/')
-    try:
-        with open(os.path.join(BASE_DIR, 'login.html'), 'r', encoding='utf-8') as f:
-            return f.read()
-    except:
-        return "<h2>صفحة تسجيل الدخول غير موجودة</h2>"
+    return send_from_directory(BASE_DIR, 'login.html')
 
 @app.route('/dashboard')
 def dashboard():
     if 'username' not in session:
         return redirect('/login')
-    try:
-        with open(os.path.join(BASE_DIR, 'index.html'), 'r', encoding='utf-8') as f:
-            return f.read()
-    except:
-        return "<h2>لوحة التحكم غير موجودة</h2>"
+    return send_from_directory(BASE_DIR, 'index.html')
 
 @app.route('/admin')
 def admin_panel():
     if 'username' not in session or not is_admin(session['username']):
         return redirect('/login')
-    try:
-        with open(os.path.join(BASE_DIR, 'admin_panel.html'), 'r', encoding='utf-8') as f:
-            return f.read()
-    except:
-        return "<h2>لوحة المسؤول غير موجودة</h2>"
+    return send_from_directory(BASE_DIR, 'admin_panel.html')
 
 # ============== API المصادقة ==============
 @app.route('/api/register', methods=['POST'])
@@ -267,7 +255,7 @@ def api_register():
         "password": hashlib.sha256(password.encode()).hexdigest(),
         "is_admin": False,
         "created_at": str(datetime.now()),
-        "max_servers": 3,
+        "max_servers": 1,
         "expiry_days": 365,
         "last_login": None
     }
@@ -316,14 +304,28 @@ def api_current_user():
             })
     return jsonify({"success": False})
 
-# ============== API السيرفرات ==============
+# ============== API السيرفرات (سيرفر واحد فقط لكل مستخدم) ==============
 @app.route('/api/servers')
 def list_servers():
     if "username" not in session:
         return jsonify({"success": False}), 401
     user_servers = []
+    total_disk_used = 0
+    total_disk_limit = 0
     for folder, srv in db["servers"].items():
         if srv["owner"] == session["username"]:
+            # حساب المساحة المستخدمة
+            disk_used = 0
+            if os.path.exists(srv["path"]):
+                for root, dirs, files in os.walk(srv["path"]):
+                    for f in files:
+                        fp = os.path.join(root, f)
+                        if os.path.exists(fp):
+                            disk_used += os.path.getsize(fp)
+            disk_used_mb = disk_used / (1024 * 1024)
+            storage_limit = srv.get("storage_limit", 100)
+            total_disk_used += disk_used_mb
+            total_disk_limit += storage_limit
             uptime_str = "0 ثانية"
             if srv.get("status") == "Running" and srv.get("start_time"):
                 diff = time.time() - srv["start_time"]
@@ -342,17 +344,24 @@ def list_servers():
                 "startup_file": srv.get("startup_file", ""),
                 "status": srv.get("status", "Stopped"),
                 "uptime": uptime_str,
-                "port": srv.get("port", "N/A")
+                "port": srv.get("port", "N/A"),
+                "plan": srv.get("plan", "free"),
+                "storage_limit": storage_limit,
+                "ram_limit": srv.get("ram_limit", 256),
+                "cpu_limit": srv.get("cpu_limit", 0.5),
+                "disk_used": round(disk_used_mb, 2)
             })
-    user = db["users"].get(session["username"], {"max_servers": 3, "expiry_days": 365})
-    max_srv = user.get("max_servers", 3)
+    user = db["users"].get(session["username"], {"max_servers": 1, "expiry_days": 365})
+    max_srv = 1
     return jsonify({
         "success": True,
         "servers": user_servers,
         "stats": {
             "used": len(user_servers),
             "total": max_srv,
-            "expiry": user.get("expiry_days", 365)
+            "expiry": user.get("expiry_days", 365),
+            "disk_used": round(total_disk_used, 2),
+            "disk_total": total_disk_limit
         }
     })
 
@@ -363,12 +372,16 @@ def add_server():
     user = db["users"].get(session["username"])
     if not user:
         return jsonify({"success": False, "message": "مستخدم غير موجود"})
+    # سيرفر واحد فقط
     user_srv_count = len([s for s in db["servers"].values() if s["owner"] == session["username"]])
-    max_allowed = user.get("max_servers", 3)
-    if user_srv_count >= max_allowed:
-        return jsonify({"success": False, "message": f"لقد وصلت للحد الأقصى ({max_allowed}) من السيرفرات"})
+    if user_srv_count >= 1:
+        return jsonify({"success": False, "message": "يمكنك امتلاك خادم واحد فقط. قم بحذف الخادم الحالي أولاً."})
     data = request.get_json()
-    name = data.get("name", "New Server").strip()
+    name = data.get("name", "My Server").strip()
+    plan_id = data.get("plan", "free")
+    storage_limit = int(data.get("storage", 100))  # MB
+    ram_limit = int(data.get("ram", 256))  # MB
+    cpu_limit = float(data.get("cpu", 0.5))
     if not name:
         name = "Server_" + secrets.token_hex(2)
     folder = f"{session['username']}_{re.sub(r'[^a-zA-Z0-9]', '', name)}_{int(time.time())}"
@@ -384,10 +397,14 @@ def add_server():
         "created_at": str(datetime.now()),
         "startup_file": "",
         "pid": None,
-        "port": assigned_port
+        "port": assigned_port,
+        "plan": plan_id,
+        "storage_limit": storage_limit,
+        "ram_limit": ram_limit,
+        "cpu_limit": cpu_limit
     }
     save_db(db)
-    return jsonify({"success": True, "message": f"✅ تم إنشاء السيرفر {name}"})
+    return jsonify({"success": True, "message": f"✅ تم إنشاء الخادم {name}"})
 
 @app.route('/api/server/action/<folder>/<action>', methods=['POST'])
 def server_action(folder, action):
@@ -398,11 +415,11 @@ def server_action(folder, action):
         return jsonify({"success": False, "message": "غير مصرح"})
     if action == "start":
         if srv.get("status") == "Running":
-            return jsonify({"success": False, "message": "السيرفر يعمل بالفعل"})
+            return jsonify({"success": False, "message": "الخادم يعمل بالفعل"})
         if start_server_process(folder):
             return jsonify({"success": True, "message": "✅ تم التشغيل"})
         else:
-            return jsonify({"success": False, "message": "فشل التشغيل - تأكد من وجود ملف تشغيل (main.py أو app.py)"})
+            return jsonify({"success": False, "message": "فشل التشغيل - تأكد من وجود ملف تشغيل"})
     elif action == "stop":
         if srv.get("pid"):
             try:
@@ -497,7 +514,7 @@ def get_server_stats(folder):
         "ip": get_public_ip()
     })
 
-# ============== API الملفات ==============
+# ============== API الملفات (مختصر لكن كامل) ==============
 @app.route('/api/files/list/<folder>')
 def list_server_files(folder):
     if "username" not in session:
@@ -520,12 +537,7 @@ def list_server_files(folder):
                 size_str = f"{size_bytes/1024:.1f} KB"
             else:
                 size_str = f"{size_bytes/(1024*1024):.1f} MB"
-            files.append({
-                "name": f,
-                "size": size_str,
-                "is_dir": os.path.isdir(fpath),
-                "modified": datetime.fromtimestamp(stat.st_mtime).strftime('%Y-%m-%d %H:%M')
-            })
+            files.append({"name": f, "size": size_str, "is_dir": os.path.isdir(fpath), "modified": datetime.fromtimestamp(stat.st_mtime).strftime('%Y-%m-%d %H:%M')})
     except:
         pass
     return jsonify(sorted(files, key=lambda x: (not x['is_dir'], x['name'].lower())))
@@ -617,45 +629,6 @@ def delete_files(folder):
         return jsonify({"success": True, "message": f"🗑️ تم حذف {deleted} ملف"})
     else:
         return jsonify({"success": False, "message": "فشل الحذف"})
-
-@app.route('/api/files/rename/<folder>', methods=['POST'])
-def rename_file(folder):
-    if "username" not in session:
-        return jsonify({"success": False}), 401
-    srv = db["servers"].get(folder)
-    if not srv or srv["owner"] != session["username"]:
-        return jsonify({"success": False})
-    data = request.get_json()
-    old_name = data.get("old_name", "").strip()
-    new_name = data.get("new_name", "").strip()
-    if not old_name or not new_name or '..' in old_name or '..' in new_name:
-        return jsonify({"success": False, "message": "اسم غير صالح"})
-    old_path = os.path.join(srv["path"], old_name)
-    new_path = os.path.join(srv["path"], new_name)
-    try:
-        os.rename(old_path, new_path)
-        return jsonify({"success": True, "message": f"✅ تم التغيير إلى {new_name}"})
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)})
-
-@app.route('/api/files/unzip/<folder>/<filename>', methods=['POST'])
-def unzip_file(folder, filename):
-    if "username" not in session:
-        return jsonify({"success": False}), 401
-    srv = db["servers"].get(folder)
-    if not srv or srv["owner"] != session["username"]:
-        return jsonify({"success": False})
-    if '..' in filename or not filename.lower().endswith('.zip'):
-        return jsonify({"success": False, "message": "ملف غير صالح"})
-    fpath = os.path.join(srv["path"], filename)
-    if not os.path.exists(fpath):
-        return jsonify({"success": False, "message": "الملف غير موجود"})
-    try:
-        with zipfile.ZipFile(fpath, 'r') as z:
-            z.extractall(srv["path"])
-        return jsonify({"success": True, "message": "✅ تم فك الضغط"})
-    except Exception as e:
-        return jsonify({"success": False, "message": f"❌ فشل: {str(e)}"})
 
 @app.route('/api/files/upload/<folder>', methods=['POST'])
 def upload_files(folder):
@@ -754,7 +727,7 @@ def admin_users():
             "is_admin": udata.get("is_admin", False),
             "created_at": udata.get("created_at"),
             "last_login": udata.get("last_login"),
-            "max_servers": udata.get("max_servers", 3),
+            "max_servers": udata.get("max_servers", 1),
             "expiry_days": udata.get("expiry_days", 365)
         })
     return jsonify({"success": True, "users": users_list})
@@ -766,7 +739,7 @@ def admin_create_user():
     data = request.get_json()
     username = data.get("username", "").strip()
     password = data.get("password", "").strip()
-    max_servers = int(data.get("max_servers", 3))
+    max_servers = int(data.get("max_servers", 1))
     expiry_days = int(data.get("expiry_days", 365))
     if not username or not password:
         return jsonify({"success": False, "message": "جميع الحقول مطلوبة"})

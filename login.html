@@ -6,6 +6,7 @@
     <title>تسجيل الدخول | MIKO HOST</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         * {
             margin: 0;
@@ -15,17 +16,15 @@
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, #0a0f1c 0%, #05080f 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            background: linear-gradient(135deg, #0a0f1c 0%, #05080f 100%);
             position: relative;
             overflow-x: hidden;
         }
 
-        /* خلفية متحركة */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -39,69 +38,110 @@
         .bg-animation .circle {
             position: absolute;
             border-radius: 50%;
-            background: rgba(45, 122, 255, 0.1);
-            animation: float 20s infinite ease-in-out;
+            background: rgba(45, 122, 255, 0.08);
+            animation: float 25s infinite ease-in-out;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(10deg); }
+            50% { transform: translateY(-40px) rotate(5deg); }
         }
 
-        /* الحاوية الرئيسية */
-        .auth-container {
+        .login-wrapper {
+            display: flex;
             width: 100%;
-            max-width: 450px;
-            background: rgba(12, 18, 28, 0.85);
+            max-width: 1100px;
+            background: rgba(12, 18, 28, 0.75);
             backdrop-filter: blur(15px);
             border-radius: 32px;
             border: 1px solid rgba(45, 122, 255, 0.3);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(45, 122, 255, 0.1);
-            padding: 40px 32px;
-            transition: all 0.3s ease;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            margin: 20px;
         }
 
-        /* الشعار */
+        .welcome-section {
+            flex: 1;
+            background: linear-gradient(145deg, rgba(45, 122, 255, 0.1), rgba(0, 229, 255, 0.05));
+            padding: 48px 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-left: 1px solid rgba(45, 122, 255, 0.2);
+        }
+
+        .welcome-image {
+            margin-bottom: 32px;
+        }
+
+        .welcome-image img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #2d7aff;
+            box-shadow: 0 0 20px rgba(45, 122, 255, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .welcome-image img:hover {
+            transform: scale(1.05);
+        }
+
+        .welcome-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2d7aff, #00e5ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .welcome-text {
+            color: #7a8099;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 48px 40px;
+        }
+
         .logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
 
         .logo-icon {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(145deg, #0d1422, #070b14);
-            border: 2px solid #00e5ff;
-            border-radius: 20px;
+            border: 1px solid #00e5ff;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 32px;
+            margin: 0 auto 12px;
+            font-size: 24px;
             color: #00e5ff;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
         }
 
         .logo-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 900;
             letter-spacing: 2px;
             background: linear-gradient(135deg, #2d7aff, #00e5ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 20px rgba(45, 122, 255, 0.3);
         }
 
-        .logo-sub {
-            font-size: 11px;
-            color: #7a8099;
-            margin-top: 8px;
-            letter-spacing: 2px;
-        }
-
-        /* أزرار التبديل */
         .tabs {
             display: flex;
             gap: 10px;
@@ -131,7 +171,6 @@
             box-shadow: 0 4px 15px rgba(45, 122, 255, 0.4);
         }
 
-        /* النماذج */
         .form {
             display: none;
             animation: fade 0.3s ease;
@@ -158,7 +197,6 @@
             transform: translateY(-50%);
             color: #4a5168;
             font-size: 18px;
-            pointer-events: none;
         }
 
         .input-group input {
@@ -170,8 +208,8 @@
             color: #fff;
             font-size: 14px;
             font-family: 'Tajawal', sans-serif;
-            transition: all 0.3s;
             outline: none;
+            transition: all 0.3s;
         }
 
         .input-group input:focus {
@@ -180,11 +218,6 @@
             box-shadow: 0 0 0 3px rgba(45, 122, 255, 0.1);
         }
 
-        .input-group input::placeholder {
-            color: #4a5168;
-        }
-
-        /* زر إظهار كلمة المرور */
         .toggle-pwd {
             position: absolute;
             left: 16px;
@@ -194,14 +227,57 @@
             border: none;
             color: #4a5168;
             cursor: pointer;
-            font-size: 18px;
         }
 
-        .toggle-pwd:hover {
-            color: #2d7aff;
+        /* حقل المعادلة الرياضية */
+        .math-group {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50px;
+            padding: 8px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        /* زر الإجراء */
+        .math-question {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #00e5ff;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 16px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        .math-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(45, 122, 255, 0.2);
+            border-radius: 40px;
+            padding: 10px 16px;
+            color: white;
+            font-size: 14px;
+            font-family: 'Tajawal', sans-serif;
+            outline: none;
+            width: 120px;
+            text-align: center;
+        }
+
+        .math-input:focus {
+            border-color: #2d7aff;
+        }
+
+        /* reCAPTCHA */
+        .captcha-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            transform: scale(0.95);
+        }
+
         .action-btn {
             width: 100%;
             padding: 14px;
@@ -223,7 +299,11 @@
             box-shadow: 0 12px 28px rgba(45, 122, 255, 0.5);
         }
 
-        /* رسائل الخطأ والنجاح */
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .message {
             padding: 12px 16px;
             border-radius: 50px;
@@ -245,7 +325,6 @@
             color: #00ff88;
         }
 
-        /* تذييل */
         .footer {
             text-align: center;
             margin-top: 28px;
@@ -253,12 +332,6 @@
             color: #4a5168;
         }
 
-        .footer a {
-            color: #2d7aff;
-            text-decoration: none;
-        }
-
-        /* تحميل */
         .loading {
             display: none;
             position: fixed;
@@ -291,23 +364,32 @@
             to { transform: rotate(360deg); }
         }
 
-        .loading p {
-            margin-top: 15px;
-            color: #2d7aff;
-            font-size: 14px;
-        }
-
-        /* توافق الجوال */
-        @media (max-width: 500px) {
-            .auth-container {
-                padding: 30px 20px;
+        @media (max-width: 768px) {
+            .login-wrapper {
+                flex-direction: column;
+                margin: 16px;
             }
-            .logo-text {
-                font-size: 20px;
+            .welcome-section {
+                padding: 32px 20px;
+                border-left: none;
+                border-bottom: 1px solid rgba(45, 122, 255, 0.2);
             }
-            .tab-btn {
-                padding: 10px;
-                font-size: 0.9rem;
+            .welcome-image img {
+                width: 120px;
+                height: 120px;
+            }
+            .welcome-title {
+                font-size: 1.4rem;
+            }
+            .form-section {
+                padding: 32px 24px;
+            }
+            .math-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .math-input {
+                width: 100%;
             }
         }
     </style>
@@ -319,50 +401,70 @@
         <div class="circle" style="width: 150px; height: 150px; top: 40%; left: 20%; animation-duration: 30s;"></div>
     </div>
 
-    <div class="auth-container">
-        <div class="logo">
-            <div class="logo-icon"><i class="fas fa-server"></i></div>
-            <div class="logo-text">MIKO HOST</div>
-            <div class="logo-sub">BY @I_tt_6</div>
+    <div class="login-wrapper">
+        <div class="welcome-section">
+            <div class="welcome-image">
+                <img src="https://i.postimg.cc/15gHrQDK/1776031185250.png" alt="ترحيب MIKO HOST">
+            </div>
+            <div class="welcome-title">مرحباً بك في MIKO HOST</div>
+            <div class="welcome-text">
+                منصة استضافة متكاملة لإدارة سيرفراتك وبوتاتك بكل سهولة وأمان.
+            </div>
         </div>
 
-        <div class="tabs">
-            <button class="tab-btn active" id="loginTabBtn">تسجيل الدخول</button>
-            <button class="tab-btn" id="registerTabBtn">إنشاء حساب</button>
-        </div>
+        <div class="form-section">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-server"></i></div>
+                <div class="logo-text">MIKO HOST</div>
+            </div>
 
-        <!-- نموذج تسجيل الدخول -->
-        <div id="loginForm" class="form active">
-            <div id="loginMessage" class="message"></div>
-            <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="loginUsername" placeholder="اسم المستخدم" autocomplete="username">
+            <div class="tabs">
+                <button class="tab-btn active" id="loginTabBtn">تسجيل الدخول</button>
+                <button class="tab-btn" id="registerTabBtn">إنشاء حساب</button>
             </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="loginPassword" placeholder="كلمة المرور">
-                <button type="button" class="toggle-pwd" onclick="togglePassword('loginPassword')"><i class="fas fa-eye"></i></button>
-            </div>
-            <button class="action-btn" onclick="login()">دخول</button>
-        </div>
 
-        <!-- نموذج إنشاء حساب -->
-        <div id="registerForm" class="form">
-            <div id="registerMessage" class="message"></div>
-            <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="regUsername" placeholder="اسم المستخدم (3 أحرف على الأقل)">
+            <!-- نموذج تسجيل الدخول (مع معادلة رياضية) -->
+            <div id="loginForm" class="form active">
+                <div id="loginMessage" class="message"></div>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="loginUsername" placeholder="اسم المستخدم" autocomplete="username">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="كلمة المرور">
+                    <button type="button" class="toggle-pwd" onclick="togglePassword('loginPassword')"><i class="fas fa-eye"></i></button>
+                </div>
+                <!-- حقل المعادلة الرياضية -->
+                <div class="math-group">
+                    <span class="math-question" id="mathQuestion">5 + 3 = ?</span>
+                    <input type="number" id="mathAnswer" class="math-input" placeholder="الحل" autocomplete="off">
+                </div>
+                <button class="action-btn" onclick="login()">دخول</button>
             </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="regPassword" placeholder="كلمة المرور (4 أحرف على الأقل)">
-                <button type="button" class="toggle-pwd" onclick="togglePassword('regPassword')"><i class="fas fa-eye"></i></button>
-            </div>
-            <button class="action-btn" onclick="register()">إنشاء حساب</button>
-        </div>
 
-        <div class="footer">
-            © 2026 MIKO HOST — منصة استضافة احترافية
+            <!-- نموذج إنشاء حساب (مع reCAPTCHA) -->
+            <div id="registerForm" class="form">
+                <div id="registerMessage" class="message"></div>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="regUsername" placeholder="اسم المستخدم (3 أحرف على الأقل)">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="regPassword" placeholder="كلمة المرور (4 أحرف على الأقل)">
+                    <button type="button" class="toggle-pwd" onclick="togglePassword('regPassword')"><i class="fas fa-eye"></i></button>
+                </div>
+                <!-- Google reCAPTCHA -->
+                <div class="captcha-container">
+                    <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE" data-callback="onCaptchaSuccess" data-expired-callback="onCaptchaExpired"></div>
+                </div>
+                <button class="action-btn" id="registerBtn" disabled onclick="register()">إنشاء حساب</button>
+            </div>
+
+            <div class="footer">
+                © 2026 MIKO HOST — منصة استضافة احترافية
+            </div>
         </div>
     </div>
 
@@ -372,26 +474,66 @@
     </div>
 
     <script>
-        // تبديل النماذج
-        document.getElementById('loginTabBtn').addEventListener('click', () => {
-            document.getElementById('loginForm').classList.add('active');
-            document.getElementById('registerForm').classList.remove('active');
-            document.getElementById('loginTabBtn').classList.add('active');
-            document.getElementById('registerTabBtn').classList.remove('active');
-            clearMessages();
-        });
+        // ========== المتغيرات العامة ==========
+        let captchaVerified = false;
+        let currentMathQuestion = null;
+        let currentMathAnswer = null;
 
-        document.getElementById('registerTabBtn').addEventListener('click', () => {
-            document.getElementById('registerForm').classList.add('active');
-            document.getElementById('loginForm').classList.remove('active');
-            document.getElementById('registerTabBtn').classList.add('active');
-            document.getElementById('loginTabBtn').classList.remove('active');
-            clearMessages();
-        });
+        // ========== دوال المعادلة الرياضية ==========
+        function generateMathQuestion() {
+            // عمليات عشوائية: + - * /
+            const operations = ['+', '-', '*', '/'];
+            const op = operations[Math.floor(Math.random() * operations.length)];
+            let a, b, answer;
+            
+            if (op === '+') {
+                a = Math.floor(Math.random() * 50) + 1;
+                b = Math.floor(Math.random() * 50) + 1;
+                answer = a + b;
+            } else if (op === '-') {
+                a = Math.floor(Math.random() * 50) + 20;
+                b = Math.floor(Math.random() * a) + 1;
+                answer = a - b;
+            } else if (op === '*') {
+                a = Math.floor(Math.random() * 12) + 1;
+                b = Math.floor(Math.random() * 12) + 1;
+                answer = a * b;
+            } else { // قسمة
+                b = Math.floor(Math.random() * 12) + 1;
+                answer = Math.floor(Math.random() * 20) + 1;
+                a = answer * b;
+                answer = a / b;
+            }
+            
+            currentMathQuestion = `${a} ${op} ${b} = ?`;
+            currentMathAnswer = answer;
+            document.getElementById('mathQuestion').innerText = currentMathQuestion;
+            document.getElementById('mathAnswer').value = '';
+        }
 
-        function clearMessages() {
-            document.getElementById('loginMessage').style.display = 'none';
-            document.getElementById('registerMessage').style.display = 'none';
+        function verifyMathAnswer() {
+            const userAnswer = parseFloat(document.getElementById('mathAnswer').value);
+            if (isNaN(userAnswer)) return false;
+            // تقريب للقسمة لتجنب أخطاء الفاصلة العائمة
+            return Math.abs(userAnswer - currentMathAnswer) < 0.001;
+        }
+
+        // ========== دوال reCAPTCHA ==========
+        function onCaptchaSuccess() {
+            captchaVerified = true;
+            document.getElementById('registerBtn').disabled = false;
+        }
+
+        function onCaptchaExpired() {
+            captchaVerified = false;
+            document.getElementById('registerBtn').disabled = true;
+            showMessage('registerMessage', '⚠️ انتهت صلاحية التحقق، يرجى إعادة التحقق', 'error');
+        }
+
+        // ========== دوال عامة ==========
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
         }
 
         function showMessage(element, msg, type) {
@@ -404,24 +546,47 @@
             }, 5000);
         }
 
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const type = field.type === 'password' ? 'text' : 'password';
-            field.type = type;
-        }
-
         function showLoading(show) {
             const loader = document.getElementById('loading');
             if (show) loader.classList.add('active');
             else loader.classList.remove('active');
         }
 
+        // تبديل التبويبات
+        document.getElementById('loginTabBtn').addEventListener('click', () => {
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('registerForm').classList.remove('active');
+            document.getElementById('loginTabBtn').classList.add('active');
+            document.getElementById('registerTabBtn').classList.remove('active');
+            // تجديد المعادلة عند العودة للدخول
+            generateMathQuestion();
+        });
+
+        document.getElementById('registerTabBtn').addEventListener('click', () => {
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('registerTabBtn').classList.add('active');
+            document.getElementById('loginTabBtn').classList.remove('active');
+            // إعادة تعيين الـ captcha
+            if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+            captchaVerified = false;
+            document.getElementById('registerBtn').disabled = true;
+        });
+
+        // ========== تسجيل الدخول (مع التحقق من المعادلة) ==========
         async function login() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
 
             if (!username || !password) {
                 showMessage('loginMessage', '⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور', 'error');
+                return;
+            }
+
+            // التحقق من صحة المعادلة الرياضية
+            if (!verifyMathAnswer()) {
+                showMessage('loginMessage', '❌ إجابة السؤال الرياضي غير صحيحة، حاول مرة أخرى', 'error');
+                generateMathQuestion(); // تجديد السؤال
                 return;
             }
 
@@ -440,15 +605,23 @@
                     }, 1000);
                 } else {
                     showMessage('loginMessage', '❌ ' + (data.message || 'بيانات غير صحيحة'), 'error');
+                    generateMathQuestion(); // تجديد السؤال
                 }
             } catch (err) {
                 showMessage('loginMessage', '❌ خطأ في الاتصال بالخادم', 'error');
+                generateMathQuestion();
             } finally {
                 showLoading(false);
             }
         }
 
+        // ========== إنشاء حساب (مع reCAPTCHA) ==========
         async function register() {
+            if (!captchaVerified) {
+                showMessage('registerMessage', '⚠️ الرجاء إكمال التحقق أنك لست روبوت', 'error');
+                return;
+            }
+
             const username = document.getElementById('regUsername').value.trim();
             const password = document.getElementById('regPassword').value;
 
@@ -465,33 +638,52 @@
                 return;
             }
 
+            const captchaToken = grecaptcha.getResponse();
+            if (!captchaToken) {
+                showMessage('registerMessage', '⚠️ الرجاء إكمال التحقق أنك لست روبوت', 'error');
+                return;
+            }
+
             showLoading(true);
             try {
                 const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ 
+                        username, 
+                        password,
+                        captcha_token: captchaToken 
+                    })
                 });
                 const data = await response.json();
                 if (data.success) {
                     showMessage('registerMessage', '✅ تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن', 'success');
-                    // تبديل إلى نموذج الدخول تلقائياً بعد 2 ثانية
                     setTimeout(() => {
                         document.getElementById('loginTabBtn').click();
                         document.getElementById('loginUsername').value = username;
                         document.getElementById('loginPassword').value = '';
+                        grecaptcha.reset();
+                        captchaVerified = false;
+                        document.getElementById('registerBtn').disabled = true;
+                        generateMathQuestion(); // تجديد المعادلة لنموذج الدخول
                     }, 2000);
                 } else {
                     showMessage('registerMessage', '❌ ' + (data.message || 'حدث خطأ'), 'error');
+                    grecaptcha.reset();
+                    captchaVerified = false;
+                    document.getElementById('registerBtn').disabled = true;
                 }
             } catch (err) {
                 showMessage('registerMessage', '❌ خطأ في الاتصال بالخادم', 'error');
+                grecaptcha.reset();
+                captchaVerified = false;
+                document.getElementById('registerBtn').disabled = true;
             } finally {
                 showLoading(false);
             }
         }
 
-        // إذا كان المستخدم مسجل دخوله بالفعل، نعيد توجيهه
+        // التحقق من وجود جلسة مفتوحة
         (async () => {
             try {
                 const res = await fetch('/api/current_user');
@@ -501,6 +693,9 @@
                 }
             } catch(e) {}
         })();
+
+        // توليد أول سؤال رياضي عند تحميل الصفحة
+        generateMathQuestion();
     </script>
 </body>
 </html>
