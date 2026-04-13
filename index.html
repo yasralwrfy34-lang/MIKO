@@ -20,7 +20,6 @@
             overflow-x: hidden;
         }
 
-        /* خلفية متحركة */
         .bg-aurora {
             position: fixed;
             inset: 0;
@@ -117,7 +116,6 @@
             transform: translateY(-1px);
         }
 
-        /* الحاوية الرئيسية */
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -191,7 +189,6 @@
             width: 0%;
         }
 
-        /* قسم السيرفرات */
         .servers-header {
             display: flex;
             justify-content: space-between;
@@ -234,7 +231,6 @@
             box-shadow: 0 8px 20px rgba(45, 122, 255, 0.6);
         }
 
-        /* بطاقات السيرفرات */
         .servers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -340,7 +336,6 @@
             background: rgba(0,0,0,0.2);
         }
 
-        /* أزرار التحكم الجديدة - متوهجة */
         .server-actions {
             display: flex;
             gap: 10px;
@@ -378,7 +373,6 @@
         .action-icon-btn.delete:hover { background: rgba(255, 61, 90, 0.2); border-color: #ff3d5a; color: #ff3d5a; }
         .action-icon-btn.detail:hover { background: rgba(45, 122, 255, 0.2); border-color: #2d7aff; color: #2d7aff; }
 
-        /* صفحة التفاصيل */
         .server-detail {
             display: none;
             animation: fadeSlide 0.3s ease;
@@ -428,7 +422,6 @@
             color: transparent;
         }
 
-        /* شريط الأزرار المتوهجة العلوي */
         .action-strip {
             display: flex;
             gap: 16px;
@@ -466,13 +459,13 @@
             filter: brightness(1.05);
         }
 
-        /* التبويبات */
         .tabs {
             display: flex;
             gap: 16px;
             margin-bottom: 28px;
             border-bottom: 1px solid rgba(45, 122, 255, 0.2);
             padding-bottom: 8px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -503,7 +496,6 @@
             border-radius: 2px;
         }
 
-        /* الكونسول */
         .console-box {
             background: #010409;
             border: 1px solid rgba(45, 122, 255, 0.2);
@@ -517,7 +509,6 @@
             white-space: pre-wrap;
         }
 
-        /* الملفات */
         .files-table {
             width: 100%;
             border-collapse: collapse;
@@ -546,7 +537,6 @@
             color: white;
         }
 
-        /* الإحصائيات الداخلية */
         .stats-details {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -623,7 +613,6 @@
             display: block;
         }
 
-        /* صفحة API Keys داخل التبويب */
         .api-panel {
             background: rgba(12, 18, 34, 0.6);
             border-radius: 28px;
@@ -647,7 +636,6 @@
             margin-top: 16px;
         }
 
-        /* مودال إنشاء سيرفر */
         .modal {
             display: none;
             position: fixed;
@@ -706,12 +694,33 @@
             font-size: 0.8rem;
         }
 
+        .hamburger-fixed {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 150;
+            background: #2d7aff;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Tajawal', sans-serif;
+        }
+
         @media (max-width: 768px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .servers-grid { grid-template-columns: 1fr; }
             .action-strip { flex-wrap: wrap; }
             .sidebar { width: 280px; }
             .container { padding: 16px; }
+            .tabs { justify-content: center; }
+            .tab-btn { padding: 6px 12px; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -731,7 +740,6 @@
 </div>
 
 <div class="container">
-    <!-- الصفحة الرئيسية (قائمة السيرفرات) -->
     <div id="homeView">
         <div class="stats-grid">
             <div class="stat-card"><div class="stat-header"><span class="stat-title">السيرفرات المستخدمة</span><div class="stat-icon"><i class="fas fa-server"></i></div></div><div class="stat-value" id="usedServers">0/1</div></div>
@@ -739,7 +747,6 @@
             <div class="stat-card"><div class="stat-header"><span class="stat-title">المساحة المستخدمة</span><div class="stat-icon"><i class="fas fa-hdd"></i></div></div><div class="stat-value" id="diskUsed">0 MB</div><div class="stat-progress"><div class="stat-progress-bar" id="diskProgress"></div></div></div>
             <div class="stat-card"><div class="stat-header"><span class="stat-title">استخدام الرام</span><div class="stat-icon"><i class="fas fa-microchip"></i></div></div><div class="stat-value" id="ramUsage">0%</div><div class="stat-progress"><div class="stat-progress-bar" id="ramProgress"></div></div></div>
         </div>
-
         <div class="servers-header">
             <div class="servers-title"><i class="fas fa-cubes"></i> الخوادم النشطة</div>
             <button class="create-server-btn" id="openCreateModalBtn"><i class="fas fa-plus-circle"></i> خادم جديد</button>
@@ -747,13 +754,11 @@
         <div class="servers-grid" id="serversGrid"><div style="text-align:center; padding:60px; color:#9ca3cf;">جاري التحميل...</div></div>
     </div>
 
-    <!-- صفحة تفاصيل السيرفر (تظهر بعد الضغط) -->
     <div id="detailView" class="server-detail">
         <div class="detail-header">
             <button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-right"></i> العودة</button>
             <div class="server-title" id="detailTitle"></div>
         </div>
-
         <div class="action-strip">
             <button class="glow-btn start" onclick="serverAction('start')"><i class="fas fa-play"></i> تشغيل</button>
             <button class="glow-btn restart" onclick="serverAction('restart')"><i class="fas fa-sync-alt"></i> إعادة تشغيل</button>
@@ -761,7 +766,6 @@
             <button class="glow-btn delete" onclick="confirmDelete()"><i class="fas fa-trash"></i> حذف</button>
             <button class="glow-btn api" onclick="showApiTab()"><i class="fas fa-key"></i> API Key</button>
         </div>
-
         <div class="tabs">
             <button class="tab-btn active" data-tab="console">الكونسول</button>
             <button class="tab-btn" data-tab="files">الملفات</button>
@@ -769,7 +773,6 @@
             <button class="tab-btn" data-tab="settings">الإعدادات</button>
             <button class="tab-btn" data-tab="api">مفاتيح API</button>
         </div>
-
         <div id="tabConsole" class="tab-content active"><div class="console-box" id="consoleOut"></div></div>
         <div id="tabFiles" class="tab-content">
             <div class="upload-zone" onclick="document.getElementById('fileUpload').click()" ondragover="event.preventDefault()" ondrop="handleDrop(event)"><i class="fas fa-cloud-upload-alt"></i> اسحب الملفات أو انقر للرفع</div>
@@ -834,33 +837,12 @@
 </div>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- مودال إنشاء سيرفر (الخطط) -->
-<div id="plansModal" class="modal">
-    <div class="modal-content">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 style="color:#2d7aff;"><i class="fas fa-rocket"></i> اختر خطتك</h3>
-            <button onclick="closePlansModal()" style="background:none; border:none; color:#9ca3cf; font-size:1.2rem;">✕</button>
-        </div>
-        <div id="plansList"></div>
-        <div id="paymentMethods" style="display:none; margin-top: 20px;">
-            <div style="display: flex; gap: 10px;">
-                <button class="glow-btn" onclick="contactSupport('card')">بطاقة ائتمان</button>
-                <button class="glow-btn" onclick="contactSupport('bank')">تحويل بنكي</button>
-                <button class="glow-btn" onclick="contactSupport('crypto')">كريبتو</button>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- زر الهامبرغر الثابت -->
+<button class="hamburger-fixed" id="hamburgerBtn"><i class="fas fa-bars"></i> القائمة</button>
 
-<!-- مودال التحميل ونجاح الإنشاء -->
-<div id="createProgressModal" class="modal">
-    <div class="modal-content">
-        <div id="createLoading"><div class="spinner"></div><p>جاري إنشاء الخادم...</p></div>
-        <div id="createSuccess" style="display:none;"><i class="fas fa-check-circle" style="font-size:3rem; color:#00ff88;"></i><p style="margin:16px 0;">تم إنشاء الخادم بنجاح!</p><button class="glow-btn start" id="goToServerBtn">الانتقال إلى الخادم</button></div>
-    </div>
-</div>
-
-<!-- باقي المودالات -->
+<!-- مودالات -->
+<div id="plansModal" class="modal"><div class="modal-content"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;"><h3 style="color:#2d7aff;"><i class="fas fa-rocket"></i> اختر خطتك</h3><button onclick="closePlansModal()" style="background:none; border:none; color:#9ca3cf; font-size:1.2rem;">✕</button></div><div id="plansList"></div><div id="paymentMethods" style="display:none; margin-top: 20px;"><div style="display: flex; gap: 10px;"><button class="glow-btn" onclick="contactSupport('card')">بطاقة ائتمان</button><button class="glow-btn" onclick="contactSupport('bank')">تحويل بنكي</button><button class="glow-btn" onclick="contactSupport('crypto')">كريبتو</button></div></div></div></div>
+<div id="createProgressModal" class="modal"><div class="modal-content"><div id="createLoading"><div class="spinner"></div><p>جاري إنشاء الخادم...</p></div><div id="createSuccess" style="display:none;"><i class="fas fa-check-circle" style="font-size:3rem; color:#00ff88;"></i><p style="margin:16px 0;">تم إنشاء الخادم بنجاح!</p><button class="glow-btn start" id="goToServerBtn">الانتقال إلى الخادم</button></div></div></div>
 <div id="editorModal" class="modal"><div class="modal-content"><textarea id="editorArea" rows="12" style="width:100%; background:#010409; border:1px solid #2d7aff; border-radius:16px; padding:12px; color:white;"></textarea><button class="glow-btn" style="width:100%; margin-top:16px;" onclick="saveFile()">حفظ</button></div></div>
 <div id="confirmModal" class="modal"><div class="modal-content"><p id="confirmMsg"></p><div style="display:flex; gap:12px; margin-top:20px;"><button class="glow-btn" id="confirmYesBtn" style="background:#ff3d5a;">تأكيد</button><button class="glow-btn" onclick="closeConfirm()">إلغاء</button></div></div></div>
 <div id="createFileModal" class="modal"><div class="modal-content"><input type="text" id="newFileName" placeholder="script.py" style="width:100%; margin-bottom:12px; padding:10px; border-radius:40px; border:1px solid #2d7aff; background:#010409; color:white;"><textarea id="newFileContent" rows="4" placeholder="المحتوى" style="width:100%; border-radius:16px; border:1px solid #2d7aff; background:#010409; color:white; padding:12px;"></textarea><button class="glow-btn" style="width:100%; margin-top:16px;" onclick="createFile()">إنشاء</button></div></div>
@@ -876,11 +858,9 @@
     const closeConfirm = () => document.getElementById('confirmModal').classList.remove('active');
     document.getElementById('confirmYesBtn').onclick = () => { if(confirmAction) confirmAction(); closeConfirm(); };
 
-    // القائمة الجانبية (هامبرغر)
+    // القائمة الجانبية
     const sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
-    const hamburgerBtn = document.createElement('button'); hamburgerBtn.className = 'glow-btn'; hamburgerBtn.innerHTML = '<i class="fas fa-bars"></i> قائمة'; hamburgerBtn.style.cssText = 'position:fixed; bottom:24px; left:24px; z-index:150; background:#2d7aff; color:white; border:none; padding:10px 18px; border-radius:50px; box-shadow:0 4px 12px rgba(0,0,0,0.3);';
-    document.body.appendChild(hamburgerBtn);
-    hamburgerBtn.onclick = () => { sidebar.classList.add('open'); overlay.classList.add('active'); };
+    document.getElementById('hamburgerBtn').onclick = () => { sidebar.classList.add('open'); overlay.classList.add('active'); };
     const closeSidebar = () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); };
     overlay.onclick = closeSidebar;
 
@@ -901,7 +881,6 @@
         };
     });
 
-    // الخطط وإنشاء سيرفر
     const plans = [
         { id:'free', name:'🎁 مجاني', storage:100, ram:256, price:0, specs:'100MB تخزين | 256MB رام | 0.5 نواة' },
         { id:'4gb', name:'💎 4 جيجا', storage:4096, ram:1024, price:5, specs:'4GB تخزين | 1GB رام | 1 نواة' },
@@ -936,7 +915,7 @@
             const data = await res.json();
             if(data.success) {
                 const serversRes = await fetch('/api/servers');
-                const serversData = await serversRes.json();
+                await serversRes.json();
                 document.getElementById('createLoading').style.display = 'none';
                 document.getElementById('createSuccess').style.display = 'block';
                 document.getElementById('goToServerBtn').onclick = () => { modal.classList.remove('active'); loadServers(); };
@@ -944,7 +923,6 @@
         } catch(e) { modal.classList.remove('active'); showToast('خطأ في الاتصال', 'error'); }
     }
 
-    // التوثيق والتحميل
     async function checkAuth() {
         try { const r = await fetch('/api/current_user'); const d = await r.json(); if(!d.success) window.location.href='/login'; else { document.getElementById('username').innerText = d.username; loadServers(); fetchMetrics(); setInterval(fetchMetrics, 8000); } } catch(e) { window.location.href='/login'; }
     }
@@ -1083,7 +1061,6 @@
         loadServers();
     }
 
-    // إدارة الملفات والإعدادات
     async function loadFiles() {
         if(!currentServer) return;
         const tbody = document.getElementById('filesList');
@@ -1093,7 +1070,7 @@
             const files = await r.json();
             if(files.length === 0) { tbody.innerHTML = '<tr><td colspan="4">لا توجد ملفات<\/td><\/tr>'; return; }
             tbody.innerHTML = files.map(f => `<tr><td><input type="checkbox" class="file-checkbox" value="${escapeHtml(f.name)}"></td><td><i class="fas ${f.is_dir ? 'fa-folder' : 'fa-file'}"></i> ${escapeHtml(f.name)}</div></td><td>${f.size}</td><td class="file-actions">${!f.is_dir ? `<button class="file-btn edit" onclick="editFile('${escapeHtml(f.name)}')">تعديل</button>` : ''}${f.name.toLowerCase().endsWith('.zip') ? `<button class="file-btn" onclick="unzipFile('${escapeHtml(f.name)}')">فك الضغط</button>` : ''}<button class="file-btn delete" onclick="deleteFile('${escapeHtml(f.name)}')">حذف</button></td></tr>`).join('');
-        } catch(e) { tbody.innerHTML = '<tr><td colspan="4">خطأ<\/td><\/tr>'; }
+        } catch(e) { tbody.innerHTML = '<td><td colspan="4">خطأ<\/td><\/tr>'; }
     }
     async function editFile(name) { currentFile = name; const r = await fetch(`/api/files/content/${currentServer.folder}/${name}`); const d = await r.json(); document.getElementById('editorArea').value = d.content||''; document.getElementById('editorModal').classList.add('active'); }
     async function saveFile() { if(!currentFile) return; const content = document.getElementById('editorArea').value; await fetch(`/api/files/save/${currentServer.folder}/${currentFile}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content}) }); showToast('تم الحفظ', 'success'); document.getElementById('editorModal').classList.remove('active'); currentFile=null; loadFiles(); }
@@ -1110,7 +1087,6 @@
     async function loadStartupFiles() { if(!currentServer) return; const r = await fetch(`/api/files/list/${currentServer.folder}`); const files = await r.json(); const pyFiles = files.filter(f=>f.name.endsWith('.py')&&!f.is_dir); const select = document.getElementById('startupFileSelect'); if(select) select.innerHTML = '<option value="">-- اختر ملف التشغيل --</option>'+pyFiles.map(f=>`<option value="${f.name}" ${currentServer.startup_file===f.name?'selected':''}>${f.name}</option>`).join(''); }
     async function setStartupFile() { const filename = document.getElementById('startupFileSelect').value; if(!filename) return; await fetch(`/api/server/set-startup/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({filename}) }); showToast('تم تعيين ملف التشغيل', 'success'); }
 
-    // إدارة API Keys
     async function loadApiKey() { document.getElementById('currentApiKeyDisplay').innerText = 'لم يتم إنشاء مفتاح بعد. اضغط "إنشاء مفتاح جديد".'; }
     async function generateApiKey() {
         try {
@@ -1120,10 +1096,9 @@
             else showToast('فشل إنشاء المفتاح', 'error');
         } catch(e) { showToast('خطأ', 'error'); }
     }
-    async function revokeApiKey() { showToast('⚠️ هذه الميزة قيد التطوير، يمكنك حذف المفتاح من قاعدة البيانات يدوياً', 'error'); }
+    async function revokeApiKey() { showToast('⚠️ هذه الميزة قيد التطوير', 'error'); }
     function showApiTab() { document.querySelector('.tab-btn[data-tab="api"]').click(); }
 
-    // التبويبات
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.onclick = () => {
             const tab = btn.dataset.tab;
