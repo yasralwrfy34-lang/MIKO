@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>MIKO HOST - لوحة التحكم المتقدمة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <title>MIKO HOST - لوحة التحكم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -16,7 +15,7 @@
 
         body {
             font-family: 'Inter', 'Tajawal', sans-serif;
-            background: #03050b;
+            background: #0a0c10;
             color: #eef2ff;
             overflow-x: hidden;
         }
@@ -38,168 +37,138 @@
             pointer-events: none;
         }
 
-        /* القائمة الجانبية */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            right: -280px;
-            width: 280px;
-            height: 100%;
-            background: rgba(5, 10, 25, 0.98);
+        /* شريط التنقل العلوي */
+        .navbar {
+            background: rgba(8, 12, 28, 0.85);
             backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(56, 139, 253, 0.3);
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            z-index: 200;
-            display: flex;
-            flex-direction: column;
-            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .sidebar.open {
-            transform: translateX(-280px);
-        }
-
-        .sidebar-header {
-            padding: 28px 24px;
-            border-bottom: 1px solid rgba(56, 139, 253, 0.2);
-            margin-bottom: 20px;
-        }
-
-        .sidebar-nav-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 18px;
-            margin-bottom: 8px;
-            border-radius: 18px;
-            color: #9ca3cf;
-            font-weight: 500;
-            transition: all 0.2s;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .sidebar-nav-item i {
-            width: 24px;
-            font-size: 1.2rem;
-        }
-
-        .sidebar-nav-item.active {
-            background: rgba(45, 122, 255, 0.2);
-            color: #2d7aff;
-            border: 0.5px solid rgba(45, 122, 255, 0.4);
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(3px);
-            z-index: 150;
-            display: none;
-        }
-
-        .sidebar-overlay.active {
-            display: block;
-        }
-
-        /* المحتوى الرئيسي */
-        .main-content {
-            padding: 24px 28px;
-            min-height: 100vh;
-            transition: margin-right 0.3s;
-        }
-
-        /* شريط علوي */
-        .top-bar {
+            border-bottom: 1px solid rgba(45, 122, 255, 0.3);
+            padding: 12px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(8, 12, 28, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            padding: 12px 24px;
-            margin-bottom: 28px;
-            border: 1px solid rgba(56, 139, 253, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .menu-toggle {
-            background: rgba(45, 122, 255, 0.15);
-            border: none;
-            font-size: 1.6rem;
-            color: #2d7aff;
-            cursor: pointer;
-            width: 44px;
-            height: 44px;
-            border-radius: 30px;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(145deg, #0f172a, #0a0f1c);
+            border: 1px solid #00e5ff;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.2s;
+            font-size: 18px;
+            color: #00e5ff;
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
         }
 
-        .logout-pill {
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #2d7aff, #00e5ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .user-greeting {
+            font-size: 0.8rem;
+            color: #9ca3cf;
+        }
+
+        .user-greeting strong {
+            color: #00e5ff;
+        }
+
+        .logout-btn {
             background: rgba(255, 70, 85, 0.15);
             border: 1px solid rgba(255, 70, 85, 0.4);
-            padding: 8px 20px;
+            color: #ff5e7c;
+            padding: 6px 16px;
             border-radius: 40px;
             font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
-        }
-
-        /* أزرار التحكم العلوية */
-        .server-actions-strip {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            background: rgba(8, 12, 28, 0.5);
-            border-radius: 60px;
-            padding: 12px 20px;
-            margin-bottom: 28px;
-            border: 1px solid rgba(45, 122, 255, 0.2);
-            justify-content: center;
-        }
-
-        .glow-btn {
-            background: linear-gradient(135deg, rgba(45, 122, 255, 0.2), rgba(0, 229, 255, 0.1));
-            border: 1px solid rgba(45, 122, 255, 0.5);
-            border-radius: 50px;
-            padding: 10px 24px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
             transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .glow-btn.start { color: #2effa7; border-color: #2effa7; }
-        .glow-btn.stop { color: #ff5e7c; border-color: #ff5e7c; }
-        .glow-btn.restart { color: #ffcf4a; border-color: #ffcf4a; }
-        .glow-btn.delete { color: #ff8a5c; border-color: #ff8a5c; }
+        .logout-btn:hover {
+            background: rgba(255, 70, 85, 0.25);
+            transform: translateY(-1px);
+        }
 
-        .glow-btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.05);
-            background: rgba(45, 122, 255, 0.3);
+        /* الحاوية الرئيسية */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
         }
 
         /* بطاقات الإحصائيات */
-        .stats-modern {
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            margin-bottom: 28px;
+            margin-bottom: 32px;
         }
 
-        .stat-neo {
-            background: rgba(12, 18, 34, 0.7);
+        .stat-card {
+            background: rgba(15, 23, 42, 0.7);
             backdrop-filter: blur(12px);
-            border-radius: 28px;
-            padding: 18px 20px;
             border: 1px solid rgba(45, 122, 255, 0.2);
+            border-radius: 24px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(45, 122, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #9ca3cf;
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(45, 122, 255, 0.15);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #2d7aff;
         }
 
         .stat-value {
@@ -222,122 +191,280 @@
             width: 0%;
         }
 
-        /* معلومات السيرفر السريعة */
-        .server-info-mini {
-            background: rgba(0,0,0,0.4);
-            border-radius: 40px;
-            padding: 8px 20px;
-            margin-bottom: 20px;
+        /* قسم السيرفرات */
+        .servers-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 24px;
             flex-wrap: wrap;
+            gap: 16px;
         }
 
-        /* التبويبات */
-        .panel {
+        .servers-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .servers-title i {
+            color: #2d7aff;
+        }
+
+        .create-server-btn {
+            background: linear-gradient(135deg, #2d7aff, #1a5cd8);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 14px rgba(45, 122, 255, 0.4);
+        }
+
+        .create-server-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(45, 122, 255, 0.6);
+        }
+
+        /* بطاقات السيرفرات */
+        .servers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .server-card {
+            background: rgba(12, 18, 34, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(45, 122, 255, 0.2);
+            border-radius: 28px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .server-card:hover {
+            border-color: rgba(45, 122, 255, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .server-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .server-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(45, 122, 255, 0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #2d7aff;
+        }
+
+        .server-status-badge {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 30px;
+            padding: 5px 12px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-online {
+            color: #00ff88;
+        }
+        .status-offline {
+            color: #9ca3cf;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .dot-online { background: #00ff88; box-shadow: 0 0 6px #00ff88; }
+        .dot-offline { background: #9ca3cf; }
+
+        .server-name {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .server-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.7rem;
+            color: #9ca3cf;
+            margin-bottom: 16px;
+        }
+
+        .server-port {
+            background: rgba(45, 122, 255, 0.15);
+            border-radius: 30px;
+            padding: 4px 12px;
+        }
+
+        .server-plan-badge {
+            background: rgba(0, 229, 255, 0.15);
+            border-radius: 30px;
+            padding: 4px 12px;
+            color: #00e5ff;
+        }
+
+        /* صفحة تفاصيل السيرفر */
+        .server-detail {
             display: none;
             animation: fadeSlide 0.3s ease;
         }
 
-        .panel.active-panel {
+        .server-detail.active {
             display: block;
         }
 
         @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(8px);}
-            to { opacity: 1; transform: translateY(0);}
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* الكونسول المحسن */
-        .console-modern {
-            background: #03050b;
-            border-radius: 28px;
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            background: rgba(45, 122, 255, 0.15);
+            border: 1px solid rgba(45, 122, 255, 0.3);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #2d7aff;
+        }
+
+        .back-btn:hover {
+            background: rgba(45, 122, 255, 0.25);
+        }
+
+        .server-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2d7aff, #00e5ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* أزرار التحكم العلوية */
+        .action-strip {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            background: rgba(8, 12, 28, 0.5);
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin-bottom: 28px;
             border: 1px solid rgba(45, 122, 255, 0.2);
-            overflow: hidden;
+            justify-content: center;
         }
 
+        .glow-btn {
+            background: linear-gradient(135deg, rgba(45, 122, 255, 0.2), rgba(0, 229, 255, 0.1));
+            border: 1px solid rgba(45, 122, 255, 0.5);
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .glow-btn.start { color: #00ff88; border-color: #00ff88; }
+        .glow-btn.stop { color: #ff5e7c; border-color: #ff5e7c; }
+        .glow-btn.restart { color: #ffcf4a; border-color: #ffcf4a; }
+        .glow-btn.delete { color: #ff8a5c; border-color: #ff8a5c; }
+
+        .glow-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+
+        /* التبويبات */
+        .tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid rgba(45, 122, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 8px 20px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #9ca3cf;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: #2d7aff;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -9px;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #2d7aff, #00e5ff);
+            border-radius: 2px;
+        }
+
+        /* الكونسول */
         .console-box {
+            background: #010409;
+            border: 1px solid rgba(45, 122, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px;
             height: 400px;
             overflow-y: auto;
-            padding: 16px;
             font-family: monospace;
             font-size: 0.75rem;
-            line-height: 1.5;
-            background: #010409;
             color: #b0f0b0;
             white-space: pre-wrap;
         }
 
-        .console-line {
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding: 2px 0;
-        }
-        .console-line.error { color: #ff6b8a; }
-        .console-line.warning { color: #ffb800; }
-        .console-line.success { color: #00ff88; }
-
-        /* إدخال الأوامر */
-        .console-input-area {
-            display: flex;
-            padding: 12px;
-            border-top: 1px solid rgba(45,122,255,0.2);
-            background: #0a0c18;
-        }
-        .console-input-area input {
-            flex: 1;
-            background: #010409;
-            border: 1px solid #2d7aff;
-            border-radius: 40px;
-            padding: 10px 16px;
-            color: white;
-            font-family: monospace;
-        }
-        .console-input-area button {
-            background: #2d7aff;
-            border: none;
-            border-radius: 40px;
-            padding: 0 16px;
-            margin-right: 8px;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* مدير الملفات المتطور */
-        .files-toolbar {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .upload-area {
-            border: 1px dashed rgba(45, 122, 255, 0.5);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            cursor: pointer;
-            background: rgba(45, 122, 255, 0.02);
-            transition: 0.2s;
-        }
-        .upload-area.drag-over {
-            border-color: #2d7aff;
-            background: rgba(45,122,255,0.1);
-        }
-        .progress-bar-container {
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            margin-top: 10px;
-            overflow: hidden;
-            display: none;
-        }
-        .progress-bar-fill {
-            height: 100%;
-            background: #2d7aff;
-            width: 0%;
-            transition: width 0.3s;
-        }
+        /* الملفات */
         .files-table {
             width: 100%;
             border-collapse: collapse;
@@ -347,41 +474,26 @@
             border-bottom: 1px solid rgba(45, 122, 255, 0.1);
             text-align: right;
         }
-        .file-icon {
-            margin-left: 8px;
-        }
-        .file-actions {
-            display: flex;
-            gap: 8px;
+        .upload-zone {
+            border: 1px dashed rgba(45, 122, 255, 0.5);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            background: rgba(45, 122, 255, 0.02);
         }
         .file-btn {
             background: rgba(45, 122, 255, 0.2);
             border: none;
             border-radius: 30px;
             padding: 4px 12px;
+            margin: 0 4px;
             cursor: pointer;
             color: white;
-            font-size: 0.7rem;
-        }
-        .image-preview {
-            max-width: 200px;
-            max-height: 150px;
-            border-radius: 12px;
-            margin-top: 8px;
         }
 
-        /* الرسم البياني */
-        .chart-container {
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 24px;
-            padding: 16px;
-            margin-top: 16px;
-        }
-        canvas {
-            max-height: 200px;
-        }
-
-        /* مودال */
+        /* مودال إنشاء السيرفر */
         .modal {
             display: none;
             position: fixed;
@@ -411,6 +523,11 @@
             padding: 16px;
             margin-bottom: 12px;
             cursor: pointer;
+            transition: 0.2s;
+        }
+        .plan-card:hover, .plan-card.selected {
+            border-color: #2d7aff;
+            background: rgba(45,122,255,0.1);
         }
         .spinner {
             width: 50px;
@@ -435,11 +552,17 @@
             display: none;
             font-size: 0.8rem;
         }
-        @media (max-width: 800px) {
-            .main-content { padding: 16px; }
-            .stats-modern { gap: 12px; }
-            .server-info-mini { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .server-actions-strip { flex-wrap: wrap; }
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .action-strip {
+                flex-wrap: wrap;
+            }
+            .container {
+                padding: 16px;
+            }
         }
     </style>
 </head>
@@ -447,147 +570,149 @@
 <div class="bg-aurora"></div>
 <div class="bg-noise"></div>
 
-<div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <i class="fas fa-crown" style="font-size: 28px; color: #2d7aff;"></i>
-            <span style="font-weight:800; font-size:1.2rem;">MIKO PANEL</span>
-        </div>
+<div class="navbar">
+    <div class="logo">
+        <div class="logo-icon"><i class="fas fa-crown"></i></div>
+        <span class="logo-text">MIKO HOST</span>
     </div>
-    <div>
-        <div class="sidebar-nav-item" data-nav="console"><i class="fas fa-terminal"></i> الكونسول</div>
-        <div class="sidebar-nav-item" data-nav="files"><i class="fas fa-folder-tree"></i> الملفات</div>
-        <div class="sidebar-nav-item" data-nav="stats"><i class="fas fa-chart-line"></i> الإحصائيات</div>
-        <div class="sidebar-nav-item" data-nav="settings"><i class="fas fa-sliders-h"></i> الإعدادات</div>
-    </div>
-    <div style="padding:24px 20px; font-size:0.7rem; color:#4b556b; margin-top: auto; border-top:1px solid rgba(255,255,255,0.05);">
-        <i class="fas fa-shield-alt"></i> MIKO HOST v3
+    <div class="user-section">
+        <div class="user-greeting"><i class="far fa-user-circle"></i> مرحباً، <strong id="username">...</strong></div>
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
     </div>
 </div>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<div class="main-content">
-    <div class="top-bar">
-        <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <span><i class="far fa-user-circle"></i> <strong id="username">...</strong></span>
-            <div class="logout-pill" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</div>
+<div class="container">
+    <!-- الصفحة الرئيسية (قائمة السيرفرات) -->
+    <div id="homeView">
+        <!-- بطاقات الإحصائيات -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">السيرفرات المستخدمة</span>
+                    <div class="stat-icon"><i class="fas fa-server"></i></div>
+                </div>
+                <div class="stat-value" id="usedServers">0/1</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">الصلاحية المتبقية</span>
+                    <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                </div>
+                <div class="stat-value" id="expiryDays">-- يوم</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">المساحة المستخدمة</span>
+                    <div class="stat-icon"><i class="fas fa-hdd"></i></div>
+                </div>
+                <div class="stat-value" id="diskUsed">0 MB</div>
+                <div class="stat-progress"><div class="stat-progress-bar" id="diskProgress"></div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">استخدام الرام</span>
+                    <div class="stat-icon"><i class="fas fa-microchip"></i></div>
+                </div>
+                <div class="stat-value" id="ramUsage">0%</div>
+                <div class="stat-progress"><div class="stat-progress-bar" id="ramProgress"></div></div>
+            </div>
+        </div>
+
+        <div class="servers-header">
+            <div class="servers-title"><i class="fas fa-cubes"></i> الخوادم النشطة</div>
+            <button class="create-server-btn" id="openCreateModalBtn"><i class="fas fa-plus-circle"></i> خادم جديد</button>
+        </div>
+
+        <div class="servers-grid" id="serversGrid">
+            <div style="text-align:center; padding:60px; color:#9ca3cf;">جاري التحميل...</div>
         </div>
     </div>
 
-    <div id="serverArea">
-        <!-- أزرار التحكم العلوية -->
-        <div id="actionStrip" style="display: none;">
-            <div class="server-actions-strip">
-                <button class="glow-btn start" onclick="serverAction('start')"><i class="fas fa-play"></i> تشغيل</button>
-                <button class="glow-btn restart" onclick="serverAction('restart')"><i class="fas fa-sync-alt"></i> إعادة تشغيل</button>
-                <button class="glow-btn stop" onclick="serverAction('stop')"><i class="fas fa-stop"></i> إيقاف</button>
-                <button class="glow-btn delete" onclick="confirmDelete()"><i class="fas fa-trash"></i> حذف</button>
-            </div>
+    <!-- صفحة تفاصيل السيرفر (تظهر بعد الضغط على أي سيرفر) -->
+    <div id="detailView" class="server-detail">
+        <div class="detail-header">
+            <button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-right"></i> العودة</button>
+            <div class="server-title" id="detailTitle"></div>
         </div>
 
-        <!-- بطاقات الإحصائيات -->
-        <div class="stats-modern">
-            <div class="stat-neo"><div><i class="fas fa-server"></i> السيرفرات</div><div class="stat-value" id="usedServers">0/1</div></div>
-            <div class="stat-neo"><div><i class="fas fa-hourglass-half"></i> الصلاحية</div><div class="stat-value" id="expiryDays">-- يوم</div></div>
-            <div class="stat-neo"><div><i class="fas fa-database"></i> المساحة</div><div class="stat-value" id="diskUsed">0 MB</div><div class="stat-progress"><div class="stat-progress-bar" id="diskProgress"></div></div></div>
-            <div class="stat-neo"><div><i class="fas fa-microchip"></i> الرام</div><div class="stat-value" id="ramUsage">0%</div><div class="stat-progress"><div class="stat-progress-bar" id="ramProgress"></div></div></div>
+        <div class="action-strip" id="actionStrip">
+            <button class="glow-btn start" onclick="serverAction('start')"><i class="fas fa-play"></i> تشغيل</button>
+            <button class="glow-btn restart" onclick="serverAction('restart')"><i class="fas fa-sync-alt"></i> إعادة تشغيل</button>
+            <button class="glow-btn stop" onclick="serverAction('stop')"><i class="fas fa-stop"></i> إيقاف</button>
+            <button class="glow-btn delete" onclick="confirmDelete()"><i class="fas fa-trash"></i> حذف</button>
         </div>
 
-        <!-- معلومات سريعة -->
-        <div id="serverInfoMini" style="display: none;" class="server-info-mini">
-            <div><i class="fas fa-cube"></i> <span id="serverName"></span> <span id="serverPlan" style="background:#2d7aff20; padding:2px 8px; border-radius:20px; margin-right:8px;"></span></div>
-            <div><span id="statusDot" style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#7a8099;"></span> <span id="serverStatusText"></span> | منفذ: <span id="serverPort"></span></div>
-            <button class="glow-btn" style="padding:4px 12px;" onclick="copyServerLink()"><i class="fas fa-link"></i> نسخ الرابط</button>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="console">الكونسول</button>
+            <button class="tab-btn" data-tab="files">الملفات</button>
         </div>
 
-        <!-- التبويبات -->
-        <div id="panelConsole" class="panel active-panel">
-            <div class="console-modern">
-                <div style="padding:12px 20px; display:flex; justify-content:space-between; border-bottom:1px solid rgba(45,122,255,0.2);">
-                    <span><i class="fas fa-terminal"></i> مخرجات السيرفر</span>
-                    <div>
-                        <button class="glow-btn" style="padding:4px 12px;" onclick="clearConsole()"><i class="fas fa-trash-alt"></i></button>
-                        <button class="glow-btn" style="padding:4px 12px;" onclick="refreshConsole()"><i class="fas fa-sync-alt"></i></button>
-                    </div>
-                </div>
-                <div class="console-box" id="consoleOut"></div>
-                <div class="console-input-area">
-                    <input type="text" id="commandInput" placeholder="اكتب أمراً (إذا كان السيرفر يدعم stdin)...">
-                    <button onclick="sendCommand()"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
+        <div id="tabConsole" class="tab-content active">
+            <div class="console-box" id="consoleOut"></div>
         </div>
 
-        <div id="panelFiles" class="panel">
-            <div class="files-toolbar">
-                <button class="glow-btn" onclick="showCreateFileModal()"><i class="fas fa-file"></i> ملف جديد</button>
-                <button class="glow-btn" onclick="showCreateFolderModal()"><i class="fas fa-folder-plus"></i> مجلد جديد</button>
-                <button class="glow-btn" onclick="document.getElementById('folderUploadInput').click()"><i class="fas fa-folder-open"></i> رفع مجلد</button>
-                <button class="glow-btn" onclick="installPackages()"><i class="fas fa-cube"></i> تثبيت المكتبات</button>
+        <div id="tabFiles" class="tab-content" style="display:none;">
+            <div class="upload-zone" onclick="document.getElementById('fileUpload').click()" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+                <i class="fas fa-cloud-upload-alt"></i> اسحب الملفات أو انقر للرفع
             </div>
             <input type="file" id="fileUpload" multiple style="display:none" onchange="uploadFiles(this.files)">
-            <input type="file" id="folderUploadInput" webkitdirectory directory multiple style="display:none" onchange="uploadFolder(this.files)">
-            <div class="upload-area" id="dropZone" onclick="document.getElementById('fileUpload').click()" ondragover="event.preventDefault(); document.getElementById('dropZone').classList.add('drag-over')" ondragleave="document.getElementById('dropZone').classList.remove('drag-over')" ondrop="handleDrop(event)">
-                <i class="fas fa-cloud-upload-alt"></i> اسحب الملفات أو المجلدات أو انقر للرفع
-                <div class="progress-bar-container" id="uploadProgressBar"><div class="progress-bar-fill" id="uploadProgressFill"></div></div>
+            <div style="margin-bottom: 16px;">
+                <button class="glow-btn" onclick="showCreateFileModal()" style="background:#2d7aff;"><i class="fas fa-file"></i> ملف جديد</button>
+                <button class="glow-btn" onclick="installPackages()" style="background:#2d7aff;"><i class="fas fa-cube"></i> تثبيت المكتبات</button>
             </div>
             <table class="files-table">
                 <thead><tr><th></th><th>الاسم</th><th>الحجم</th><th></th></tr></thead>
                 <tbody id="filesList"></tbody>
             </table>
         </div>
+    </div>
+</div>
 
-        <div id="panelStats" class="panel">
-            <div class="stats-details" style="display: grid; grid-template-columns: repeat(2,1fr); gap: 20px;">
-                <div class="stat-detail-card" style="background:rgba(12,18,34,0.6); border-radius:24px; padding:20px;"><div><i class="fas fa-microchip"></i> CPU</div><div class="stat-value" id="cpuStat">0%</div><div class="stat-progress"><div class="stat-progress-bar" id="cpuProgress"></div></div></div>
-                <div class="stat-detail-card" style="background:rgba(12,18,34,0.6); border-radius:24px; padding:20px;"><div><i class="fas fa-memory"></i> RAM</div><div class="stat-value" id="ramStat">0 MB / 0 MB</div><div class="stat-progress"><div class="stat-progress-bar" id="ramDetailProgress"></div></div></div>
-                <div class="stat-detail-card" style="background:rgba(12,18,34,0.6); border-radius:24px; padding:20px;"><div><i class="fas fa-hdd"></i> التخزين</div><div class="stat-value" id="storageStat">0 MB / 0 MB</div><div class="stat-progress"><div class="stat-progress-bar" id="storageProgress"></div></div></div>
-                <div class="stat-detail-card" style="background:rgba(12,18,34,0.6); border-radius:24px; padding:20px;"><div><i class="fas fa-clock"></i> وقت التشغيل</div><div class="stat-value" id="uptimeStat">0</div></div>
-            </div>
-            <div class="chart-container">
-                <canvas id="resourceChart"></canvas>
-            </div>
+<!-- مودال اختيار الخطة (إنشاء سيرفر) -->
+<div id="plansModal" class="modal">
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="color:#2d7aff;">اختر خطتك</h3>
+            <button onclick="closePlansModal()" style="background:none; border:none; color:#9ca3cf; font-size:1.2rem;">✕</button>
         </div>
-
-        <div id="panelSettings" class="panel">
-            <div style="background: rgba(12,18,34,0.6); border-radius: 24px; padding: 20px; margin-bottom: 20px;">
-                <div><i class="fas fa-rocket"></i> ملف بدء التشغيل</div>
-                <div style="display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
-                    <select id="startupFileSelect" style="background:#0a0c18; border:1px solid #2d7aff; border-radius:40px; padding:8px 16px; color:white;"></select>
-                    <button class="glow-btn" onclick="setStartupFile()">حفظ</button>
-                </div>
-                <p style="font-size:0.7rem; margin-top:12px;">اختر ملف .py لتشغيله عند الضغط على زر التشغيل</p>
+        <div id="plansList"></div>
+        <div id="paymentMethods" style="display:none; margin-top: 20px;">
+            <div style="display: flex; gap: 10px;">
+                <button class="glow-btn" onclick="contactSupport('card')">بطاقة ائتمان</button>
+                <button class="glow-btn" onclick="contactSupport('bank')">تحويل بنكي</button>
+                <button class="glow-btn" onclick="contactSupport('crypto')">كريبتو</button>
             </div>
-            <div style="background: rgba(12,18,34,0.6); border-radius: 24px; padding: 20px;">
-                <div>الخطة: <span id="planDetails"></span></div>
-                <div>الرام الأقصى: <span id="ramLimit"></span> MB</div>
-                <div>المساحة القصوى: <span id="storageLimit"></span> MB</div>
-            </div>
-        </div>
-
-        <div id="noServerBlock" style="text-align:center; padding:60px;">
-            <i class="fas fa-server" style="font-size:3rem; color:#2d7aff;"></i>
-            <p style="margin: 20px 0;">لا يوجد خادم حالي</p>
-            <button class="glow-btn start" onclick="showPlansModal()"><i class="fas fa-plus-circle"></i> إنشاء خادم جديد</button>
         </div>
     </div>
 </div>
 
-<!-- مودالات الخطط والإنشاء والمجلدات -->
-<div id="plansModal" class="modal"><div class="modal-content"><div style="display: flex; justify-content: space-between;"><h3>اختر خطتك</h3><button onclick="closePlansModal()" style="background:none; border:none; color:white; font-size:1.2rem;">✕</button></div><div id="plansList"></div><div id="paymentMethods" style="display:none; margin-top:20px;"><div style="display:flex; gap:10px;"><button class="glow-btn" onclick="contactSupport('card')">بطاقة</button><button class="glow-btn" onclick="contactSupport('bank')">تحويل</button><button class="glow-btn" onclick="contactSupport('crypto')">كريبتو</button></div></div></div></div>
-<div id="createProgressModal" class="modal"><div class="modal-content"><div id="createLoading"><div class="spinner"></div><p>جاري إنشاء الخادم...</p></div><div id="createSuccess" style="display:none;"><i class="fas fa-check-circle" style="font-size:3rem; color:#2effa7;"></i><p style="margin:16px 0;">تم إنشاء الخادم!</p><button class="glow-btn start" id="goToServerBtn">الانتقال إلى الخادم</button></div></div></div>
+<!-- مودال التحميل ونجاح الإنشاء -->
+<div id="createProgressModal" class="modal">
+    <div class="modal-content">
+        <div id="createLoading"><div class="spinner"></div><p>جاري إنشاء الخادم...</p></div>
+        <div id="createSuccess" style="display:none;">
+            <i class="fas fa-check-circle" style="font-size:3rem; color:#00ff88;"></i>
+            <p style="margin:16px 0;">تم إنشاء الخادم بنجاح!</p>
+            <div id="newServerDetails" style="background:#0a0c18; border-radius:20px; padding:12px; margin:12px 0; text-align:right;">
+                <p><strong>الاسم:</strong> <span id="newServerName"></span></p>
+                <p><strong>المنفذ:</strong> <span id="newServerPort"></span></p>
+                <p><strong>الخطة:</strong> <span id="newServerPlan"></span></p>
+            </div>
+            <button class="glow-btn start" id="goToServerBtn">الانتقال إلى الخادم</button>
+        </div>
+    </div>
+</div>
+
+<!-- مودالات أخرى -->
 <div id="editorModal" class="modal"><div class="modal-content"><textarea id="editorArea" rows="12" style="width:100%; background:#010409; border:1px solid #2d7aff; border-radius:16px; padding:12px; color:white;"></textarea><button class="glow-btn" style="width:100%; margin-top:16px;" onclick="saveFile()">حفظ</button></div></div>
 <div id="confirmModal" class="modal"><div class="modal-content"><p id="confirmMsg"></p><div style="display:flex; gap:12px; margin-top:20px;"><button class="glow-btn" id="confirmYesBtn" style="background:#ff3d5a;">تأكيد</button><button class="glow-btn" onclick="closeConfirm()">إلغاء</button></div></div></div>
-<div id="createFileModal" class="modal"><div class="modal-content"><input type="text" id="newFileName" placeholder="اسم الملف" style="width:100%; margin-bottom:12px; padding:10px; border-radius:40px; border:1px solid #2d7aff; background:#010409; color:white;"><textarea id="newFileContent" rows="4" placeholder="المحتوى" style="width:100%; border-radius:16px; border:1px solid #2d7aff; background:#010409; color:white; padding:12px;"></textarea><button class="glow-btn" style="width:100%; margin-top:16px;" onclick="createFile()">إنشاء</button></div></div>
-<div id="createFolderModal" class="modal"><div class="modal-content"><input type="text" id="newFolderName" placeholder="اسم المجلد" style="width:100%; margin-bottom:12px; padding:10px; border-radius:40px; border:1px solid #2d7aff; background:#010409; color:white;"><button class="glow-btn" style="width:100%;" onclick="createFolder()">إنشاء مجلد</button></div></div>
-<div id="imagePreviewModal" class="modal"><div class="modal-content"><img id="previewImage" style="max-width:100%; border-radius:16px;"><button class="glow-btn" style="margin-top:16px;" onclick="closeImagePreview()">إغلاق</button></div></div>
+<div id="createFileModal" class="modal"><div class="modal-content"><input type="text" id="newFileName" placeholder="script.py" style="width:100%; margin-bottom:12px; padding:10px; border-radius:40px; border:1px solid #2d7aff; background:#010409; color:white;"><textarea id="newFileContent" rows="4" placeholder="المحتوى" style="width:100%; border-radius:16px; border:1px solid #2d7aff; background:#010409; color:white; padding:12px;"></textarea><button class="glow-btn" style="width:100%; margin-top:16px;" onclick="createFile()">إنشاء</button></div></div>
+
 <div id="toast" class="toast"></div>
 
 <script>
     let currentServer = null, polling = null, currentFile = null, confirmAction = null, selectedPlan = null;
-    let resourceChart = null;
-    const resourceData = { cpu: [], ram: [], labels: [] };
+    let createdServerData = null;
 
     const showToast = (msg, type='info') => {
         const t = document.getElementById('toast');
@@ -595,28 +720,13 @@
         t.style.display = 'block';
         setTimeout(() => t.style.display = 'none', 3000);
     };
-    const showConfirm = (msg, cb) => { document.getElementById('confirmMsg').innerText = msg; confirmAction = cb; document.getElementById('confirmModal').classList.add('active'); };
+    const showConfirm = (msg, cb) => {
+        document.getElementById('confirmMsg').innerText = msg;
+        confirmAction = cb;
+        document.getElementById('confirmModal').classList.add('active');
+    };
     const closeConfirm = () => document.getElementById('confirmModal').classList.remove('active');
     document.getElementById('confirmYesBtn').onclick = () => { if(confirmAction) confirmAction(); closeConfirm(); };
-
-    // Sidebar
-    const sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
-    document.getElementById('menuToggle').onclick = () => { sidebar.classList.add('open'); overlay.classList.add('active'); };
-    const closeSidebar = () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); };
-    overlay.onclick = closeSidebar;
-    document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
-        btn.onclick = () => {
-            const nav = btn.dataset.nav;
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active-panel'));
-            document.getElementById(`panel${nav.charAt(0).toUpperCase()+nav.slice(1)}`).classList.add('active-panel');
-            document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
-            btn.classList.add('active');
-            closeSidebar();
-            if(nav === 'files') loadFiles();
-            if(nav === 'settings') loadStartupFiles();
-            if(nav === 'stats') initResourceChart();
-        };
-    });
 
     // الخطط
     const plans = [
@@ -625,11 +735,14 @@
         { id:'10gb', name:'💎 10 جيجا', storage:10240, ram:2048, price:10 },
         { id:'40gb', name:'💎 40 جيجا', storage:40960, ram:4096, price:25 }
     ];
+
     function showPlansModal() {
         const container = document.getElementById('plansList');
         container.innerHTML = plans.map(p => `<div class="plan-card" data-plan='${JSON.stringify(p)}'><div style="font-weight:700;">${p.name}</div><div>${p.storage}MB / ${p.ram}MB</div><div style="color:#2d7aff;">${p.price===0?'مجاني':p.price+'$'}</div></div>`).join('');
         document.querySelectorAll('.plan-card').forEach(card => {
             card.onclick = () => {
+                document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
                 selectedPlan = JSON.parse(card.dataset.plan);
                 if(selectedPlan.price === 0) createServerWithPlan(selectedPlan);
                 else document.getElementById('paymentMethods').style.display = 'block';
@@ -640,6 +753,7 @@
     }
     function closePlansModal() { document.getElementById('plansModal').classList.remove('active'); selectedPlan=null; }
     function contactSupport(method) { window.open(`https://t.me/a_u711?text=شراء خطة ${selectedPlan.name} بـ ${selectedPlan.price}$ عبر ${method}`, '_blank'); closePlansModal(); }
+
     async function createServerWithPlan(plan) {
         closePlansModal();
         const modal = document.getElementById('createProgressModal');
@@ -653,19 +767,36 @@
             });
             const data = await res.json();
             if(data.success) {
+                // جلب تفاصيل السيرفر الجديد
+                const serversRes = await fetch('/api/servers');
+                const serversData = await serversRes.json();
+                const newServer = serversData.servers[serversData.servers.length-1];
+                createdServerData = newServer;
+                document.getElementById('newServerName').innerText = newServer.title;
+                document.getElementById('newServerPort').innerText = newServer.port;
+                document.getElementById('newServerPlan').innerText = plan.name;
                 document.getElementById('createLoading').style.display = 'none';
                 document.getElementById('createSuccess').style.display = 'block';
-                document.getElementById('goToServerBtn').onclick = () => { modal.classList.remove('active'); loadServers(); showToast('تم إنشاء الخادم!', 'success'); };
-            } else { modal.classList.remove('active'); showToast(data.message || 'فشل', 'error'); }
-        } catch(e) { modal.classList.remove('active'); showToast('خطأ', 'error'); }
+                document.getElementById('goToServerBtn').onclick = () => {
+                    modal.classList.remove('active');
+                    openServer(newServer);
+                };
+            } else {
+                modal.classList.remove('active');
+                showToast(data.message || 'فشل الإنشاء', 'error');
+            }
+        } catch(e) {
+            modal.classList.remove('active');
+            showToast('خطأ في الاتصال', 'error');
+        }
     }
 
-    // تحميل البيانات
+    // المصادقة وجلب البيانات
     async function checkAuth() {
         try { const r = await fetch('/api/current_user'); const d = await r.json(); if(!d.success) window.location.href='/login'; else { document.getElementById('username').innerText = d.username; loadServers(); fetchMetrics(); setInterval(fetchMetrics, 8000); } } catch(e) { window.location.href='/login'; }
     }
     async function fetchMetrics() {
-        try { const r = await fetch('/api/system/metrics'); const d = await r.json(); document.getElementById('ramUsage').innerText = d.memory+'%'; document.getElementById('ramProgress').style.width = d.memory+'%'; document.getElementById('cpuStat').innerText = d.cpu+'%'; document.getElementById('cpuProgress').style.width = d.cpu+'%'; updateResourceChart(d.cpu, d.memory); } catch(e) {}
+        try { const r = await fetch('/api/system/metrics'); const d = await r.json(); document.getElementById('ramUsage').innerText = d.memory+'%'; document.getElementById('ramProgress').style.width = d.memory+'%'; } catch(e) {}
     }
     async function loadServers() {
         try {
@@ -675,108 +806,127 @@
             const diskTotal = d.stats.disk_total||100, diskUsed = d.stats.disk_used||0;
             document.getElementById('diskUsed').innerText = `${Math.round(diskUsed)}/${diskTotal} MB`;
             document.getElementById('diskProgress').style.width = (diskUsed/diskTotal)*100+'%';
-            document.getElementById('storageStat').innerText = `${Math.round(diskUsed)}/${diskTotal} MB`;
-            document.getElementById('storageProgress').style.width = (diskUsed/diskTotal)*100+'%';
-            document.getElementById('storageLimit').innerText = diskTotal;
-            if(d.servers.length===0) {
-                document.getElementById('actionStrip').style.display='none';
-                document.getElementById('serverInfoMini').style.display='none';
-                document.getElementById('noServerBlock').style.display='block';
-                if(polling) clearInterval(polling);
+            const grid = document.getElementById('serversGrid');
+            if(d.servers.length === 0) {
+                grid.innerHTML = '<div style="text-align:center; padding:60px; color:#9ca3cf;">لا توجد خوادم، أنشئ واحداً</div>';
                 return;
             }
-            document.getElementById('noServerBlock').style.display='none';
-            document.getElementById('actionStrip').style.display='block';
-            document.getElementById('serverInfoMini').style.display='flex';
-            currentServer = d.servers[0];
-            document.getElementById('serverName').innerText = currentServer.title;
-            document.getElementById('serverPlan').innerText = currentServer.plan==='free'?'مجاني':currentServer.plan;
-            document.getElementById('serverPort').innerText = currentServer.port;
-            document.getElementById('serverStatusText').innerText = currentServer.status==='Running'?'يعمل':'متوقف';
-            document.getElementById('statusDot').style.background = currentServer.status==='Running'?'#00ff88':'#7a8099';
-            document.getElementById('ramLimit').innerText = currentServer.ram_limit||256;
-            document.getElementById('planDetails').innerText = currentServer.plan==='free'?'مجاني':currentServer.plan;
-            if(polling) clearInterval(polling);
-            fetchStats();
-            polling = setInterval(fetchStats, 4000);
-            loadStartupFiles();
-            document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active-panel'));
-            document.getElementById('panelConsole').classList.add('active-panel');
-            document.querySelectorAll('.sidebar-nav-item').forEach(i=>i.classList.remove('active'));
-            document.querySelector('.sidebar-nav-item[data-nav="console"]').classList.add('active');
+            grid.innerHTML = '';
+            d.servers.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'server-card';
+                card.innerHTML = `
+                    <div class="server-card-header">
+                        <div class="server-icon"><i class="fas fa-cube"></i></div>
+                        <div class="server-status-badge ${s.status==='Running'?'status-online':'status-offline'}"><span class="status-dot ${s.status==='Running'?'dot-online':'dot-offline'}"></span>${s.status==='Running'?'يعمل':'متوقف'}</div>
+                    </div>
+                    <div class="server-name">${escapeHtml(s.title)}</div>
+                    <div class="server-meta">
+                        <span class="server-port"><i class="fas fa-plug"></i> ${s.port||'N/A'}</span>
+                        <span class="server-plan-badge"><i class="fas fa-tag"></i> ${s.plan==='free'?'مجاني':s.plan}</span>
+                    </div>
+                `;
+                card.onclick = () => openServer(s);
+                grid.appendChild(card);
+            });
         } catch(e) { showToast('خطأ في التحميل', 'error'); }
     }
+
+    function openServer(s) {
+        currentServer = s;
+        document.getElementById('homeView').style.display = 'none';
+        document.getElementById('detailView').classList.add('active');
+        document.getElementById('detailTitle').innerHTML = `<i class="fas fa-server"></i> ${escapeHtml(s.title)}`;
+        if(polling) clearInterval(polling);
+        fetchStats();
+        polling = setInterval(fetchStats, 4000);
+        switchTab('console');
+        loadFiles();
+        loadStartupFiles();
+    }
+
     async function fetchStats() {
         if(!currentServer) return;
         try {
             const r = await fetch(`/api/server/stats/${currentServer.folder}`);
             const d = await r.json();
             if(!d.success) return;
-            const consoleBox = document.getElementById('consoleOut');
-            const logs = d.logs || '';
-            consoleBox.innerHTML = logs.split('\n').map(line => {
-                let cls = '';
-                if(line.toLowerCase().includes('error')) cls='error';
-                else if(line.toLowerCase().includes('warning')) cls='warning';
-                else if(line.toLowerCase().includes('success')) cls='success';
-                return `<div class="console-line ${cls}">${escapeHtml(line)}</div>`;
-            }).join('');
-            consoleBox.scrollTop = consoleBox.scrollHeight;
-            document.getElementById('serverStatusText').innerText = d.status==='Running'?'يعمل':'متوقف';
-            document.getElementById('statusDot').style.background = d.status==='Running'?'#00ff88':'#7a8099';
-            document.getElementById('ramStat').innerText = `${d.mem||0} MB / ${currentServer.ram_limit||256} MB`;
-            const ramPercent = (parseFloat(d.mem||0)/(currentServer.ram_limit||256))*100;
-            document.getElementById('ramDetailProgress').style.width = Math.min(ramPercent,100)+'%';
-            document.getElementById('uptimeStat').innerText = d.uptime||'0';
+            document.getElementById('consoleOut').innerHTML = (d.logs || 'لا توجد مخرجات').split('\n').map(l => `<div>${escapeHtml(l)}</div>`).join('');
+            document.getElementById('consoleOut').scrollTop = document.getElementById('consoleOut').scrollHeight;
         } catch(e) {}
     }
+
     async function serverAction(act) {
-        if(act==='delete') { confirmDelete(); return; }
+        if(act === 'delete') { confirmDelete(); return; }
         showToast(`جاري ${act}...`);
         try {
             const r = await fetch(`/api/server/action/${currentServer.folder}/${act}`, { method:'POST' });
             const d = await r.json();
             if(d.success) {
                 showToast(d.message, 'success');
-                if(act!=='stop') setTimeout(fetchStats, 1000);
+                if(act !== 'stop') setTimeout(fetchStats, 1000);
                 loadServers();
             } else showToast(d.message || 'فشل', 'error');
         } catch(e) { showToast('خطأ', 'error'); }
     }
+
     function confirmDelete() {
-        showConfirm('⚠️ حذف الخادم نهائياً؟', async () => {
+        showConfirm('⚠️ حذف الخادم نهائياً؟ لا يمكن التراجع', async () => {
             const r = await fetch(`/api/server/action/${currentServer.folder}/delete`, { method:'POST' });
             const d = await r.json();
-            if(d.success) { showToast('تم الحذف', 'success'); if(polling) clearInterval(polling); loadServers(); }
-            else showToast(d.message, 'error');
+            if(d.success) {
+                showToast('تم الحذف', 'success');
+                if(polling) clearInterval(polling);
+                goHome();
+            } else showToast(d.message || 'فشل', 'error');
         });
     }
-    function copyServerLink() { navigator.clipboard.writeText(window.location.origin+'/dashboard?server='+currentServer.folder); showToast('تم نسخ الرابط', 'success'); }
 
-    // أوامر الكونسول
-    async function sendCommand() {
-        const cmd = document.getElementById('commandInput').value;
-        if(!cmd) return;
-        showToast('تم إرسال الأمر (إذا كان السيرفر يدعم stdin)');
-        // هنا يمكن إضافة API لإرسال الأمر إلى stdin العملية
-        document.getElementById('commandInput').value = '';
+    function goHome() {
+        document.getElementById('homeView').style.display = 'block';
+        document.getElementById('detailView').classList.remove('active');
+        if(polling) clearInterval(polling);
+        currentServer = null;
+        loadServers();
     }
 
-    // مدير الملفات المتطور
+    // التبويبات
+    function switchTab(tab) {
+        const consoleTab = document.getElementById('tabConsole');
+        const filesTab = document.getElementById('tabFiles');
+        const btns = document.querySelectorAll('.tab-btn');
+        if(tab === 'console') {
+            consoleTab.style.display = 'block';
+            filesTab.style.display = 'none';
+            btns[0].classList.add('active');
+            btns[1].classList.remove('active');
+        } else {
+            consoleTab.style.display = 'none';
+            filesTab.style.display = 'block';
+            btns[0].classList.remove('active');
+            btns[1].classList.add('active');
+            loadFiles();
+        }
+    }
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.onclick = () => switchTab(btn.dataset.tab);
+    });
+
+    // إدارة الملفات
     async function loadFiles() {
+        if(!currentServer) return;
         const tbody = document.getElementById('filesList');
-        tbody.innerHTML = '<td><td colspan="4">جاري...<\/td><\/tr>';
+        tbody.innerHTML = '<tr><td colspan="4">جاري...<\/td><\/tr>';
         try {
             const r = await fetch(`/api/files/list/${currentServer.folder}`);
             const files = await r.json();
-            if(files.length===0) { tbody.innerHTML = '<tr><td colspan="4">لا توجد ملفات<\/td><\/tr>'; return; }
+            if(files.length === 0) { tbody.innerHTML = '<td><td colspan="4">لا توجد ملفات<\/td><\/tr>'; return; }
             tbody.innerHTML = files.map(f => `
                 <tr>
                     <td><input type="checkbox" class="file-checkbox" value="${escapeHtml(f.name)}"></td>
-                    <td><i class="fas ${f.is_dir ? 'fa-folder' : 'fa-file'} file-icon"></i> ${escapeHtml(f.name)} (${f.is_dir ? 'مجلد' : ''})</div></td>
+                    <td><i class="fas ${f.is_dir ? 'fa-folder' : 'fa-file'}"></i> ${escapeHtml(f.name)}</div></td>
                     <td>${f.size}</td>
                     <td class="file-actions">
-                        ${!f.is_dir && (f.name.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? `<button class="file-btn" onclick="previewImage('${escapeHtml(f.name)}')"><i class="fas fa-eye"></i> معاينة</button>` : '')}
                         ${!f.is_dir ? `<button class="file-btn edit" onclick="editFile('${escapeHtml(f.name)}')">تعديل</button>` : ''}
                         ${f.name.toLowerCase().endsWith('.zip') ? `<button class="file-btn" onclick="unzipFile('${escapeHtml(f.name)}')">فك الضغط</button>` : ''}
                         <button class="file-btn delete" onclick="deleteFile('${escapeHtml(f.name)}')">حذف</button>
@@ -788,62 +938,19 @@
     async function editFile(name) { currentFile = name; const r = await fetch(`/api/files/content/${currentServer.folder}/${name}`); const d = await r.json(); document.getElementById('editorArea').value = d.content||''; document.getElementById('editorModal').classList.add('active'); }
     async function saveFile() { if(!currentFile) return; const content = document.getElementById('editorArea').value; await fetch(`/api/files/save/${currentServer.folder}/${currentFile}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content}) }); showToast('تم الحفظ', 'success'); document.getElementById('editorModal').classList.remove('active'); currentFile=null; loadFiles(); }
     async function deleteFile(name) { showConfirm(`حذف ${name}؟`, async () => { await fetch(`/api/files/delete/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({names:[name]}) }); loadFiles(); }); }
-    async function uploadFiles(files) {
-        if(!files.length) return;
-        const total = files.length; let uploaded = 0;
-        const progressBar = document.getElementById('uploadProgressBar');
-        const progressFill = document.getElementById('uploadProgressFill');
-        progressBar.style.display = 'block';
-        for(const file of files) {
-            const fd = new FormData(); fd.append('files[]', file);
-            await fetch(`/api/files/upload/${currentServer.folder}`, { method:'POST', body:fd });
-            uploaded++;
-            progressFill.style.width = (uploaded/total)*100 + '%';
-        }
-        setTimeout(() => { progressBar.style.display = 'none'; progressFill.style.width = '0%'; }, 1000);
-        loadFiles();
-        showToast(`تم رفع ${uploaded} ملف`, 'success');
-    }
-    async function uploadFolder(files) { uploadFiles(files); }
-    function handleDrop(e) { e.preventDefault(); document.getElementById('dropZone').classList.remove('drag-over'); const files = e.dataTransfer.files; uploadFiles(files); }
+    async function uploadFiles(files) { if(!files.length) return; const fd = new FormData(); for(let f of files) fd.append('files[]',f); await fetch(`/api/files/upload/${currentServer.folder}`, { method:'POST', body:fd }); loadFiles(); showToast('تم رفع الملفات', 'success'); }
+    function handleDrop(e) { e.preventDefault(); uploadFiles(e.dataTransfer.files); }
     async function installPackages() { showToast('بدء التثبيت...'); const r = await fetch(`/api/server/install/${currentServer.folder}`, { method:'POST' }); const d = await r.json(); showToast(d.message, d.success?'success':'error'); }
-    function showCreateFileModal() { document.getElementById('newFileName').value = ''; document.getElementById('newFileContent').value = ''; document.getElementById('createFileModal').classList.add('active'); }
-    function showCreateFolderModal() { document.getElementById('newFolderName').value = ''; document.getElementById('createFolderModal').classList.add('active'); }
-    async function createFolder() { const name = document.getElementById('newFolderName').value.trim(); if(!name) return; await fetch(`/api/files/create/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({filename:name, content:''}) }); document.getElementById('createFolderModal').classList.remove('active'); loadFiles(); }
-    async function createFile() { const name = document.getElementById('newFileName').value.trim(); const content = document.getElementById('newFileContent').value; if(!name) return; await fetch(`/api/files/create/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({filename:name, content}) }); closeCreateFileModal(); loadFiles(); loadStartupFiles(); }
+    function showCreateFileModal() { document.getElementById('newFileName').value=''; document.getElementById('newFileContent').value=''; document.getElementById('createFileModal').classList.add('active'); }
     function closeCreateFileModal() { document.getElementById('createFileModal').classList.remove('active'); }
     async function unzipFile(name) { showToast('جاري فك الضغط...'); await fetch(`/api/files/unzip/${currentServer.folder}/${name}`, { method:'POST' }); loadFiles(); }
-    async function previewImage(name) { const r = await fetch(`/api/files/content/${currentServer.folder}/${name}`); const d = await r.json(); document.getElementById('previewImage').src = `data:image/png;base64,${btoa(d.content)}`; document.getElementById('imagePreviewModal').classList.add('active'); }
-    function closeImagePreview() { document.getElementById('imagePreviewModal').classList.remove('active'); }
+    async function createFile() { const name = document.getElementById('newFileName').value.trim(); const content = document.getElementById('newFileContent').value; if(!name) return; await fetch(`/api/files/create/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({filename:name,content}) }); closeCreateFileModal(); loadFiles(); loadStartupFiles(); }
+    async function loadStartupFiles() { if(!currentServer) return; const r = await fetch(`/api/files/list/${currentServer.folder}`); const files = await r.json(); const pyFiles = files.filter(f=>f.name.endsWith('.py')&&!f.is_dir); const select = document.getElementById('startupFileSelect'); if(select) select.innerHTML = '<option value="">-- اختر ملف التشغيل --</option>'+pyFiles.map(f=>`<option value="${f.name}" ${currentServer.startup_file===f.name?'selected':''}>${f.name}</option>`).join(''); }
 
-    async function loadStartupFiles() { if(!currentServer) return; const r = await fetch(`/api/files/list/${currentServer.folder}`); const files = await r.json(); const pyFiles = files.filter(f=>f.name.endsWith('.py')&&!f.is_dir); const select = document.getElementById('startupFileSelect'); select.innerHTML = '<option value="">-- اختر ملف التشغيل --</option>'+pyFiles.map(f=>`<option value="${f.name}" ${currentServer.startup_file===f.name?'selected':''}>${f.name}</option>`).join(''); }
-    async function setStartupFile() { const filename = document.getElementById('startupFileSelect').value; if(!filename) return; await fetch(`/api/server/set-startup/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({filename}) }); showToast('تم تعيين ملف التشغيل', 'success'); }
-
-    // الرسم البياني للموارد
-    function initResourceChart() {
-        const ctx = document.getElementById('resourceChart').getContext('2d');
-        if(resourceChart) resourceChart.destroy();
-        resourceChart = new Chart(ctx, {
-            type: 'line',
-            data: { labels: resourceData.labels, datasets: [{ label: 'CPU %', data: resourceData.cpu, borderColor: '#2d7aff', fill: false }, { label: 'RAM %', data: resourceData.ram, borderColor: '#00e5ff', fill: false }] },
-            options: { responsive: true, maintainAspectRatio: true }
-        });
-    }
-    function updateResourceChart(cpu, ram) {
-        const now = new Date().toLocaleTimeString();
-        resourceData.labels.push(now);
-        resourceData.cpu.push(cpu);
-        resourceData.ram.push(ram);
-        if(resourceData.labels.length > 20) { resourceData.labels.shift(); resourceData.cpu.shift(); resourceData.ram.shift(); }
-        if(resourceChart) { resourceChart.data.labels = resourceData.labels; resourceChart.data.datasets[0].data = resourceData.cpu; resourceChart.data.datasets[1].data = resourceData.ram; resourceChart.update(); }
-        else initResourceChart();
-    }
-
-    function clearConsole() { document.getElementById('consoleOut').innerHTML = ''; showToast('تم مسح الكونسول'); }
-    function refreshConsole() { fetchStats(); }
     async function logout() { await fetch('/api/logout', { method:'POST' }); window.location.href = '/login'; }
     function escapeHtml(s) { return String(s).replace(/[&<>]/g, m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
+    document.getElementById('openCreateModalBtn').onclick = showPlansModal;
     checkAuth();
 </script>
 </body>
