@@ -341,7 +341,7 @@ def link_telegram():
     save_db(db)
     return jsonify({"success": True, "message": "تم ربط حساب التليجرام"})
 
-# ============== API للبوت (التحكم عبر API Key أو telegram_id) ==============
+# ============== API للبوت (التحكم عبر API Key) ==============
 @app.route('/api/bot/verify', methods=['POST'])
 def bot_verify():
     data = request.get_json()
@@ -709,7 +709,6 @@ def bot_set_startup():
     save_db(db)
     return jsonify({"success": True, "message": f"تم تعيين {filename} كملف التشغيل"})
 
-# ============== API إنشاء سيرفر للبوت ==============
 @app.route('/api/bot/create_server', methods=['POST'])
 def bot_create_server():
     data = request.get_json()
@@ -1025,7 +1024,7 @@ def get_server_stats(folder):
         "ip": get_public_ip()
     })
 
-# ============== API الملفات ==============
+# ============== API الملفات (للواجهة العادية) ==============
 @app.route('/api/files/list/<folder>')
 def list_server_files(folder):
     if "username" not in session:

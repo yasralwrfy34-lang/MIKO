@@ -336,44 +336,46 @@
             background: rgba(0,0,0,0.2);
         }
 
+        /* أزرار التحكم الجديدة - شكل مستطيل بحواف دائرية (غير دائري) */
         .server-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             padding: 16px 20px;
             justify-content: space-between;
+            flex-wrap: wrap;
         }
 
         .action-group {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .action-icon-btn {
+        .action-btn {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(45, 122, 255, 0.3);
             border-radius: 40px;
-            padding: 8px 14px;
+            padding: 8px 18px;
             font-size: 0.7rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             cursor: pointer;
             transition: 0.2s;
             color: #cbd5ff;
         }
 
-        .action-icon-btn i {
+        .action-btn i {
             font-size: 0.8rem;
         }
 
-        .action-icon-btn.start:hover { background: rgba(0, 255, 136, 0.2); border-color: #00ff88; color: #00ff88; }
-        .action-icon-btn.stop:hover { background: rgba(255, 61, 90, 0.2); border-color: #ff3d5a; color: #ff3d5a; }
-        .action-icon-btn.restart:hover { background: rgba(255, 184, 0, 0.2); border-color: #ffb800; color: #ffb800; }
-        .action-icon-btn.delete:hover { background: rgba(255, 61, 90, 0.2); border-color: #ff3d5a; color: #ff3d5a; }
-        .action-icon-btn.detail:hover { background: rgba(45, 122, 255, 0.2); border-color: #2d7aff; color: #2d7aff; }
+        .action-btn.start:hover { background: rgba(0, 255, 136, 0.2); border-color: #00ff88; color: #00ff88; }
+        .action-btn.stop:hover { background: rgba(255, 61, 90, 0.2); border-color: #ff3d5a; color: #ff3d5a; }
+        .action-btn.restart:hover { background: rgba(255, 184, 0, 0.2); border-color: #ffb800; color: #ffb800; }
+        .action-btn.delete:hover { background: rgba(255, 61, 90, 0.2); border-color: #ff3d5a; color: #ff3d5a; }
+        .action-btn.detail:hover { background: rgba(45, 122, 255, 0.2); border-color: #2d7aff; color: #2d7aff; }
 
-        /* ========== صفحة تفاصيل السيرفر (تصميم Wispbyte) ========== */
+        /* صفحة تفاصيل السيرفر (تبويبات فقط في القائمة الجانبية) */
         .server-detail {
             display: none;
             animation: fadeSlide 0.3s ease;
@@ -388,12 +390,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* شريط علوي به أزرار هامبرغر وتبويبات */
+        /* شريط علوي مبسط (بدون تبويبات) */
         .server-top-bar {
             background: rgba(8, 12, 28, 0.7);
             backdrop-filter: blur(12px);
             border-radius: 60px;
-            padding: 8px 20px;
+            padding: 12px 24px;
             margin-bottom: 28px;
             display: flex;
             justify-content: space-between;
@@ -409,8 +411,8 @@
             font-size: 1.4rem;
             color: #2d7aff;
             cursor: pointer;
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 30px;
             display: flex;
             align-items: center;
@@ -422,57 +424,22 @@
             background: rgba(45, 122, 255, 0.3);
         }
 
-        .server-actions-tabs {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .server-tab-btn {
-            background: rgba(255,255,255,0.05);
-            border: none;
-            border-radius: 40px;
-            padding: 8px 18px;
-            font-family: 'Tajawal', sans-serif;
-            font-weight: 600;
-            font-size: 0.8rem;
-            color: #9ca3cf;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .server-tab-btn i {
-            font-size: 0.9rem;
-        }
-
-        .server-tab-btn.active {
-            background: rgba(45, 122, 255, 0.2);
-            color: #2d7aff;
-        }
-
-        .server-tab-btn:not(.active):hover {
-            background: rgba(255,255,255,0.1);
-            color: #eef2ff;
-        }
-
         .server-control-buttons {
             display: flex;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .glow-btn {
             background: linear-gradient(135deg, rgba(45, 122, 255, 0.2), rgba(0, 229, 255, 0.1));
             border: 1px solid rgba(45, 122, 255, 0.5);
             border-radius: 50px;
-            padding: 8px 18px;
+            padding: 8px 20px;
             font-weight: 600;
             font-size: 0.75rem;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -487,7 +454,7 @@
             filter: brightness(1.05);
         }
 
-        /* محتوى التبويبات */
+        /* محتوى التبويبات (تظهر فقط من القائمة الجانبية) */
         .tab-pane {
             display: none;
             animation: fade 0.2s;
@@ -713,10 +680,10 @@
             .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .servers-grid { grid-template-columns: 1fr; }
             .server-top-bar { flex-direction: column; align-items: stretch; }
-            .server-actions-tabs { justify-content: center; }
             .server-control-buttons { justify-content: center; }
             .sidebar { width: 280px; }
             .container { padding: 16px; }
+            .action-group { flex-wrap: wrap; justify-content: center; }
         }
     </style>
 </head>
@@ -751,17 +718,10 @@
         <div class="servers-grid" id="serversGrid"><div style="text-align:center; padding:60px; color:#9ca3cf;">جاري التحميل...</div></div>
     </div>
 
-    <!-- صفحة تفاصيل السيرفر (تصميم Wispbyte) -->
+    <!-- صفحة تفاصيل السيرفر (تبويبات فقط في القائمة الجانبية) -->
     <div id="detailView" class="server-detail">
         <div class="server-top-bar">
             <button class="hamburger-btn" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-            <div class="server-actions-tabs">
-                <button class="server-tab-btn active" data-tab="console"><i class="fas fa-terminal"></i> الكونسول</button>
-                <button class="server-tab-btn" data-tab="files"><i class="fas fa-folder-tree"></i> الملفات</button>
-                <button class="server-tab-btn" data-tab="stats"><i class="fas fa-chart-line"></i> الإحصائيات</button>
-                <button class="server-tab-btn" data-tab="settings"><i class="fas fa-sliders-h"></i> الإعدادات</button>
-                <button class="server-tab-btn" data-tab="api"><i class="fas fa-key"></i> API Keys</button>
-            </div>
             <div class="server-control-buttons">
                 <button class="glow-btn start" onclick="serverAction('start')"><i class="fas fa-play"></i> تشغيل</button>
                 <button class="glow-btn restart" onclick="serverAction('restart')"><i class="fas fa-sync-alt"></i> إعادة تشغيل</button>
@@ -770,6 +730,7 @@
             </div>
         </div>
 
+        <!-- أقسام التبويبات (تظهر فقط من القائمة الجانبية) -->
         <div id="consolePane" class="tab-pane active">
             <div class="console-box" id="consoleOut"></div>
         </div>
@@ -822,7 +783,7 @@
     </div>
 </div>
 
-<!-- القائمة الجانبية (هامبرغر) -->
+<!-- القائمة الجانبية (هامبرغر) - تحتوي على جميع التبويبات -->
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <div style="display: flex; align-items: center; gap: 12px;"><i class="fas fa-crown" style="font-size: 28px; color: #2d7aff;"></i><span style="font-weight:800; font-size:1.2rem;">MIKO PANEL</span></div>
@@ -862,13 +823,11 @@
     const closeSidebar = () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); };
     overlay.onclick = closeSidebar;
 
+    // تبديل التبويبات من القائمة الجانبية
     document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
         btn.onclick = () => {
             if(!currentServer) return;
             const nav = btn.dataset.nav;
-            // تفعيل التبويب المناسب في الصفحة الرئيسية
-            document.querySelectorAll('.server-tab-btn').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.server-tab-btn[data-tab="${nav}"]`).classList.add('active');
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             document.getElementById(`${nav}Pane`).classList.add('active');
             document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
@@ -877,20 +836,6 @@
             if(nav === 'files') loadFiles();
             if(nav === 'settings') loadStartupFiles();
             if(nav === 'api') loadApiKey();
-        };
-    });
-
-    // تبديل التبويبات من الأزرار العلوية
-    document.querySelectorAll('.server-tab-btn').forEach(btn => {
-        btn.onclick = () => {
-            const tab = btn.dataset.tab;
-            document.querySelectorAll('.server-tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-            document.getElementById(`${tab}Pane`).classList.add('active');
-            if(tab === 'files') loadFiles();
-            if(tab === 'settings') loadStartupFiles();
-            if(tab === 'api') loadApiKey();
         };
     });
 
@@ -978,18 +923,18 @@
                     </div>
                     <div class="server-actions">
                         <div class="action-group">
-                            <button class="action-icon-btn start" data-action="start" data-folder="${s.folder}"><i class="fas fa-play"></i> تشغيل</button>
-                            <button class="action-icon-btn restart" data-action="restart" data-folder="${s.folder}"><i class="fas fa-sync-alt"></i> إعادة</button>
-                            <button class="action-icon-btn stop" data-action="stop" data-folder="${s.folder}"><i class="fas fa-stop"></i> إيقاف</button>
+                            <button class="action-btn start" data-action="start" data-folder="${s.folder}"><i class="fas fa-play"></i> تشغيل</button>
+                            <button class="action-btn restart" data-action="restart" data-folder="${s.folder}"><i class="fas fa-sync-alt"></i> إعادة</button>
+                            <button class="action-btn stop" data-action="stop" data-folder="${s.folder}"><i class="fas fa-stop"></i> إيقاف</button>
                         </div>
                         <div class="action-group">
-                            <button class="action-icon-btn delete" data-action="delete" data-folder="${s.folder}"><i class="fas fa-trash"></i> حذف</button>
-                            <button class="action-icon-btn detail" data-action="detail" data-folder="${s.folder}"><i class="fas fa-chevron-left"></i> تفاصيل</button>
+                            <button class="action-btn delete" data-action="delete" data-folder="${s.folder}"><i class="fas fa-trash"></i> حذف</button>
+                            <button class="action-btn detail" data-action="detail" data-folder="${s.folder}"><i class="fas fa-chevron-left"></i> تفاصيل</button>
                         </div>
                     </div>
                 `;
-                card.addEventListener('click', (e) => { if(e.target.closest('.action-icon-btn')) return; openServer({ folder: s.folder, title: s.title, port: s.port, status: s.status, storage_limit: s.storage_limit, ram_limit: s.ram_limit, plan: s.plan, startup_file: s.startup_file }); });
-                card.querySelectorAll('.action-icon-btn').forEach(btn => {
+                card.addEventListener('click', (e) => { if(e.target.closest('.action-btn')) return; openServer({ folder: s.folder, title: s.title, port: s.port, status: s.status, storage_limit: s.storage_limit, ram_limit: s.ram_limit, plan: s.plan, startup_file: s.startup_file }); });
+                card.querySelectorAll('.action-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const action = btn.dataset.action;
@@ -1018,7 +963,6 @@
         currentServer = s;
         document.getElementById('homeView').style.display = 'none';
         document.getElementById('detailView').classList.add('active');
-        document.getElementById('detailTitle').innerHTML = `<i class="fas fa-server"></i> ${escapeHtml(s.title)}`;
         document.getElementById('ramLimit').innerText = s.ram_limit || 256;
         document.getElementById('planDetails').innerText = s.plan === 'free' ? 'مجاني' : s.plan;
         if(polling) clearInterval(polling);
@@ -1027,11 +971,11 @@
         loadFiles();
         loadStartupFiles();
         loadApiKey();
-        // إعادة ضبط التبويب النشط
-        document.querySelectorAll('.server-tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('.server-tab-btn[data-tab="console"]').classList.add('active');
+        // إعادة ضبط التبويب النشط (الكونسول)
         document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
         document.getElementById('consolePane').classList.add('active');
+        document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
+        document.querySelector('.sidebar-nav-item[data-nav="console"]').classList.add('active');
     }
 
     async function fetchStats() {
@@ -1077,39 +1021,22 @@
         loadServers();
     }
 
+    // دوال الملفات والإعدادات
     async function loadFiles() {
         if(!currentServer) return;
         const tbody = document.getElementById('filesList');
-        tbody.innerHTML = '<tr><td colspan="4">جاري...<\/td><\/tr>';
+        tbody.innerHTML = '<td><td colspan="4">جاري...<\/td><\/tr>';
         try {
             const r = await fetch(`/api/files/list/${currentServer.folder}`);
             const files = await r.json();
-            if(files.length === 0) { tbody.innerHTML = '<td><td colspan="4">لا توجد ملفات<\/td><\/tr>'; return; }
+            if(files.length === 0) { tbody.innerHTML = '<tr><td colspan="4">لا توجد ملفات<\/td><\/tr>'; return; }
             tbody.innerHTML = files.map(f => `<tr><td><input type="checkbox" class="file-checkbox" value="${escapeHtml(f.name)}"></td><td><i class="fas ${f.is_dir ? 'fa-folder' : 'fa-file'}"></i> ${escapeHtml(f.name)}</div></td><td>${f.size}</td><td class="file-actions">${!f.is_dir ? `<button class="file-btn edit" onclick="editFile('${escapeHtml(f.name)}')">تعديل</button>` : ''}${f.name.toLowerCase().endsWith('.zip') ? `<button class="file-btn" onclick="unzipFile('${escapeHtml(f.name)}')">فك الضغط</button>` : ''}<button class="file-btn delete" onclick="deleteFile('${escapeHtml(f.name)}')">حذف</button></td></tr>`).join('');
-        } catch(e) { tbody.innerHTML = '<tr><td colspan="4">خطأ<\/td><\/tr>'; }
+        } catch(e) { tbody.innerHTML = '<td><td colspan="4">خطأ<\/td><\/tr>'; }
     }
-
     async function editFile(name) { currentFile = name; const r = await fetch(`/api/files/content/${currentServer.folder}/${name}`); const d = await r.json(); document.getElementById('editorArea').value = d.content||''; document.getElementById('editorModal').classList.add('active'); }
     async function saveFile() { if(!currentFile) return; const content = document.getElementById('editorArea').value; await fetch(`/api/files/save/${currentServer.folder}/${currentFile}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content}) }); showToast('تم الحفظ', 'success'); document.getElementById('editorModal').classList.remove('active'); currentFile=null; loadFiles(); }
     async function deleteFile(name) { showConfirm(`حذف ${name}؟`, async () => { await fetch(`/api/files/delete/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({names:[name]}) }); loadFiles(); }); }
-    async function uploadFiles(files) {
-        if(!files.length) return;
-        const fd = new FormData();
-        for(let f of files) fd.append('files[]', f);
-        try {
-            const response = await fetch(`/api/files/upload/${currentServer.folder}`, { method: 'POST', body: fd });
-            const result = await response.json();
-            if(result.success) {
-                showToast(result.message || 'تم رفع الملفات بنجاح', 'success');
-                loadFiles();  // تحديث قائمة الملفات
-            } else {
-                showToast(result.message || 'فشل رفع الملفات', 'error');
-            }
-        } catch(e) {
-            showToast('خطأ في الاتصال أثناء رفع الملفات', 'error');
-        }
-        document.getElementById('fileUpload').value = '';
-    }
+    async function uploadFiles(files) { if(!files.length) return; const fd = new FormData(); for(let f of files) fd.append('files[]',f); await fetch(`/api/files/upload/${currentServer.folder}`, { method:'POST', body:fd }); loadFiles(); showToast('تم رفع الملفات', 'success'); }
     function handleDrop(e) { e.preventDefault(); uploadFiles(e.dataTransfer.files); }
     async function installPackages() { showToast('بدء التثبيت...'); const r = await fetch(`/api/server/install/${currentServer.folder}`, { method:'POST' }); const d = await r.json(); showToast(d.message, d.success?'success':'error'); }
     function showCreateFileModal() { document.getElementById('newFileName').value=''; document.getElementById('newFileContent').value=''; document.getElementById('createFileModal').classList.add('active'); }
@@ -1131,7 +1058,6 @@
         } catch(e) { showToast('خطأ', 'error'); }
     }
     async function revokeApiKey() { showToast('⚠️ هذه الميزة قيد التطوير', 'error'); }
-    function showApiTab() { document.querySelector('.server-tab-btn[data-tab="api"]').click(); }
 
     async function logout() { await fetch('/api/logout', { method:'POST' }); window.location.href = '/login'; }
     function escapeHtml(s) { return String(s).replace(/[&<>]/g, m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
