@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>تسجيل الدخول | MIKO HOST</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>MIKO HOST | تسجيل الدخول</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -14,17 +14,18 @@
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Inter', 'Tajawal', sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #0a0f1c 0%, #05080f 100%);
+            background: radial-gradient(ellipse at 20% 30%, #0a0f2a, #03050b);
             position: relative;
             overflow-x: hidden;
         }
 
-        .bg-animation {
+        /* خلفية متحركة جزيئية */
+        .particles {
             position: fixed;
             top: 0;
             left: 0;
@@ -33,465 +34,566 @@
             z-index: -1;
             overflow: hidden;
         }
-
-        .bg-animation .circle {
+        .particle {
             position: absolute;
+            background: rgba(45, 122, 255, 0.3);
             border-radius: 50%;
-            background: rgba(45, 122, 255, 0.08);
-            animation: float 25s infinite ease-in-out;
+            animation: float 12s infinite ease-in-out;
         }
-
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-40px) rotate(5deg); }
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
 
-        .login-wrapper {
-            display: flex;
+        /* الحاوية الرئيسية */
+        .auth-wrapper {
             width: 100%;
-            max-width: 1100px;
-            background: rgba(12, 18, 28, 0.75);
-            backdrop-filter: blur(15px);
-            border-radius: 32px;
-            border: 1px solid rgba(45, 122, 255, 0.3);
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            max-width: 480px;
             margin: 20px;
+            animation: fadeInUp 0.6s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .welcome-section {
-            flex: 1;
-            background: linear-gradient(145deg, rgba(45, 122, 255, 0.1), rgba(0, 229, 255, 0.05));
-            padding: 48px 32px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        /* البطاقة الزجاجية */
+        .glass-card {
+            background: rgba(12, 18, 34, 0.65);
+            backdrop-filter: blur(16px);
+            border-radius: 48px;
+            border: 1px solid rgba(45, 122, 255, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            padding: 40px 36px;
+            transition: all 0.3s;
+        }
+        .glass-card:hover {
+            border-color: rgba(45, 122, 255, 0.6);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+        }
+
+        /* الشعار */
+        .logo-area {
             text-align: center;
-            border-left: 1px solid rgba(45, 122, 255, 0.2);
-        }
-
-        .welcome-image {
             margin-bottom: 32px;
         }
-
-        .welcome-image img {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #2d7aff;
-            box-shadow: 0 0 20px rgba(45, 122, 255, 0.3);
-            transition: transform 0.3s;
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(145deg, #0f172a, #0a0f1c);
+            border: 1px solid #00e5ff;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
+            color: #00e5ff;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+            transition: transform 0.2s;
         }
-
-        .welcome-image img:hover {
-            transform: scale(1.05);
+        .logo-icon:hover {
+            transform: scale(1.02);
         }
-
-        .welcome-title {
-            font-size: 1.8rem;
-            font-weight: 800;
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 2px;
             background: linear-gradient(135deg, #2d7aff, #00e5ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 16px;
+            text-shadow: 0 0 10px rgba(45,122,255,0.3);
         }
-
-        .welcome-text {
+        .logo-sub {
+            font-size: 11px;
             color: #7a8099;
-            font-size: 0.85rem;
-            line-height: 1.6;
+            margin-top: 8px;
+            letter-spacing: 2px;
         }
 
-        .form-section {
-            flex: 1;
-            padding: 48px 40px;
-        }
-
-        /* تم حذف اللوجو القديم بناءً على طلب المستخدم */
-
+        /* أزرار التبويب */
         .tabs {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             background: rgba(0, 0, 0, 0.3);
             padding: 6px;
-            border-radius: 60px;
-            margin-bottom: 30px;
+            border-radius: 80px;
+            margin-bottom: 32px;
         }
-
         .tab-btn {
             flex: 1;
             background: transparent;
             border: none;
             padding: 12px;
-            border-radius: 50px;
+            border-radius: 60px;
             font-family: 'Tajawal', sans-serif;
             font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
-            color: #7a8099;
+            color: #9ca3cf;
         }
-
         .tab-btn.active {
             background: linear-gradient(135deg, #2d7aff, #1a5cd8);
             color: white;
-            box-shadow: 0 4px 15px rgba(45, 122, 255, 0.4);
+            box-shadow: 0 6px 14px rgba(45, 122, 255, 0.4);
         }
 
-        .form {
+        /* النماذج */
+        .form-container {
             display: none;
-            animation: fade 0.3s ease;
+            animation: fade 0.4s ease;
         }
-
-        .form.active {
+        .form-container.active {
             display: block;
         }
-
         @keyframes fade {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             position: relative;
         }
-
         .input-group i {
             position: absolute;
-            right: 16px;
+            right: 18px;
             top: 50%;
             transform: translateY(-50%);
-            color: #4a5168;
+            color: #5b6e8c;
             font-size: 18px;
+            transition: color 0.2s;
+            pointer-events: none;
         }
-
         .input-group input {
             width: 100%;
-            padding: 14px 48px 14px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(45, 122, 255, 0.2);
-            border-radius: 50px;
+            padding: 16px 50px 16px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(45, 122, 255, 0.3);
+            border-radius: 60px;
             color: #fff;
-            font-size: 14px;
+            font-size: 15px;
             font-family: 'Tajawal', sans-serif;
             outline: none;
             transition: all 0.3s;
         }
-
         .input-group input:focus {
             border-color: #2d7aff;
             background: rgba(45, 122, 255, 0.08);
-            box-shadow: 0 0 0 3px rgba(45, 122, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(45, 122, 255, 0.15);
         }
-
+        .input-group input:focus + i {
+            color: #2d7aff;
+        }
         .toggle-pwd {
             position: absolute;
-            left: 16px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #4a5168;
+            color: #5b6e8c;
             cursor: pointer;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+        .toggle-pwd:hover {
+            color: #2d7aff;
         }
 
+        /* خيارات إضافية (تذكرني) */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            font-size: 0.8rem;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #b9c3e0;
+        }
+        .checkbox-label input {
+            width: 16px;
+            height: 16px;
+            accent-color: #2d7aff;
+            cursor: pointer;
+        }
+        .forgot-link {
+            color: #2d7aff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+
+        /* زر الإجراء */
         .action-btn {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             background: linear-gradient(135deg, #2d7aff, #1a5cd8);
             border: none;
-            border-radius: 50px;
+            border-radius: 60px;
             color: white;
             font-weight: 800;
-            font-size: 16px;
+            font-size: 1rem;
             font-family: 'Tajawal', sans-serif;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             box-shadow: 0 8px 20px rgba(45, 122, 255, 0.3);
         }
-
         .action-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 28px rgba(45, 122, 255, 0.5);
         }
 
+        /* رسائل الخطأ والنجاح */
         .message {
             padding: 12px 16px;
-            border-radius: 50px;
-            font-size: 13px;
+            border-radius: 60px;
+            font-size: 0.8rem;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             display: none;
+            animation: shake 0.3s ease;
         }
-
         .message.error {
-            background: rgba(255, 61, 90, 0.1);
-            border: 1px solid rgba(255, 61, 90, 0.3);
-            color: #ff6b8a;
+            background: rgba(255, 61, 90, 0.15);
+            border: 1px solid rgba(255, 61, 90, 0.4);
+            color: #ff8a9e;
         }
-
         .message.success {
             background: rgba(0, 255, 136, 0.1);
             border: 1px solid rgba(0, 255, 136, 0.3);
-            color: #00ff88;
+            color: #8effc2;
+        }
+        @keyframes shake {
+            0%,100%{ transform: translateX(0); }
+            25%{ transform: translateX(-4px); }
+            75%{ transform: translateX(4px); }
         }
 
+        /* تذييل */
         .footer {
             text-align: center;
-            margin-top: 28px;
+            margin-top: 32px;
             font-size: 11px;
-            color: #4a5168;
+            color: #5b6e8c;
+        }
+        .footer a {
+            color: #2d7aff;
+            text-decoration: none;
         }
 
-        .loading {
+        /* تحميل */
+        .loading-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(8px);
-            z-index: 1000;
+            z-index: 2000;
             align-items: center;
             justify-content: center;
             flex-direction: column;
         }
-
-        .loading.active {
+        .loading-overlay.active {
             display: flex;
         }
-
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(45, 122, 255, 0.2);
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(45, 122, 255, 0.3);
             border-top-color: #2d7aff;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.7s linear infinite;
         }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        .loading-text {
+            margin-top: 16px;
+            color: #2d7aff;
+            font-weight: 500;
+        }
 
-        @media (max-width: 768px) {
-            .login-wrapper {
-                flex-direction: column;
-                margin: 16px;
-            }
-            .welcome-section {
-                padding: 32px 20px;
-                border-left: none;
-                border-bottom: 1px solid rgba(45, 122, 255, 0.2);
-            }
-            .welcome-image img {
-                width: 120px;
-                height: 120px;
-            }
-            .welcome-title {
-                font-size: 1.4rem;
-            }
-            .form-section {
+        @media (max-width: 550px) {
+            .glass-card {
                 padding: 32px 24px;
+            }
+            .logo-text {
+                font-size: 22px;
+            }
+            .tab-btn {
+                padding: 10px;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bg-animation">
-        <div class="circle" style="width: 300px; height: 300px; top: -100px; right: -100px; animation-duration: 25s;"></div>
-        <div class="circle" style="width: 200px; height: 200px; bottom: -50px; left: -50px; animation-duration: 20s;"></div>
-        <div class="circle" style="width: 150px; height: 150px; top: 40%; left: 20%; animation-duration: 30s;"></div>
-    </div>
+<div class="particles" id="particles"></div>
 
-    <div class="login-wrapper">
-        <div class="welcome-section">
-            <div class="welcome-image">
-                <img src="https://i.postimg.cc/15gHrQDK/1776031185250.png" alt="ترحيب MIKO HOST">
-            </div>
-            <div class="welcome-title">مرحباً بك في MIKO HOST</div>
-            <div class="welcome-text">
-                منصة استضافة متكاملة كاملة ومتطورة لإدارة سيرفراتك وبوتاتك بكل سهولة وأمان واحترافية.
-            </div>
+<div class="auth-wrapper">
+    <div class="glass-card">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fas fa-crown"></i></div>
+            <div class="logo-text">MIKO HOST</div>
+            <div class="logo-sub">BY @I_tt_6</div>
         </div>
 
-        <div class="form-section">
-            <div class="tabs">
-                <button class="tab-btn active" id="loginTabBtn">تسجيل الدخول</button>
-                <button class="tab-btn" id="registerTabBtn">إنشاء حساب</button>
-            </div>
+        <div class="tabs">
+            <button class="tab-btn active" id="loginTabBtn">تسجيل الدخول</button>
+            <button class="tab-btn" id="registerTabBtn">إنشاء حساب</button>
+        </div>
 
-            <!-- نموذج تسجيل الدخول (بدون أي تحقق إضافي) -->
-            <div id="loginForm" class="form active">
-                <div id="loginMessage" class="message"></div>
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="loginUsername" placeholder="اسم المستخدم" autocomplete="username">
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="loginPassword" placeholder="كلمة المرور">
-                    <button type="button" class="toggle-pwd" onclick="togglePassword('loginPassword')"><i class="fas fa-eye"></i></button>
-                </div>
-                <button class="action-btn" onclick="login()">دخول</button>
+        <!-- نموذج تسجيل الدخول -->
+        <div id="loginForm" class="form-container active">
+            <div id="loginMessage" class="message"></div>
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="loginUsername" placeholder="اسم المستخدم" autocomplete="username">
             </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPassword" placeholder="كلمة المرور">
+                <button type="button" class="toggle-pwd" onclick="togglePassword('loginPassword')"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="form-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="rememberMeCheckbox"> تذكرني
+                </label>
+                <a href="#" class="forgot-link" id="forgotBtn">نسيت كلمة المرور؟</a>
+            </div>
+            <button class="action-btn" onclick="login()"><i class="fas fa-arrow-left"></i> دخول</button>
+        </div>
 
-            <!-- نموذج إنشاء حساب (بدون أي تحقق إضافي) -->
-            <div id="registerForm" class="form">
-                <div id="registerMessage" class="message"></div>
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="regUsername" placeholder="اسم المستخدم (3 أحرف على الأقل)">
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="regPassword" placeholder="كلمة المرور (4 أحرف على الأقل)">
-                    <button type="button" class="toggle-pwd" onclick="togglePassword('regPassword')"><i class="fas fa-eye"></i></button>
-                </div>
-                <button class="action-btn" onclick="register()">إنشاء حساب</button>
+        <!-- نموذج إنشاء حساب -->
+        <div id="registerForm" class="form-container">
+            <div id="registerMessage" class="message"></div>
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="regUsername" placeholder="اسم المستخدم (3 أحرف على الأقل)">
             </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="regPassword" placeholder="كلمة المرور (4 أحرف على الأقل)">
+                <button type="button" class="toggle-pwd" onclick="togglePassword('regPassword')"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="form-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="registerTerms"> أوافق على <a href="#" style="color:#2d7aff;">الشروط والأحكام</a>
+                </label>
+            </div>
+            <button class="action-btn" onclick="register()"><i class="fas fa-user-plus"></i> إنشاء حساب</button>
+        </div>
 
-            <div class="footer">
-                © 2026 MIKO HOST — منصة استضافة متكاملة
-            </div>
+        <div class="footer">
+            © 2026 MIKO HOST — استضافة احترافية بلا حدود
         </div>
     </div>
+</div>
 
-    <div id="loading" class="loading">
-        <div class="spinner"></div>
-        <p>جاري المعالجة...</p>
-    </div>
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <div class="loading-text">جاري المعالجة...</div>
+</div>
 
-    <script>
-        // دوال عامة
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            field.type = field.type === 'password' ? 'text' : 'password';
+<script>
+    // توليد جزيئات خلفية متحركة
+    function createParticles() {
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 60; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 6 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = Math.random() * 15 + 8 + 's';
+            particle.style.animationDelay = Math.random() * 10 + 's';
+            particle.style.opacity = Math.random() * 0.4;
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
+
+    // دوال مساعدة
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const icon = field.nextElementSibling?.querySelector('i') || document.querySelector(`#${fieldId} + .toggle-pwd i`);
+        if (field.type === 'password') {
+            field.type = 'text';
+            if (icon) icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            field.type = 'password';
+            if (icon) icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+
+    function showMessage(element, msg, type) {
+        const el = document.getElementById(element);
+        el.innerHTML = msg;
+        el.className = `message ${type}`;
+        el.style.display = 'block';
+        setTimeout(() => {
+            el.style.display = 'none';
+        }, 5000);
+    }
+
+    function showLoading(show) {
+        const loader = document.getElementById('loadingOverlay');
+        if (show) loader.classList.add('active');
+        else loader.classList.remove('active');
+    }
+
+    // تذكرني (حفظ اسم المستخدم في localStorage)
+    function saveRememberedUser() {
+        const remember = document.getElementById('rememberMeCheckbox').checked;
+        const username = document.getElementById('loginUsername').value.trim();
+        if (remember && username) {
+            localStorage.setItem('miko_remembered_user', username);
+        } else if (!remember) {
+            localStorage.removeItem('miko_remembered_user');
+        }
+    }
+
+    function loadRememberedUser() {
+        const saved = localStorage.getItem('miko_remembered_user');
+        if (saved) {
+            document.getElementById('loginUsername').value = saved;
+            document.getElementById('rememberMeCheckbox').checked = true;
+        }
+    }
+
+    // تبديل التبويبات
+    document.getElementById('loginTabBtn').addEventListener('click', () => {
+        document.getElementById('loginForm').classList.add('active');
+        document.getElementById('registerForm').classList.remove('active');
+        document.getElementById('loginTabBtn').classList.add('active');
+        document.getElementById('registerTabBtn').classList.remove('active');
+    });
+    document.getElementById('registerTabBtn').addEventListener('click', () => {
+        document.getElementById('registerForm').classList.add('active');
+        document.getElementById('loginForm').classList.remove('active');
+        document.getElementById('registerTabBtn').classList.add('active');
+        document.getElementById('loginTabBtn').classList.remove('active');
+    });
+
+    // نسيان كلمة المرور (توجيه إلى الدعم)
+    document.getElementById('forgotBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open('https://t.me/a_u711', '_blank');
+    });
+
+    // تسجيل الدخول
+    async function login() {
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!username || !password) {
+            showMessage('loginMessage', '⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور', 'error');
+            return;
+        }
+        showLoading(true);
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password, remember_me: false })
+            });
+            const data = await response.json();
+            if (data.success) {
+                saveRememberedUser();  // حفظ حالة تذكرني
+                showMessage('loginMessage', '✅ تم تسجيل الدخول بنجاح، جاري التحويل...', 'success');
+                setTimeout(() => {
+                    window.location.href = data.redirect || (data.is_admin ? '/admin' : '/dashboard');
+                }, 1000);
+            } else {
+                showMessage('loginMessage', '❌ ' + (data.message || 'بيانات غير صحيحة'), 'error');
+            }
+        } catch (err) {
+            showMessage('loginMessage', '❌ خطأ في الاتصال بالخادم', 'error');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // إنشاء حساب
+    async function register() {
+        const username = document.getElementById('regUsername').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const terms = document.getElementById('registerTerms').checked;
+
+        if (!username || !password) {
+            showMessage('registerMessage', '⚠️ الرجاء إدخال جميع البيانات', 'error');
+            return;
+        }
+        if (username.length < 3) {
+            showMessage('registerMessage', '⚠️ اسم المستخدم 3 أحرف على الأقل', 'error');
+            return;
+        }
+        if (password.length < 4) {
+            showMessage('registerMessage', '⚠️ كلمة المرور 4 أحرف على الأقل', 'error');
+            return;
+        }
+        if (!terms) {
+            showMessage('registerMessage', '⚠️ يجب الموافقة على الشروط والأحكام', 'error');
+            return;
         }
 
-        function showMessage(element, msg, type) {
-            const el = document.getElementById(element);
-            el.innerHTML = msg;
-            el.className = `message ${type}`;
-            el.style.display = 'block';
-            setTimeout(() => {
-                el.style.display = 'none';
-            }, 5000);
+        showLoading(true);
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            if (data.success) {
+                showMessage('registerMessage', '✅ تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن', 'success');
+                setTimeout(() => {
+                    document.getElementById('loginTabBtn').click();
+                    document.getElementById('loginUsername').value = username;
+                    document.getElementById('loginPassword').value = '';
+                }, 2000);
+            } else {
+                showMessage('registerMessage', '❌ ' + (data.message || 'حدث خطأ'), 'error');
+            }
+        } catch (err) {
+            showMessage('registerMessage', '❌ خطأ في الاتصال', 'error');
+        } finally {
+            showLoading(false);
         }
+    }
 
-        function showLoading(show) {
-            const loader = document.getElementById('loading');
-            if (show) loader.classList.add('active');
-            else loader.classList.remove('active');
-        }
+    // تحميل اسم المستخدم المخزن عند تحميل الصفحة
+    loadRememberedUser();
 
-        // تبديل التبويبات
-        document.getElementById('loginTabBtn').addEventListener('click', () => {
-            document.getElementById('loginForm').classList.add('active');
-            document.getElementById('registerForm').classList.remove('active');
-            document.getElementById('loginTabBtn').classList.add('active');
-            document.getElementById('registerTabBtn').classList.remove('active');
-        });
-
-        document.getElementById('registerTabBtn').addEventListener('click', () => {
-            document.getElementById('registerForm').classList.add('active');
-            document.getElementById('loginForm').classList.remove('active');
-            document.getElementById('registerTabBtn').classList.add('active');
-            document.getElementById('loginTabBtn').classList.remove('active');
-        });
-
-        // تسجيل الدخول
-        async function login() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            if (!username || !password) {
-                showMessage('loginMessage', '⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور', 'error');
-                return;
+    // التحقق من الجلسة المفتوحة
+    (async () => {
+        try {
+            const res = await fetch('/api/current_user');
+            const data = await res.json();
+            if (data.success && data.username) {
+                window.location.href = data.is_admin ? '/admin' : '/dashboard';
             }
-
-            showLoading(true);
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password, remember_me: false })
-                });
-                const data = await response.json();
-                if (data.success) {
-                    showMessage('loginMessage', '✅ تم تسجيل الدخول بنجاح، جاري التحويل...', 'success');
-                    setTimeout(() => {
-                        window.location.href = data.redirect || (data.is_admin ? '/admin' : '/dashboard');
-                    }, 1000);
-                } else {
-                    showMessage('loginMessage', '❌ ' + (data.message || 'بيانات غير صحيحة'), 'error');
-                }
-            } catch (err) {
-                showMessage('loginMessage', '❌ خطأ في الاتصال بالخادم', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // إنشاء حساب
-        async function register() {
-            const username = document.getElementById('regUsername').value.trim();
-            const password = document.getElementById('regPassword').value;
-
-            if (!username || !password) {
-                showMessage('registerMessage', '⚠️ الرجاء إدخال جميع البيانات', 'error');
-                return;
-            }
-            if (username.length < 3) {
-                showMessage('registerMessage', '⚠️ اسم المستخدم يجب أن يكون 3 أحرف على الأقل', 'error');
-                return;
-            }
-            if (password.length < 4) {
-                showMessage('registerMessage', '⚠️ كلمة المرور يجب أن تكون 4 أحرف على الأقل', 'error');
-                return;
-            }
-
-            showLoading(true);
-            try {
-                const response = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await response.json();
-                if (data.success) {
-                    showMessage('registerMessage', '✅ تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن', 'success');
-                    setTimeout(() => {
-                        document.getElementById('loginTabBtn').click();
-                        document.getElementById('loginUsername').value = username;
-                        document.getElementById('loginPassword').value = '';
-                    }, 2000);
-                } else {
-                    showMessage('registerMessage', '❌ ' + (data.message || 'حدث خطأ'), 'error');
-                }
-            } catch (err) {
-                showMessage('registerMessage', '❌ خطأ في الاتصال بالخادم', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // التحقق من وجود جلسة مفتوحة
-        (async () => {
-            try {
-                const res = await fetch('/api/current_user');
-                const data = await res.json();
-                if (data.success && data.username) {
-                    window.location.href = data.is_admin ? '/admin' : '/dashboard';
-                }
-            } catch(e) {}
-        })();
-    </script>
+        } catch(e) {}
+    })();
+</script>
 </body>
 </html>
