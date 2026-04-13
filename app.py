@@ -21,7 +21,9 @@ USERS_DIR = os.path.join(BASE_DIR, "USERS")
 os.makedirs(USERS_DIR, exist_ok=True)
 
 app = Flask(__name__, static_folder=BASE_DIR)
-app.secret_key = secrets.token_hex(32)
+
+# ============== إعدادات الجلسة (تدوم 30 يوماً) ==============
+app.secret_key = "MIKO_HOST_STABLE_SECRET_KEY_2026"
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
 app.config['SESSION_COOKIE_HTTPONLY'] = True
@@ -39,8 +41,8 @@ def load_db():
         try:
             with open(DB_FILE, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        except:
-            pass
+        except Exception as e:
+            print(f"⚠️ خطأ في تحميل db.json: {e}")
     admin_hash = hashlib.sha256(ADMIN_PASSWORD_RAW.encode()).hexdigest()
     default_db = {
         "users": {
@@ -65,9 +67,10 @@ def save_db(db_data):
     try:
         with open(DB_FILE, 'w', encoding='utf-8') as f:
             json.dump(db_data, f, indent=4, ensure_ascii=False)
+        print("✅ تم حفظ قاعدة البيانات")
         return True
     except Exception as e:
-        print(f"❌ خطأ: {e}")
+        print(f"❌ خطأ في حفظ db.json: {e}")
         return False
 
 db = load_db()
@@ -247,7 +250,7 @@ def admin_panel():
         return redirect('/login')
     return send_from_directory(BASE_DIR, 'admin_panel.html')
 
-# ============== API المصادقة ==============
+# ============== API المصادقة (معدلة لضمان الحفظ الفوري) ==============
 @app.route('/api/register', methods=['POST'])
 def api_register():
     data = request.get_json()
@@ -263,6 +266,7 @@ def api_register():
         return jsonify({"success": False, "message": "اسم المستخدم موجود"})
     if username == ADMIN_USERNAME:
         return jsonify({"success": False, "message": "لا يمكن استخدام هذا الاسم"})
+    
     db["users"][username] = {
         "password": hashlib.sha256(password.encode()).hexdigest(),
         "is_admin": False,
@@ -273,7 +277,9 @@ def api_register():
         "telegram_id": None,
         "api_key": None
     }
-    save_db(db)
+    if not save_db(db):
+        return jsonify({"success": False, "message": "خطأ في حفظ البيانات"})
+    
     user_dir = os.path.join(USERS_DIR, username)
     os.makedirs(user_dir, exist_ok=True)
     os.makedirs(os.path.join(user_dir, "SERVERS"), exist_ok=True)
@@ -290,14 +296,17 @@ def api_login():
         session.permanent = True
         return jsonify({"success": True, "redirect": "/admin", "is_admin": True})
     user = db["users"].get(username)
-    if user and user["password"] == hashlib.sha256(password.encode()).hexdigest():
-        session.clear()
-        session['username'] = username
-        session.permanent = True
-        user["last_login"] = str(datetime.now())
-        save_db(db)
-        return jsonify({"success": True, "redirect": "/dashboard", "is_admin": False})
-    return jsonify({"success": False, "message": "بيانات غير صحيحة"})
+    if not user:
+        return jsonify({"success": False, "message": "المستخدم غير موجود"})
+    if user["password"] != hashlib.sha256(password.encode()).hexdigest():
+        return jsonify({"success": False, "message": "كلمة المرور غير صحيحة"})
+    
+    session.clear()
+    session['username'] = username
+    session.permanent = True
+    user["last_login"] = str(datetime.now())
+    save_db(db)
+    return jsonify({"success": True, "redirect": "/dashboard", "is_admin": False})
 
 @app.route('/api/logout', methods=['GET', 'POST'])
 def api_logout():
@@ -767,6 +776,35 @@ def admin_users():
             "api_key": udata.get("api_key")
         })
     return jsonify({"success": True, "users": users_list})
+
+@app.route('/api/admin/create-user', methods=['POST'])
+def admin_create_user():
+    if "username" not in session or not is_admin(session["username"]):
+        return jsonify({"success": False}), 403
+    data = request.get_json()
+    username = data.get("username", "").strip()
+    password = data.get("password", "").strip()
+    max_servers = int(data.get("max_servers", 1))
+    expiry_days = int(data.get("expiry_days", 365))
+    if not username or not password:
+        return jsonify({"success": False, "message": "جميع الحقول مطلوبة"})
+    if username in db["users"]:
+        return jsonify({"success": False, "message": "المستخدم موجود"})
+    db["users"][username] = {
+        "password": hashlib.sha256(password.encode()).hexdigest(),
+        "is_admin": False,
+        "created_at": str(datetime.now()),
+        "max_servers": max_servers,
+        "expiry_days": expiry_days,
+        "last_login": None,
+        "telegram_id": None,
+        "api_key": None
+    }
+    save_db(db)
+    user_dir = os.path.join(USERS_DIR, username)
+    os.makedirs(user_dir, exist_ok=True)
+    os.makedirs(os.path.join(user_dir, "SERVERS"), exist_ok=True)
+    return jsonify({"success": True, "message": "✅ تم إنشاء الحساب"})
 
 @app.route('/api/admin/delete-user', methods=['POST'])
 def admin_delete_user():
