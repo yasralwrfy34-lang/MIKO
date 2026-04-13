@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>MIKO HOST | تسجيل الدخول</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <title>تسجيل الدخول | MIKO HOST</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -14,18 +14,18 @@
         }
 
         body {
-            font-family: 'Inter', 'Tajawal', sans-serif;
+            font-family: 'Tajawal', sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(ellipse at 20% 30%, #0a0f2a, #03050b);
+            background: #0a0808;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* خلفية متحركة جزيئية */
-        .particles {
+        /* خلفية سوداء مع جزيئات ذهبية متحركة */
+        .bg-gold-dust {
             position: fixed;
             top: 0;
             left: 0;
@@ -33,22 +33,50 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
+            background: radial-gradient(ellipse at 30% 40%, #1a1508, #0a0808);
         }
-        .particle {
+
+        .gold-particle {
             position: absolute;
-            background: rgba(45, 122, 255, 0.3);
+            background: rgba(255, 215, 0, 0.4);
             border-radius: 50%;
-            animation: float 12s infinite ease-in-out;
+            animation: floatGold 15s infinite ease-in-out;
         }
-        @keyframes float {
+
+        @keyframes floatGold {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
             20% { opacity: 0.6; }
             80% { opacity: 0.6; }
             100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
 
-        /* الحاوية الرئيسية */
-        .auth-wrapper {
+        /* شعار بايثون متحرك */
+        .python-logo {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: pythonGlow 2s ease-in-out infinite;
+        }
+        .python-logo i {
+            font-size: 60px;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 10px rgba(255,215,0,0.5));
+            animation: pythonRotate 3s linear infinite;
+        }
+        @keyframes pythonRotate {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+        @keyframes pythonGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(255,215,0,0.3)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255,215,0,0.8)); }
+            100% { filter: drop-shadow(0 0 5px rgba(255,215,0,0.3)); }
+        }
+
+        .login-wrapper {
             width: 100%;
             max-width: 480px;
             margin: 20px;
@@ -59,19 +87,19 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* البطاقة الزجاجية */
+        /* بطاقة زجاجية ذهبية */
         .glass-card {
-            background: rgba(12, 18, 34, 0.65);
+            background: rgba(10, 8, 8, 0.75);
             backdrop-filter: blur(16px);
             border-radius: 48px;
-            border: 1px solid rgba(45, 122, 255, 0.3);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,215,0,0.1);
             padding: 40px 36px;
             transition: all 0.3s;
         }
         .glass-card:hover {
-            border-color: rgba(45, 122, 255, 0.6);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 215, 0, 0.8);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255,215,0,0.2);
         }
 
         /* الشعار */
@@ -82,35 +110,38 @@
         .logo-icon {
             width: 70px;
             height: 70px;
-            background: linear-gradient(145deg, #0f172a, #0a0f1c);
-            border: 1px solid #00e5ff;
+            background: linear-gradient(145deg, #1a1508, #0a0800);
+            border: 1px solid #ffd700;
             border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 16px;
             font-size: 32px;
-            color: #00e5ff;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-            transition: transform 0.2s;
-        }
-        .logo-icon:hover {
-            transform: scale(1.02);
+            color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
         }
         .logo-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 26px;
+            font-size: 32px;
             font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #2d7aff, #00e5ff);
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, #ffd700, #ffaa00, #ff8c00, #ffd700);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 10px rgba(45,122,255,0.3);
+            animation: goldRainbow 2s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(255,215,0,0.5);
+        }
+        @keyframes goldRainbow {
+            0% { background: linear-gradient(90deg, #ffd700, #ffaa00); -webkit-background-clip: text; background-clip: text; }
+            33% { background: linear-gradient(90deg, #ffaa00, #ff8c00); -webkit-background-clip: text; background-clip: text; }
+            66% { background: linear-gradient(90deg, #ff8c00, #ffd700); -webkit-background-clip: text; background-clip: text; }
+            100% { background: linear-gradient(90deg, #ffd700, #ffaa00); -webkit-background-clip: text; background-clip: text; }
         }
         .logo-sub {
             font-size: 11px;
-            color: #7a8099;
+            color: #b9a87c;
             margin-top: 8px;
             letter-spacing: 2px;
         }
@@ -135,12 +166,12 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
-            color: #9ca3cf;
+            color: #b9a87c;
         }
         .tab-btn.active {
-            background: linear-gradient(135deg, #2d7aff, #1a5cd8);
-            color: white;
-            box-shadow: 0 6px 14px rgba(45, 122, 255, 0.4);
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #0a0808;
+            box-shadow: 0 6px 14px rgba(255, 215, 0, 0.4);
         }
 
         /* النماذج */
@@ -165,7 +196,7 @@
             right: 18px;
             top: 50%;
             transform: translateY(-50%);
-            color: #5b6e8c;
+            color: #b9a87c;
             font-size: 18px;
             transition: color 0.2s;
             pointer-events: none;
@@ -173,8 +204,8 @@
         .input-group input {
             width: 100%;
             padding: 16px 50px 16px 20px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(45, 122, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.4);
             border-radius: 60px;
             color: #fff;
             font-size: 15px;
@@ -183,12 +214,12 @@
             transition: all 0.3s;
         }
         .input-group input:focus {
-            border-color: #2d7aff;
-            background: rgba(45, 122, 255, 0.08);
-            box-shadow: 0 0 0 3px rgba(45, 122, 255, 0.15);
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.08);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
         }
         .input-group input:focus + i {
-            color: #2d7aff;
+            color: #ffd700;
         }
         .toggle-pwd {
             position: absolute;
@@ -197,13 +228,13 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #5b6e8c;
+            color: #b9a87c;
             cursor: pointer;
             font-size: 18px;
             transition: color 0.2s;
         }
         .toggle-pwd:hover {
-            color: #2d7aff;
+            color: #ffd700;
         }
 
         /* خيارات إضافية (تذكرني) */
@@ -219,16 +250,16 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            color: #b9c3e0;
+            color: #b9a87c;
         }
         .checkbox-label input {
             width: 16px;
             height: 16px;
-            accent-color: #2d7aff;
+            accent-color: #ffd700;
             cursor: pointer;
         }
         .forgot-link {
-            color: #2d7aff;
+            color: #ffd700;
             text-decoration: none;
             font-weight: 500;
             transition: 0.2s;
@@ -242,10 +273,10 @@
         .action-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #2d7aff, #1a5cd8);
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
             border: none;
             border-radius: 60px;
-            color: white;
+            color: #0a0808;
             font-weight: 800;
             font-size: 1rem;
             font-family: 'Tajawal', sans-serif;
@@ -255,11 +286,11 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 8px 20px rgba(45, 122, 255, 0.3);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
         }
         .action-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(45, 122, 255, 0.5);
+            box-shadow: 0 12px 28px rgba(255, 215, 0, 0.5);
         }
 
         /* رسائل الخطأ والنجاح */
@@ -293,10 +324,10 @@
             text-align: center;
             margin-top: 32px;
             font-size: 11px;
-            color: #5b6e8c;
+            color: #5b4a2a;
         }
         .footer a {
-            color: #2d7aff;
+            color: #ffd700;
             text-decoration: none;
         }
 
@@ -318,8 +349,8 @@
         .spinner {
             width: 48px;
             height: 48px;
-            border: 3px solid rgba(45, 122, 255, 0.3);
-            border-top-color: #2d7aff;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-top-color: #ffd700;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
@@ -328,7 +359,7 @@
         }
         .loading-text {
             margin-top: 16px;
-            color: #2d7aff;
+            color: #ffd700;
             font-weight: 500;
         }
 
@@ -337,7 +368,7 @@
                 padding: 32px 24px;
             }
             .logo-text {
-                font-size: 22px;
+                font-size: 24px;
             }
             .tab-btn {
                 padding: 10px;
@@ -347,10 +378,15 @@
     </style>
 </head>
 <body>
-<div class="particles" id="particles"></div>
+<div class="bg-gold-dust" id="particles"></div>
 
-<div class="auth-wrapper">
+<div class="login-wrapper">
     <div class="glass-card">
+        <!-- شعار بايثون متحرك -->
+        <div class="python-logo">
+            <i class="fab fa-python"></i>
+        </div>
+
         <div class="logo-area">
             <div class="logo-icon"><i class="fas fa-crown"></i></div>
             <div class="logo-text">MIKO HOST</div>
@@ -376,7 +412,7 @@
             </div>
             <div class="form-options">
                 <label class="checkbox-label">
-                    <input type="checkbox" id="rememberMeCheckbox"> تذكرني
+                    <input type="checkbox" id="rememberMeCheckbox"> تذكرني لمدة 5 سنوات
                 </label>
                 <a href="#" class="forgot-link" id="forgotBtn">نسيت كلمة المرور؟</a>
             </div>
@@ -397,7 +433,7 @@
             </div>
             <div class="form-options">
                 <label class="checkbox-label">
-                    <input type="checkbox" id="registerTerms"> أوافق على <a href="#" style="color:#2d7aff;">الشروط والأحكام</a>
+                    <input type="checkbox" id="registerTerms"> أوافق على <a href="#" style="color:#ffd700;">الشروط والأحكام</a>
                 </label>
             </div>
             <button class="action-btn" onclick="register()"><i class="fas fa-user-plus"></i> إنشاء حساب</button>
@@ -415,25 +451,24 @@
 </div>
 
 <script>
-    // توليد جزيئات خلفية متحركة
-    function createParticles() {
+    // توليد جزيئات ذهبية في الخلفية
+    function createGoldParticles() {
         const container = document.getElementById('particles');
         for (let i = 0; i < 60; i++) {
             const particle = document.createElement('div');
-            particle.classList.add('particle');
-            const size = Math.random() * 6 + 2;
+            particle.classList.add('gold-particle');
+            const size = Math.random() * 5 + 1;
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
             particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = Math.random() * 15 + 8 + 's';
+            particle.style.animationDuration = Math.random() * 15 + 10 + 's';
             particle.style.animationDelay = Math.random() * 10 + 's';
-            particle.style.opacity = Math.random() * 0.4;
+            particle.style.opacity = Math.random() * 0.5;
             container.appendChild(particle);
         }
     }
-    createParticles();
+    createGoldParticles();
 
-    // دوال مساعدة
     function togglePassword(fieldId) {
         const field = document.getElementById(fieldId);
         const icon = field.nextElementSibling?.querySelector('i') || document.querySelector(`#${fieldId} + .toggle-pwd i`);
@@ -462,25 +497,6 @@
         else loader.classList.remove('active');
     }
 
-    // تذكرني (حفظ اسم المستخدم في localStorage)
-    function saveRememberedUser() {
-        const remember = document.getElementById('rememberMeCheckbox').checked;
-        const username = document.getElementById('loginUsername').value.trim();
-        if (remember && username) {
-            localStorage.setItem('miko_remembered_user', username);
-        } else if (!remember) {
-            localStorage.removeItem('miko_remembered_user');
-        }
-    }
-
-    function loadRememberedUser() {
-        const saved = localStorage.getItem('miko_remembered_user');
-        if (saved) {
-            document.getElementById('loginUsername').value = saved;
-            document.getElementById('rememberMeCheckbox').checked = true;
-        }
-    }
-
     // تبديل التبويبات
     document.getElementById('loginTabBtn').addEventListener('click', () => {
         document.getElementById('loginForm').classList.add('active');
@@ -501,10 +517,12 @@
         window.open('https://t.me/a_u711', '_blank');
     });
 
-    // تسجيل الدخول
+    // تسجيل الدخول (مع تذكرني)
     async function login() {
         const username = document.getElementById('loginUsername').value.trim();
         const password = document.getElementById('loginPassword').value;
+        const rememberMe = document.getElementById('rememberMeCheckbox').checked;
+
         if (!username || !password) {
             showMessage('loginMessage', '⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور', 'error');
             return;
@@ -514,11 +532,10 @@
             const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password, remember_me: false })
+                body: JSON.stringify({ username, password, remember_me: rememberMe })
             });
             const data = await response.json();
             if (data.success) {
-                saveRememberedUser();  // حفظ حالة تذكرني
                 showMessage('loginMessage', '✅ تم تسجيل الدخول بنجاح، جاري التحويل...', 'success');
                 setTimeout(() => {
                     window.location.href = data.redirect || (data.is_admin ? '/admin' : '/dashboard');
@@ -581,10 +598,7 @@
         }
     }
 
-    // تحميل اسم المستخدم المخزن عند تحميل الصفحة
-    loadRememberedUser();
-
-    // التحقق من الجلسة المفتوحة
+    // التحقق من الجلسة المفتوحة (إذا كان المستخدم مسجلاً، نعيده للوحة التحكم فورًا)
     (async () => {
         try {
             const res = await fetch('/api/current_user');
