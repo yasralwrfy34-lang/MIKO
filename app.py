@@ -28,8 +28,8 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 # ============== بيانات المسؤول ==============
-ADMIN_USERNAME = "elmodmen"
-ADMIN_PASSWORD_RAW = "amar1212"
+ADMIN_USERNAME = "yasralwrfy"
+ADMIN_PASSWORD_RAW = "amiailafu"
 
 # ============== قاعدة البيانات ==============
 DB_FILE = os.path.join(BASE_DIR, "db.json")
