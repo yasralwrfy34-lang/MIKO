@@ -4,4 +4,3 @@ requests>=2.31.0
 pymongo>=4.6.0
 dnspython>=2.4.0
 gunicorn>=21.2.0
-SQLAlchemy>=2.0.0
