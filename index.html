@@ -499,6 +499,7 @@
             color: transparent;
         }
 
+        /* شريط أزرار التشغيل والإيقاف - تلوين مميز */
         .detail-actions-bar {
             display: flex;
             flex-wrap: wrap;
@@ -521,51 +522,85 @@
             transition: 0.2s;
             color: #ddd;
         }
-        .detail-action-btn.start:hover { background: rgba(255,215,0,0.2); color: var(--gold); }
-        .detail-action-btn.stop:hover { background: rgba(255,61,90,0.2); color: var(--red); border-color: var(--red); }
-        .detail-action-btn.restart:hover { background: rgba(255,215,0,0.2); color: #FFA500; }
-        .detail-action-btn.delete:hover { background: rgba(255,61,90,0.2); color: var(--red); border-color: var(--red); }
+        /* ألوان مميزة للأزرار */
+        .detail-action-btn.start {
+            background: rgba(0, 200, 0, 0.15);
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+        .detail-action-btn.start:hover {
+            background: rgba(0, 200, 0, 0.35);
+            transform: translateY(-2px);
+        }
+        .detail-action-btn.stop {
+            background: rgba(255, 61, 90, 0.15);
+            border-color: var(--red);
+            color: var(--red);
+        }
+        .detail-action-btn.stop:hover {
+            background: rgba(255, 61, 90, 0.35);
+            transform: translateY(-2px);
+        }
+        .detail-action-btn.restart {
+            background: rgba(255, 165, 0, 0.15);
+            border-color: #ffa500;
+            color: #ffa500;
+        }
+        .detail-action-btn.restart:hover {
+            background: rgba(255, 165, 0, 0.35);
+            transform: translateY(-2px);
+        }
+        .detail-action-btn.delete {
+            background: rgba(255, 61, 90, 0.15);
+            border-color: var(--red);
+            color: var(--red);
+        }
+        .detail-action-btn.delete:hover {
+            background: rgba(255, 61, 90, 0.35);
+            transform: translateY(-2px);
+        }
 
+        /* تبويبات جديدة بأيقونات وشكل دائري */
         .tabs {
             display: flex;
             gap: 16px;
             margin-bottom: 28px;
-            border-bottom: 1px solid var(--gold);
+            border-bottom: none;
             padding-bottom: 8px;
             flex-wrap: wrap;
         }
         .tab-btn {
-            background: transparent;
-            border: none;
-            padding: 8px 20px;
+            background: rgba(20, 25, 45, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 60px;
+            padding: 8px 24px;
             font-family: 'Tajawal', sans-serif;
             font-weight: 600;
             font-size: 0.85rem;
-            color: #9ca3cf;
+            color: #cbd5e1;
             cursor: pointer;
-            transition: 0.2s;
-            position: relative;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn i {
+            font-size: 0.9rem;
         }
         .tab-btn.active {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--gold);
             color: var(--gold);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            transform: scale(1.02);
         }
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -9px;
-            right: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--gold), #FFA500);
-            border-radius: 2px;
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.6);
+            color: #e2e8f0;
         }
-        .tab-content {
-            display: none;
-            animation: fade 0.2s;
-        }
-        .tab-content.active {
-            display: block;
-        }
+
         .console-box {
             background: #010409;
             border: 1px solid var(--gold);
@@ -579,7 +614,7 @@
             white-space: pre-wrap;
         }
 
-        /* ---------- NEW FILE MANAGER STYLES (Pure Black) ---------- */
+        /* ---------- PROFESSIONAL FILE MANAGER (PURE BLACK & GOLD) ---------- */
         .file-manager-pure-black {
             background: var(--pure-black);
             border-radius: 20px;
@@ -618,6 +653,7 @@
             cursor: pointer;
             transition: all 0.2s;
             color: var(--text-gray);
+            font-weight: 500;
         }
         .file-action-card i {
             font-size: 1.8rem;
@@ -628,6 +664,7 @@
             border-color: var(--gold);
             background: #1a1a1a;
             transform: translateY(-2px);
+            color: var(--gold);
         }
         .beta-badge {
             background: #FF8C00;
@@ -637,6 +674,7 @@
             border-radius: 20px;
             margin-right: 8px;
             font-weight: bold;
+            display: inline-block;
         }
         .search-bar {
             width: 100%;
@@ -832,6 +870,7 @@
             .stats-row { grid-template-columns: repeat(2,1fr); gap: 12px; }
             .servers-grid { grid-template-columns: 1fr; }
             .file-actions-grid { grid-template-columns: 1fr; }
+            .tab-btn { padding: 6px 16px; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -909,19 +948,19 @@
                 <button class="detail-action-btn delete" id="detailDeleteBtn"><i class="fas fa-trash"></i> حذف</button>
             </div>
             <div class="tabs">
-                <button class="tab-btn active" data-tab="console">الكونسول</button>
-                <button class="tab-btn" data-tab="files">الملفات</button>
-                <button class="tab-btn" data-tab="stats">الإحصائيات</button>
-                <button class="tab-btn" data-tab="settings">الإعدادات</button>
-                <button class="tab-btn" data-tab="api">مفاتيح API</button>
+                <button class="tab-btn active" data-tab="console"><i class="fas fa-terminal"></i> الكونسول</button>
+                <button class="tab-btn" data-tab="files"><i class="fas fa-folder-open"></i> الملفات</button>
+                <button class="tab-btn" data-tab="stats"><i class="fas fa-chart-line"></i> الإحصائيات</button>
+                <button class="tab-btn" data-tab="settings"><i class="fas fa-sliders-h"></i> الإعدادات</button>
+                <button class="tab-btn" data-tab="api"><i class="fas fa-key"></i> مفاتيح API</button>
             </div>
             <div id="consoleTab" class="tab-content active"><div class="console-box" id="consoleOut"></div></div>
             <div id="filesTab" class="tab-content">
-                <!-- NEW PROFESSIONAL FILE MANAGER -->
+                <!-- PROFESSIONAL FILE MANAGER -->
                 <div class="file-manager-pure-black">
                     <div class="breadcrumb" id="fileBreadcrumb"></div>
                     <div class="file-actions-grid">
-                        <div class="file-action-card" id="uploadFileBtn"><i class="fas fa-cloud-upload-alt"></i> تحميل الملفات</div>
+                        <div class="file-action-card" id="uploadFileBtn"><i class="fas fa-cloud-upload-alt"></i> تحميل ملفات</div>
                         <div class="file-action-card" id="createFileBtn"><i class="fas fa-file-alt"></i> إنشاء ملف</div>
                         <div class="file-action-card" id="createFolderBtn"><i class="fas fa-folder-plus"></i> إنشاء مجلد</div>
                         <div class="file-action-card" id="uploadFolderBtn"><i class="fas fa-folder-open"></i> مجلد التحميل <span class="beta-badge">تجريبي</span></div>
@@ -930,7 +969,12 @@
                     <div class="files-table-wrapper">
                         <table class="modern-files-table" id="filesModernTable">
                             <thead>
-                                <tr><th style="width:30px"><input type="checkbox" id="selectAllCheckbox"></th><th>الاسم</th><th>الحجم</th><th style="width:50px"></th></tr>
+                                <tr>
+                                    <th style="width:30px"><input type="checkbox" id="selectAllCheckbox"></th>
+                                    <th>الاسم</th>
+                                    <th>الحجم</th>
+                                    <th style="width:50px"></th>
+                                </tr>
                             </thead>
                             <tbody id="filesModernTbody"></tbody>
                         </table>
@@ -998,10 +1042,10 @@
     async function fetchStats() { if(!currentServer) return; try { const r = await fetch(`/api/server/stats/${currentServer.folder}`); const d = await r.json(); if(!d.success) return; document.getElementById('consoleOut').innerHTML = (d.logs || 'لا توجد مخرجات').split('\n').map(l => `<div>${escapeHtml(l)}</div>`).join(''); document.getElementById('consoleOut').scrollTop = document.getElementById('consoleOut').scrollHeight; document.getElementById('ramStat').innerText = `${d.mem || 0} MB / ${currentServer.ram_limit || 256} MB`; const ramPercent = (parseFloat(d.mem||0)/(currentServer.ram_limit||256))*100; document.getElementById('ramDetailProgress').style.width = Math.min(ramPercent,100)+'%'; document.getElementById('uptimeStat').innerText = d.uptime || '0'; } catch(e) {} }
     function goHome() { document.getElementById('homeView').style.display = 'block'; document.getElementById('detailView').classList.remove('active'); document.getElementById('createServerView').classList.remove('active'); if(polling) clearInterval(polling); currentServer = null; loadServers(); }
 
-    // NEW FILE MANAGER
+    // PROFESSIONAL FILE MANAGER FUNCTIONS
     async function loadFiles(path = '') { if(!currentServer) return; currentPath = path; try { const url = `/api/files/list/${currentServer.folder}${path ? '?path='+encodeURIComponent(path) : ''}`; const res = await fetch(url); const files = await res.json(); currentFilesList = files; renderFileManager(); updateBreadcrumb(); } catch(e) { showNotif('فشل تحميل الملفات','error'); } }
-    function renderFileManager() { const tbody = document.getElementById('filesModernTbody'); const searchTerm = document.getElementById('fileSearchInput').value.toLowerCase(); let filtered = currentFilesList.filter(f => f.name.toLowerCase().includes(searchTerm)); tbody.innerHTML = filtered.map(f => `<tr class="file-row" data-name="${escapeHtml(f.name)}" data-is-dir="${f.is_dir}"><td><input type="checkbox" class="file-checkbox" value="${escapeHtml(f.name)}"></td><td><div class="file-name-cell" data-name="${escapeHtml(f.name)}" data-is-dir="${f.is_dir}"><span class="file-icon">${f.is_dir ? '<i class="fas fa-folder" style="color:#FFD700;"></i>' : (f.name.endsWith('.py')?'<i class="fab fa-python"></i>':(f.name.endsWith('.js')?'<i class="fab fa-node-js"></i>':'<i class="fas fa-file"></i>'))}</span><span>${escapeHtml(f.name)}</span></div></td><td>${f.is_dir ? '—' : f.size}</td><td><div class="options-dropdown"><button class="options-btn" data-name="${escapeHtml(f.name)}" data-is-dir="${f.is_dir}"><i class="fas fa-ellipsis-v"></i></button><div class="dropdown-content"></div></div></td></tr>`).join('');
-        document.querySelectorAll('.file-name-cell').forEach(el => { el.addEventListener('click', (e) => { const name = el.dataset.name, isDir = el.dataset.isDir === 'true'; if(isDir) loadFiles(currentPath ? currentPath+'/'+name : name); else editFile(name); }); });
+    function renderFileManager() { const tbody = document.getElementById('filesModernTbody'); const searchTerm = document.getElementById('fileSearchInput').value.toLowerCase(); let filtered = currentFilesList.filter(f => f.name.toLowerCase().includes(searchTerm)); tbody.innerHTML = filtered.map(f => `<tr class="file-row" data-name="${escapeHtml(f.name)}" data-is-dir="${f.is_dir}"><td style="width:30px"><input type="checkbox" class="file-checkbox" value="${escapeHtml(f.name)}"></td><td><div class="file-name-cell" data-name="${escapeHtml(f.name)}" data-is-dir="${f.is_dir}"><span class="file-icon">${f.is_dir ? '<i class="fas fa-folder" style="color:#FFD700;"></i>' : (f.name.endsWith('.py')?'<i class="fab fa-python" style="color:#3776AB;"></i>':(f.name.endsWith('.js')?'<i class="fab fa-node-js" style="color:#339933;"></i>':'<i class="fas fa-file"></i>'))}</span><span>${escapeHtml(f.name)}</span></div></td><td>${f.is_dir ? '—' : f.size}</td><td style="width:50px"><div class="options-dropdown"><button class="options-btn" data-name="${escapeHtml(f.name)}" data-is-dir="${f.is_dir}"><i class="fas fa-ellipsis-v"></i></button><div class="dropdown-content"></div></div></td></tr>`).join('');
+        document.querySelectorAll('.file-name-cell').forEach(el => { el.addEventListener('click', (e) => { e.stopPropagation(); const name = el.dataset.name, isDir = el.dataset.isDir === 'true'; if(isDir) loadFiles(currentPath ? currentPath+'/'+name : name); else editFile(name); }); });
         document.querySelectorAll('.options-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const div = btn.nextElementSibling; const name = btn.dataset.name, isDir = btn.dataset.isDir === 'true'; div.innerHTML = `<button class="rename-opt" data-name="${name}" data-is-dir="${isDir}">✏️ إعادة تسمية</button><button class="delete-opt" data-name="${name}">🗑️ حذف</button>${!isDir ? '<button class="download-opt" data-name="'+name+'">⬇️ تنزيل</button>' : ''}`; div.style.display = 'block'; div.querySelectorAll('button').forEach(b => { b.addEventListener('click', (ev) => { ev.stopPropagation(); const n = b.dataset.name; if(b.classList.contains('rename-opt')) openRenameModal(n, isDir); else if(b.classList.contains('delete-opt')) deleteFile(n); else if(b.classList.contains('download-opt')) downloadFile(n); div.style.display = 'none'; }); }); setTimeout(() => { document.addEventListener('click', function hideDrop(e) { if(!div.contains(e.target) && e.target !== btn) { div.style.display = 'none'; document.removeEventListener('click', hideDrop); } }); }, 0); }); });
         document.getElementById('selectAllCheckbox').onchange = (e) => { document.querySelectorAll('.file-checkbox').forEach(cb => cb.checked = e.target.checked); };
         document.getElementById('bulkDeleteBtn').onclick = () => { const selected = Array.from(document.querySelectorAll('.file-checkbox:checked')).map(cb => cb.value); if(selected.length) deleteMultiple(selected); else showNotif('اختر ملفات أولاً','warning'); };
@@ -1010,7 +1054,7 @@
     async function deleteFile(name) { showConfirm(`حذف ${name}؟`, async () => { await fetch(`/api/files/delete/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({names:[name], path:currentPath}) }); loadFiles(currentPath); }); }
     async function deleteMultiple(names) { showConfirm(`حذف ${names.length} عنصر؟`, async () => { await fetch(`/api/files/delete/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({names, path:currentPath}) }); loadFiles(currentPath); }); }
     async function uploadFiles(files) { const fd = new FormData(); for(let f of files) fd.append('files[]',f); if(currentPath) fd.append('path', currentPath); await fetch(`/api/files/upload/${currentServer.folder}`, { method:'POST', body:fd }); loadFiles(currentPath); showNotif('تم الرفع', 'success'); }
-    async function uploadFolder(files) { const fd = new FormData(); for(let f of files) fd.append('files[]',f); fd.append('path', currentPath); await fetch(`/api/files/upload/${currentServer.folder}`, { method:'POST', body:fd }); loadFiles(currentPath); showNotif('تم رفع المجلد', 'success'); }
+    async function uploadFolder(files) { const fd = new FormData(); for(let f of files) fd.append('files[]',f); fd.append('path', currentPath); await fetch(`/api/files/upload/${currentServer.folder}`, { method:'POST', body:fd }); loadFiles(currentPath); showNotif('تم رفع المجلد (تجريبي)', 'success'); }
     async function createFile() { const name = document.getElementById('newFileName').value.trim(); const content = document.getElementById('newFileContent').value; if(!name) return; await fetch(`/api/files/create/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({filename:name, content, path:currentPath}) }); closeCreateFileModal(); loadFiles(currentPath); loadStartupFiles(); }
     async function createFolder() { const name = document.getElementById('newFolderName').value.trim(); if(!name) return; await fetch(`/api/files/create-folder/${currentServer.folder}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({foldername:name, path:currentPath}) }); document.getElementById('createFolderModal').classList.remove('active'); loadFiles(currentPath); }
     async function editFile(name) { currentFile = name; const url = `/api/files/content/${currentServer.folder}/${encodeURIComponent(name)}?path=${encodeURIComponent(currentPath)}`; const r = await fetch(url); const d = await r.json(); document.getElementById('editorArea').value = d.content||''; document.getElementById('editorModal').classList.add('active'); }
