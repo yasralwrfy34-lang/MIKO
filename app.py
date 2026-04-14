@@ -25,20 +25,40 @@ os.makedirs(USERS_DIR, exist_ok=True)
 
 app = Flask(__name__, static_folder=BASE_DIR)
 
+# ============== تنظيف جلسة قاعدة البيانات بعد كل طلب ==============
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
+
 # ============== إعدادات الجلسة ==============
 app.secret_key = "MIKO_HOST_STABLE_SECRET_KEY_2026"
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
-app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024  # سيتم تعديله حسب صلاحيات المستخدم
+app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
-# ============== قاعدة البيانات (PostgreSQL / SQLite احتياطي) ==============
+# ============== قاعدة البيانات ==============
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
     DATABASE_URL = f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite')}"
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-db_session = scoped_session(sessionmaker(bind=engine))
+# إصلاح رابط PostgreSQL (Render/Railway يستخدمون postgres:// القديم)
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+    pool_recycle=300,
+    pool_size=5,
+    max_overflow=10
+)
+db_session = scoped_session(sessionmaker(
+    bind=engine,
+    autocommit=False,
+    autoflush=False,
+    expire_on_commit=False
+))
 Base = declarative_base()
 Base.query = db_session.query_property()
 
@@ -64,6 +84,7 @@ class Server(Base):
     name = Column(String(100), nullable=False)
     path = Column(String(500), nullable=False)
     type = Column(String(20), default="Python")
+    language = Column(String(20), default="python")
     status = Column(String(20), default="Stopped")
     created_at = Column(DateTime, default=datetime.now)
     startup_file = Column(String(200), default="")
@@ -89,6 +110,13 @@ class Log(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     message = Column(Text)
     timestamp = Column(DateTime, default=datetime.now)
+
+# إضافة عمود language إذا لم يكن موجوداً (للتحديث)
+try:
+    with engine.connect() as conn:
+        conn.execute("ALTER TABLE servers ADD COLUMN language VARCHAR(20) DEFAULT 'python'")
+except Exception as e:
+    pass
 
 Base.metadata.create_all(bind=engine)
 
@@ -211,9 +239,27 @@ def start_server_process(folder):
         return False
     main_file = srv.startup_file
     if not main_file:
-        py_files = [f for f in os.listdir(srv.path) if f.endswith('.py') and f not in ['out.log', 'meta.json']]
-        if py_files:
-            main_file = py_files[0]
+        lang = srv.language.lower()
+        if lang == 'python':
+            py_files = [f for f in os.listdir(srv.path) if f.endswith('.py') and f not in ['out.log', 'meta.json']]
+            if py_files:
+                main_file = py_files[0]
+        elif lang == 'nodejs':
+            if os.path.exists(os.path.join(srv.path, 'index.js')):
+                main_file = 'index.js'
+            elif os.path.exists(os.path.join(srv.path, 'app.js')):
+                main_file = 'app.js'
+        elif lang == 'java':
+            jar_files = [f for f in os.listdir(srv.path) if f.endswith('.jar')]
+            if jar_files:
+                main_file = jar_files[0]
+        elif lang == 'go':
+            if os.path.exists(os.path.join(srv.path, 'main.go')):
+                main_file = 'main.go'
+        elif lang == 'php':
+            if os.path.exists(os.path.join(srv.path, 'index.php')):
+                main_file = 'index.php'
+        if main_file:
             srv.startup_file = main_file
             db_session.commit()
         else:
@@ -228,14 +274,27 @@ def start_server_process(folder):
         db_session.commit()
     log_path = os.path.join(srv.path, "out.log")
     log_file = open(log_path, "a", encoding='utf-8')
-    log_file.write(f"\n{'='*50}\n🚀 بدء التشغيل - {datetime.now()}\n📁 {main_file}\n🔌 المنفذ: {port}\n{'='*50}\n\n")
+    log_file.write(f"\n{'='*50}\n🚀 بدء التشغيل - {datetime.now()}\n📁 {main_file}\n🔌 المنفذ: {port}\n🌐 اللغة: {srv.language}\n{'='*50}\n\n")
     log_file.flush()
     try:
         env = os.environ.copy()
         env["PORT"] = str(port)
         env["SERVER_PORT"] = str(port)
+        lang = srv.language.lower()
+        if lang == 'python':
+            cmd = [sys.executable, "-u", main_file]
+        elif lang == 'nodejs':
+            cmd = ["node", main_file]
+        elif lang == 'java':
+            cmd = ["java", "-jar", main_file]
+        elif lang == 'go':
+            cmd = ["go", "run", main_file]
+        elif lang == 'php':
+            cmd = ["php", "-S", f"0.0.0.0:{port}", "-t", srv.path]
+        else:
+            cmd = [sys.executable, "-u", main_file]
         proc = subprocess.Popen(
-            [sys.executable, "-u", main_file],
+            cmd,
             cwd=srv.path,
             stdout=log_file,
             stderr=subprocess.STDOUT,
@@ -343,7 +402,11 @@ def api_register():
         max_file_size_mb=100
     )
     db_session.add(new_user)
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception as e:
+        db_session.rollback()
+        return jsonify({"success": False, "message": "خطأ في إنشاء الحساب، حاول مرة أخرى"})
     
     user_dir = os.path.join(USERS_DIR, username)
     os.makedirs(user_dir, exist_ok=True)
@@ -364,6 +427,8 @@ def api_login():
         session['username'] = username
         session.permanent = True
         return jsonify({"success": True, "redirect": "/admin", "is_admin": True})
+    # إعادة تحميل الجلسة لضمان بيانات محدثة من قاعدة البيانات
+    db_session.expire_all()
     user = db_session.query(User).filter_by(username=username).first()
     if not user:
         return jsonify({"success": False, "message": "المستخدم غير موجود"})
@@ -374,7 +439,10 @@ def api_login():
     session['username'] = username
     session.permanent = True
     user.last_login = datetime.now()
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
     return jsonify({"success": True, "redirect": "/dashboard", "is_admin": False})
 
 @app.route('/api/logout', methods=['GET', 'POST'])
@@ -577,7 +645,7 @@ def get_metrics():
 def ping():
     return jsonify({"status": "pong", "timestamp": str(datetime.now())})
 
-# ============== السيرفرات (للواجهة العادية) ==============
+# ============== السيرفرات ==============
 @app.route('/api/servers')
 def list_servers():
     if "username" not in session:
@@ -617,6 +685,7 @@ def list_servers():
             "uptime": uptime_str,
             "port": srv.port or "N/A",
             "plan": srv.plan,
+            "language": srv.language,
             "storage_limit": storage_limit,
             "ram_limit": srv.ram_limit,
             "cpu_limit": srv.cpu_limit,
@@ -652,6 +721,7 @@ def add_server():
     storage_limit = int(data.get("storage", 100))
     ram_limit = int(data.get("ram", 256))
     cpu_limit = float(data.get("cpu", 0.5))
+    language = data.get("language", "python").strip().lower()
     if not name:
         name = "Server_" + secrets.token_hex(2)
     folder = f"{session['username']}_{re.sub(r'[^a-zA-Z0-9]', '', name)}_{int(time.time())}"
@@ -668,7 +738,8 @@ def add_server():
         plan=plan_id,
         storage_limit=storage_limit,
         ram_limit=ram_limit,
-        cpu_limit=cpu_limit
+        cpu_limit=cpu_limit,
+        language=language
     )
     db_session.add(new_server)
     db_session.commit()
@@ -782,7 +853,7 @@ def get_server_stats(folder):
         "ip": get_public_ip()
     })
 
-# ============== API الملفات (للواجهة العادية) ==============
+# ============== API الملفات ==============
 @app.route('/api/files/list/<folder>')
 def list_server_files(folder):
     if "username" not in session:
@@ -908,7 +979,6 @@ def upload_files(folder):
     user = get_user(session["username"])
     max_file_size_mb = user.max_file_size_mb if user else 100
     max_file_size_bytes = max_file_size_mb * 1024 * 1024
-    # تحديث الحد الأقصى ديناميكياً
     app.config['MAX_CONTENT_LENGTH'] = max_file_size_bytes
     
     if not os.path.exists(srv.path):
@@ -923,7 +993,6 @@ def upload_files(folder):
                 continue
             if '..' in f.filename:
                 continue
-            # التحقق من حجم الملف
             f.seek(0, 2)
             size = f.tell()
             f.seek(0)
@@ -1006,7 +1075,7 @@ def install_requirements(folder):
             return jsonify({"success": False, "message": str(e)})
     return jsonify({"success": False, "message": "requirements.txt غير موجود"})
 
-# ============== API للبوت (التحكم عبر API Key) ==============
+# ============== API للبوت ==============
 @app.route('/api/bot/verify', methods=['POST'])
 def bot_verify():
     data = request.get_json()
@@ -1053,6 +1122,7 @@ def bot_list_servers():
             "uptime": uptime_str,
             "port": srv.port or "N/A",
             "plan": srv.plan,
+            "language": srv.language,
             "storage_limit": srv.storage_limit,
             "ram_limit": srv.ram_limit,
             "cpu_limit": srv.cpu_limit
@@ -1283,7 +1353,6 @@ def bot_file_upload():
     srv = db_session.query(Server).filter_by(folder=folder).first()
     if not srv or srv.owner != username:
         return jsonify({"success": False, "message": "غير مصرح"}), 403
-    # التحقق من حجم الملف حسب صلاحيات المستخدم
     max_file_size_mb = user.max_file_size_mb if user else 100
     max_file_size_bytes = max_file_size_mb * 1024 * 1024
     target_dir = os.path.join(srv.path, file_path) if file_path else srv.path
@@ -1294,7 +1363,6 @@ def bot_file_upload():
     if '..' in filename:
         return jsonify({"success": False, "message": "اسم ملف غير صالح"}), 400
     full_path = os.path.join(target_dir, filename)
-    # التحقق من الحجم
     uploaded_file.seek(0, 2)
     size = uploaded_file.tell()
     uploaded_file.seek(0)
@@ -1384,6 +1452,7 @@ def bot_create_server():
     storage_limit = int(data.get('storage', 100))
     ram_limit = int(data.get('ram', 256))
     cpu_limit = float(data.get('cpu', 0.5))
+    language = data.get('language', 'python').strip().lower()
     if not api_key:
         return jsonify({"success": False, "message": "API Key مطلوب"}), 400
     username, user = get_user_by_api_key(api_key)
@@ -1406,7 +1475,8 @@ def bot_create_server():
         plan=plan_id,
         storage_limit=storage_limit,
         ram_limit=ram_limit,
-        cpu_limit=cpu_limit
+        cpu_limit=cpu_limit,
+        language=language
     )
     db_session.add(new_server)
     db_session.commit()
