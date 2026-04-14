@@ -8,808 +8,622 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --gold: #FFD700;
-            --gold-glow: rgba(255,215,0,0.3);
-            --red: #FF3D5A;
-            --bg: #08090f;
-            --sidebar-w: 260px;
-        }
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: var(--bg);
-            color: #eef2ff;
-            overflow-x: hidden;
-        }
-        .bg-aurora {
-            position: fixed; inset: 0;
-            background: radial-gradient(ellipse at 30% 40%,rgba(255,215,0,0.07),transparent 60%),
-                        radial-gradient(ellipse at 80% 70%,rgba(255,61,90,0.05),transparent 60%);
-            z-index: -1; pointer-events: none;
-        }
-
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--gold:#FFD700;--glow:rgba(255,215,0,.28);--red:#FF3D5A;--bg:#08090f;--sw:260px}
+        body{font-family:'Tajawal',sans-serif;background:var(--bg);color:#eef2ff;overflow-x:hidden}
+        .bg-a{position:fixed;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(255,215,0,.07),transparent 60%),radial-gradient(ellipse at 80% 70%,rgba(255,61,90,.05),transparent 60%);z-index:-1;pointer-events:none}
         /* NAVBAR */
-        .navbar {
-            position: fixed; top: 0; left: 0; right: 0; height: 60px;
-            background: rgba(8,9,20,0.97);
-            border-bottom: 1px solid var(--gold);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; z-index: 300;
-        }
-        .logo { display: flex; align-items: center; gap: 10px; }
-        .logo-icon {
-            width: 34px; height: 34px;
-            background: linear-gradient(145deg,#0f172a,#0a0f1c);
-            border: 1px solid var(--gold); border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--gold); font-size: 15px;
-        }
-        .logo-text {
-            font-size: 14px; font-weight: 900; letter-spacing: 1px;
-            background: linear-gradient(135deg,var(--gold),#FFA500);
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-        }
-        .nav-right { display: flex; align-items: center; gap: 14px; }
-        .notif-wrap { position: relative; }
-        .notif-bell { cursor: pointer; color: var(--gold); font-size: 1.2rem; padding: 6px; }
-        .notif-badge {
-            position: absolute; top: 0; right: 0;
-            background: var(--red); color: white; font-size: 0.55rem;
-            border-radius: 50%; padding: 2px 5px; min-width: 16px; text-align: center;
-        }
-        .notif-dropdown {
-            position: absolute; top: 44px; left: -10px; width: 290px;
-            background: #0a0c18; border: 1px solid var(--gold); border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 400;
-            display: none; max-height: 340px; overflow-y: auto;
-        }
-        .notif-dropdown.show { display: block; }
-        .notif-item { padding: 10px 14px; border-bottom: 1px solid rgba(255,215,0,0.07); font-size: 0.78rem; }
-        .notif-time { font-size: 0.62rem; color: var(--gold); margin-top: 3px; display: block; }
-        .badge-admin {
-            background: rgba(255,215,0,0.12); color: var(--gold);
-            padding: 3px 11px; border-radius: 30px; font-size: 0.7rem;
-            border: 1px solid rgba(255,215,0,0.25);
-        }
-        .logout-btn {
-            background: rgba(255,61,90,0.1); border: 1px solid var(--red);
-            color: var(--red); padding: 5px 14px; border-radius: 40px;
-            cursor: pointer; font-size: 0.78rem; font-family: 'Tajawal', sans-serif;
-            transition: 0.2s;
-        }
-        .logout-btn:hover { background: rgba(255,61,90,0.22); }
-
+        .navbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(8,9,20,.97);border-bottom:1px solid var(--gold);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:300}
+        .logo{display:flex;align-items:center;gap:10px}
+        .logo-i{width:34px;height:34px;background:linear-gradient(145deg,#0f172a,#0a0f1c);border:1px solid var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:15px}
+        .logo-t{font-size:14px;font-weight:900;letter-spacing:1px;background:linear-gradient(135deg,var(--gold),#FFA500);-webkit-background-clip:text;background-clip:text;color:transparent}
+        .nav-r{display:flex;align-items:center;gap:14px}
+        .nw{position:relative}
+        .nbell{cursor:pointer;color:var(--gold);font-size:1.2rem;padding:6px}
+        .nbadge{position:absolute;top:0;right:0;background:var(--red);color:white;font-size:.55rem;border-radius:50%;padding:2px 5px;min-width:16px;text-align:center}
+        .ndrop{position:absolute;top:44px;left:-10px;width:300px;background:#0a0c18;border:1px solid var(--gold);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.6);z-index:400;display:none;max-height:340px;overflow-y:auto}
+        .ndrop.show{display:block}
+        .ni{padding:10px 14px;border-bottom:1px solid rgba(255,215,0,.07);font-size:.78rem;cursor:pointer}
+        .ni:hover{background:rgba(255,215,0,.04)}
+        .ni.unread{border-right:3px solid var(--gold)}
+        .ntime{font-size:.62rem;color:var(--gold);margin-top:3px;display:block}
+        .badm{background:rgba(255,215,0,.12);color:var(--gold);padding:3px 11px;border-radius:30px;font-size:.7rem;border:1px solid rgba(255,215,0,.25)}
+        .logout-btn{background:rgba(255,61,90,.1);border:1px solid var(--red);color:var(--red);padding:5px 14px;border-radius:40px;cursor:pointer;font-size:.78rem;font-family:'Tajawal',sans-serif;transition:.2s}
+        .logout-btn:hover{background:rgba(255,61,90,.22)}
         /* LAYOUT */
-        .layout { display: flex; margin-top: 60px; min-height: calc(100vh - 60px); }
-
-        /* SIDEBAR - always visible on desktop */
-        .sidebar {
-            width: var(--sidebar-w);
-            background: rgba(5,8,20,0.99);
-            border-left: 1px solid rgba(255,215,0,0.2);
-            position: fixed; top: 60px; right: 0; bottom: 0;
-            display: flex; flex-direction: column;
-            z-index: 200; overflow-y: auto;
-            transition: transform 0.3s ease;
-        }
-        .sidebar-logo {
-            padding: 18px 18px 14px;
-            border-bottom: 1px solid rgba(255,215,0,0.08);
-            display: flex; align-items: center; gap: 10px;
-            color: var(--gold); font-weight: 800; font-size: 0.95rem;
-        }
-        .nav-section { padding: 10px 8px; flex: 1; }
-        .nav-label {
-            font-size: 0.6rem; text-transform: uppercase; color: #3d4a6b;
-            padding: 8px 10px 3px; letter-spacing: 1.5px;
-        }
-        .nav-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 11px 14px; margin-bottom: 2px;
-            border-radius: 14px; color: #7c8ab5;
-            cursor: pointer; font-size: 0.87rem; font-weight: 500;
-            transition: all 0.15s; border: 1px solid transparent;
-            user-select: none;
-        }
-        .nav-item i { width: 18px; text-align: center; font-size: 0.95rem; }
-        .nav-item:hover { background: rgba(255,215,0,0.07); color: #d4b800; }
-        .nav-item.active {
-            background: rgba(255,215,0,0.14);
-            color: var(--gold);
-            border-color: rgba(255,215,0,0.28);
-            box-shadow: 0 0 8px var(--gold-glow);
-        }
-        .sidebar-footer {
-            padding: 12px 18px; border-top: 1px solid rgba(255,215,0,0.06);
-            font-size: 0.62rem; color: #3d4560;
-        }
-
-        /* MAIN CONTENT */
-        .main { margin-right: var(--sidebar-w); flex: 1; padding: 22px; min-width: 0; }
-
-        /* TABS */
-        .tab-page { display: none; }
-        .tab-page.active { display: block; animation: fadeIn 0.22s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
-
+        .layout{display:flex;margin-top:60px;min-height:calc(100vh - 60px)}
+        /* SIDEBAR */
+        .sidebar{width:var(--sw);background:rgba(5,8,20,.99);border-left:1px solid rgba(255,215,0,.18);position:fixed;top:60px;right:0;bottom:0;display:flex;flex-direction:column;z-index:200;overflow-y:auto;transition:transform .3s ease}
+        .slogo{padding:18px 18px 14px;border-bottom:1px solid rgba(255,215,0,.07);display:flex;align-items:center;gap:10px;color:var(--gold);font-weight:800;font-size:.95rem}
+        .nsec{padding:10px 8px;flex:1}
+        .nlabel{font-size:.6rem;text-transform:uppercase;color:#3d4a6b;padding:8px 10px 3px;letter-spacing:1.5px}
+        .ni2{display:flex;align-items:center;gap:12px;padding:11px 14px;margin-bottom:2px;border-radius:12px;color:#7c8ab5;cursor:pointer;font-size:.87rem;font-weight:500;transition:all .15s;border:1px solid transparent;user-select:none}
+        .ni2 i{width:18px;text-align:center;font-size:.95rem}
+        .ni2:hover{background:rgba(255,215,0,.07);color:#d4b800}
+        .ni2.active{background:rgba(255,215,0,.13);color:var(--gold);border-color:rgba(255,215,0,.26);box-shadow:0 0 8px var(--glow)}
+        .sfooter{padding:12px 18px;border-top:1px solid rgba(255,215,0,.06);font-size:.62rem;color:#3d4560}
+        /* MAIN */
+        .main{margin-right:var(--sw);flex:1;padding:22px;min-width:0}
+        .tab-page{display:none}
+        .tab-page.active{display:block;animation:fadeIn .22s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
         /* MOBILE */
-        .mobile-topbar {
-            display: none; align-items: center; justify-content: space-between;
-            background: rgba(8,9,20,0.7); border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 28px; padding: 10px 16px; margin-bottom: 20px;
-        }
-        .hamburger {
-            background: rgba(255,215,0,0.1); border: none;
-            color: var(--gold); font-size: 1.3rem;
-            width: 38px; height: 38px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-        .sidebar-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.55); backdrop-filter: blur(3px); z-index: 190;
-        }
-        .sidebar-overlay.show { display: block; }
-
-        /* PAGE HEADER */
-        .page-header { margin-bottom: 22px; }
-        .page-title {
-            font-size: 1.25rem; font-weight: 800;
-            background: linear-gradient(135deg,var(--gold),#FFA500);
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-        }
-
+        .mbar{display:none;align-items:center;justify-content:space-between;background:rgba(8,9,20,.7);border:1px solid rgba(255,215,0,.3);border-radius:28px;padding:10px 16px;margin-bottom:20px}
+        .hbg{background:rgba(255,215,0,.1);border:none;color:var(--gold);font-size:1.3rem;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
+        .sovlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:190}
+        .sovlay.show{display:block}
+        /* PAGE */
+        .ptitle{font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--gold),#FFA500);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:20px}
         /* STATS */
-        .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 20px; }
-        .stats-2 { grid-template-columns: repeat(2,1fr); }
-        .stats-3 { grid-template-columns: repeat(3,1fr); }
-        .stat-card {
-            background: rgba(12,18,34,0.75); border: 1px solid rgba(255,215,0,0.22);
-            border-radius: 20px; padding: 18px; transition: 0.2s;
-        }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 0 12px var(--gold-glow); }
-        .stat-label { font-size: 0.67rem; color: #6b7a9f; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--gold); }
-        .stat-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 10px; margin-top: 10px; overflow: hidden; }
-        .stat-bar-fill { height: 100%; background: linear-gradient(90deg,var(--gold),#FFA500); border-radius: 10px; transition: width 0.5s; }
-
+        .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+        .s2{grid-template-columns:repeat(2,1fr)}
+        .s3{grid-template-columns:repeat(3,1fr)}
+        .sc{background:rgba(12,18,34,.75);border:1px solid rgba(255,215,0,.2);border-radius:18px;padding:16px;transition:.2s}
+        .sc:hover{transform:translateY(-2px);box-shadow:0 0 12px var(--glow)}
+        .sl{font-size:.67rem;color:#6b7a9f;text-transform:uppercase;margin-bottom:5px;letter-spacing:.5px}
+        .sv{font-size:1.7rem;font-weight:800;color:var(--gold)}
+        .sb{height:4px;background:rgba(255,255,255,.05);border-radius:10px;margin-top:9px;overflow:hidden}
+        .sbf{height:100%;background:linear-gradient(90deg,var(--gold),#FFA500);border-radius:10px;transition:width .5s}
         /* CARD */
-        .card {
-            background: rgba(12,18,34,0.75); border: 1px solid rgba(255,215,0,0.18);
-            border-radius: 20px; padding: 20px; margin-bottom: 18px;
-        }
-        .card-title {
-            font-size: 0.95rem; font-weight: 700; color: var(--gold);
-            display: flex; align-items: center; gap: 9px; margin-bottom: 16px;
-        }
-
+        .card{background:rgba(12,18,34,.75);border:1px solid rgba(255,215,0,.16);border-radius:18px;padding:20px;margin-bottom:18px}
+        .ctitle{font-size:.95rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:9px;margin-bottom:16px}
         /* FORM */
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .form-group { display: flex; flex-direction: column; gap: 5px; }
-        .form-group label { font-size: 0.73rem; color: #9ca3cf; }
-        .form-group input, .form-group select, .form-group textarea {
-            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.28);
-            border-radius: 40px; padding: 9px 14px; color: white;
-            font-family: 'Tajawal', sans-serif; font-size: 0.85rem; transition: 0.2s;
-        }
-        .form-group textarea { border-radius: 14px; resize: vertical; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none; border-color: var(--gold); box-shadow: 0 0 7px var(--gold-glow);
-        }
-
+        .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+        .fg{display:flex;flex-direction:column;gap:5px}
+        .fg label{font-size:.73rem;color:#9ca3cf}
+        .fg input,.fg select,.fg textarea{background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.25);border-radius:40px;padding:9px 14px;color:white;font-family:'Tajawal',sans-serif;font-size:.85rem;transition:.2s}
+        .fg textarea{border-radius:12px;resize:vertical}
+        .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 7px var(--glow)}
         /* BUTTONS */
-        .btn {
-            border: none; border-radius: 40px; padding: 9px 20px;
-            font-family: 'Tajawal', sans-serif; font-size: 0.85rem; font-weight: 700;
-            cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 7px;
-        }
-        .btn-gold { background: linear-gradient(135deg,var(--gold),#FFA500); color: #0a0808; }
-        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--gold-glow); }
-        .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
-        .btn-outline:hover { background: rgba(255,215,0,0.08); }
-        .btn-red { background: linear-gradient(135deg,var(--red),#b91c1c); color: white; }
-
+        .btn{border:none;border-radius:40px;padding:9px 20px;font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:7px}
+        .bg{background:linear-gradient(135deg,var(--gold),#FFA500);color:#0a0808}
+        .bg:hover{transform:translateY(-2px);box-shadow:0 4px 12px var(--glow)}
+        .bo{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+        .bo:hover{background:rgba(255,215,0,.08)}
+        .br{background:linear-gradient(135deg,var(--red),#b91c1c);color:white}
+        .bgreen{background:rgba(0,220,100,.15);border:1px solid rgba(0,220,100,.35);color:#00dc64}
+        .bgreen:hover{background:rgba(0,220,100,.25)}
+        .byellow{background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);color:var(--gold)}
+        .byellow:hover{background:rgba(255,215,0,.22)}
+        .borange{background:rgba(255,165,0,.12);border:1px solid rgba(255,165,0,.3);color:#FFA500}
+        .borange:hover{background:rgba(255,165,0,.22)}
         /* TABLE */
-        .table-wrap { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px 12px; border-bottom: 1px solid rgba(255,215,0,0.06); text-align: right; font-size: 0.82rem; }
-        th { color: var(--gold); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        tr:hover td { background: rgba(255,215,0,0.025); }
-        .badge { padding: 3px 10px; border-radius: 30px; font-size: 0.67rem; font-weight: 600; }
-        .badge-admin { background: rgba(255,215,0,0.12); color: var(--gold); border: 1px solid rgba(255,215,0,0.2); }
-        .badge-user { background: rgba(100,130,255,0.08); color: #a5b4fc; }
-        .badge-on { background: rgba(0,255,136,0.1); color: #00ff88; }
-        .badge-off { background: rgba(255,255,255,0.04); color: #6b7a9f; }
-        .icon-btn {
-            background: none; border: none; cursor: pointer;
-            color: var(--gold); font-size: 0.88rem; padding: 4px 6px;
-            border-radius: 8px; transition: 0.15s;
-        }
-        .icon-btn:hover { background: rgba(255,215,0,0.1); }
-        .icon-btn.red { color: var(--red); }
-        .icon-btn.red:hover { background: rgba(255,61,90,0.1); }
-        .search-input {
-            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,215,0,0.22);
-            border-radius: 40px; padding: 7px 16px; color: white;
-            font-family: 'Tajawal', sans-serif; width: 100%; max-width: 280px;
-            margin-bottom: 14px; font-size: 0.83rem;
-        }
-        .search-input:focus { outline: none; border-color: var(--gold); }
-        .inline-input {
-            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.2);
-            border-radius: 20px; padding: 3px 8px; color: white;
-            font-size: 0.78rem; text-align: center;
-        }
-
+        .tw{overflow-x:auto}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:9px 12px;border-bottom:1px solid rgba(255,215,0,.05);text-align:right;font-size:.82rem}
+        th{color:var(--gold);font-weight:600;font-size:.68rem;text-transform:uppercase;letter-spacing:.5px}
+        tr:hover td{background:rgba(255,215,0,.025)}
+        .badge{padding:3px 10px;border-radius:30px;font-size:.65rem;font-weight:600}
+        .b-admin{background:rgba(255,215,0,.12);color:var(--gold);border:1px solid rgba(255,215,0,.2)}
+        .b-user{background:rgba(100,130,255,.08);color:#a5b4fc}
+        .b-vip{background:rgba(255,215,0,.2);color:#FFD700;border:1px solid rgba(255,215,0,.4);box-shadow:0 0 6px rgba(255,215,0,.2)}
+        .b-ban{background:rgba(255,61,90,.15);color:#ff6b81;border:1px solid rgba(255,61,90,.3)}
+        .b-on{background:rgba(0,255,136,.1);color:#00ff88}
+        .b-off{background:rgba(255,255,255,.04);color:#6b7a9f}
+        .ib{background:none;border:none;cursor:pointer;font-size:.88rem;padding:4px 6px;border-radius:8px;transition:.15s}
+        .ib:hover{background:rgba(255,215,0,.1)}
+        .ib.red{color:var(--red)}
+        .ib.red:hover{background:rgba(255,61,90,.1)}
+        .ib.gold{color:var(--gold)}
+        .ib.green{color:#00dc64}
+        .ib.green:hover{background:rgba(0,220,100,.1)}
+        .ib.orange{color:#FFA500}
+        .ib.orange:hover{background:rgba(255,165,0,.1)}
+        .sin{background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.22);border-radius:40px;padding:7px 16px;color:white;font-family:'Tajawal',sans-serif;width:100%;max-width:280px;margin-bottom:14px;font-size:.83rem}
+        .sin:focus{outline:none;border-color:var(--gold)}
+        .ilin{background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.18);border-radius:20px;padding:3px 8px;color:white;font-size:.78rem;text-align:center}
         /* MODAL */
-        .modal {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.82); backdrop-filter: blur(10px);
-            z-index: 500; align-items: center; justify-content: center;
-        }
-        .modal.show { display: flex; }
-        .modal-box {
-            background: #0a0c18; border: 1px solid var(--gold);
-            border-radius: 26px; padding: 24px;
-            width: 90%; max-width: 440px;
-            box-shadow: 0 0 28px var(--gold-glow);
-        }
-        .modal-title { color: var(--gold); font-size: 0.98rem; font-weight: 700; margin-bottom: 16px; }
-
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);z-index:500;align-items:center;justify-content:center}
+        .modal.show{display:flex}
+        .mbox{background:#0a0c18;border:1px solid var(--gold);border-radius:24px;padding:24px;width:90%;max-width:480px;box-shadow:0 0 28px var(--glow);max-height:85vh;overflow-y:auto}
+        .mtitle{color:var(--gold);font-size:.98rem;font-weight:700;margin-bottom:16px}
         /* TOAST */
-        .toast {
-            position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
-            background: #1e293b; border: 1px solid var(--gold); border-radius: 50px;
-            padding: 8px 20px; z-index: 600; display: none; font-size: 0.8rem;
-            backdrop-filter: blur(8px); white-space: nowrap;
-        }
-
+        .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1e293b;border:1px solid var(--gold);border-radius:50px;padding:8px 20px;z-index:600;display:none;font-size:.8rem;backdrop-filter:blur(8px);white-space:nowrap}
         /* CHART */
-        .chart-wrap { position: relative; height: 230px; }
-
+        .cw{position:relative;height:220px}
         /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .sidebar { transform: translateX(100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main { margin-right: 0; }
-            .mobile-topbar { display: flex; }
-            .stats-grid { grid-template-columns: repeat(2,1fr); }
-            .stats-3 { grid-template-columns: repeat(2,1fr); }
-            .form-row { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .main { padding: 14px; }
-        }
+        @media(max-width:900px){.sidebar{transform:translateX(100%)}.sidebar.open{transform:translateX(0)}.main{margin-right:0}.mbar{display:flex}.sgrid{grid-template-columns:repeat(2,1fr)}.s3{grid-template-columns:repeat(2,1fr)}.frow{grid-template-columns:1fr}}
+        @media(max-width:480px){.sgrid{grid-template-columns:1fr 1fr;gap:10px}.main{padding:14px}}
+        /* special */
+        .vip-star{color:#FFD700;animation:vipPulse 2s infinite}
+        @keyframes vipPulse{0%,100%{opacity:1}50%{opacity:.5}}
+        .action-bar{display:flex;gap:8px;flex-wrap:wrap}
     </style>
 </head>
 <body>
-<div class="bg-aurora"></div>
+<div class="bg-a"></div>
 
 <nav class="navbar">
-    <div class="logo">
-        <div class="logo-icon"><i class="fas fa-crown"></i></div>
-        <span class="logo-text">MIKO HOST · ADMIN</span>
-    </div>
-    <div class="nav-right">
-        <div class="notif-wrap">
-            <div class="notif-bell" id="notifBell"><i class="fas fa-bell"></i><span class="notif-badge" id="notifCount">0</span></div>
-            <div class="notif-dropdown" id="notifDropdown">
-                <div style="padding:10px 14px; border-bottom:1px solid rgba(255,215,0,0.1); font-weight:700; font-size:0.82rem; color:var(--gold);">الإشعارات</div>
-                <div id="notifList"><div style="padding:12px; color:#888; text-align:center; font-size:0.78rem;">لا توجد إشعارات</div></div>
+    <div class="logo"><div class="logo-i"><i class="fas fa-crown"></i></div><span class="logo-t">MIKO HOST · ADMIN</span></div>
+    <div class="nav-r">
+        <div class="nw">
+            <div class="nbell" id="nbell"><i class="fas fa-bell"></i><span class="nbadge" id="ncount">0</span></div>
+            <div class="ndrop" id="ndrop">
+                <div style="padding:10px 14px;border-bottom:1px solid rgba(255,215,0,.1);font-weight:700;font-size:.82rem;color:var(--gold)">الإشعارات
+                    <button style="float:left;background:none;border:none;color:#6b7a9f;cursor:pointer;font-size:.7rem" onclick="markAllRead()">قراءة الكل</button>
+                </div>
+                <div id="nlist"><div style="padding:12px;color:#888;text-align:center;font-size:.78rem">لا توجد إشعارات</div></div>
             </div>
         </div>
-        <span class="badge-admin"><i class="fas fa-shield-alt"></i> مسؤول</span>
-        <strong id="adminName" style="font-size:0.8rem; color:#9ca3cf;"></strong>
+        <span class="badm"><i class="fas fa-shield-alt"></i> مسؤول</span>
+        <strong id="adminName" style="font-size:.8rem;color:#9ca3cf"></strong>
         <button class="logout-btn" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
     </div>
 </nav>
 
 <div class="layout">
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-logo">
-            <i class="fas fa-crown" style="font-size:1.2rem;"></i> MIKO PANEL
+<aside class="sidebar" id="sidebar">
+    <div class="slogo"><i class="fas fa-crown" style="font-size:1.2rem"></i> MIKO PANEL</div>
+    <nav class="nsec">
+        <div class="nlabel">الرئيسية</div>
+        <div class="ni2 active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> لوحة التحكم</div>
+        <div class="nlabel">إدارة الحسابات</div>
+        <div class="ni2" data-tab="users"><i class="fas fa-users-gear"></i> المستخدمون</div>
+        <div class="ni2" data-tab="bans"><i class="fas fa-ban"></i> الحظر والتقييد</div>
+        <div class="nlabel">إدارة السيرفرات</div>
+        <div class="ni2" data-tab="servers"><i class="fas fa-server"></i> السيرفرات</div>
+        <div class="ni2" data-tab="userfiles"><i class="fas fa-folder-open"></i> ملفات المستخدمين</div>
+        <div class="nlabel">الأدوات</div>
+        <div class="ni2" data-tab="broadcast"><i class="fas fa-bullhorn"></i> إذاعة</div>
+        <div class="ni2" data-tab="monitor"><i class="fas fa-chart-line"></i> مراقبة الأداء</div>
+        <div class="ni2" data-tab="settings"><i class="fas fa-sliders-h"></i> إعدادات</div>
+    </nav>
+    <div class="sfooter"><i class="fas fa-shield-alt"></i> MIKO HOST v6</div>
+</aside>
+<div class="sovlay" id="sovlay" onclick="closeSidebar()"></div>
+
+<main class="main">
+    <div class="mbar">
+        <button class="hbg" id="hbg"><i class="fas fa-bars"></i></button>
+        <span style="font-weight:700;color:var(--gold);font-size:.9rem">MIKO ADMIN</span>
+        <span id="adminNameM" style="font-size:.75rem;color:#9ca3cf"></span>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="tab-page active">
+        <div class="ptitle"><i class="fas fa-chart-pie"></i> لوحة التحكم</div>
+        <div class="sgrid">
+            <div class="sc"><div class="sl"><i class="fas fa-users"></i> المستخدمون</div><div class="sv" id="tUsers">—</div></div>
+            <div class="sc"><div class="sl"><i class="fas fa-circle" style="color:#00ff88;font-size:.5rem"></i> نشط</div><div class="sv" id="tActive">—</div></div>
+            <div class="sc"><div class="sl"><i class="fas fa-server"></i> السيرفرات</div><div class="sv" id="tServers">—</div></div>
+            <div class="sc"><div class="sl"><i class="fas fa-ban"></i> المحظورون</div><div class="sv" id="tBanned">—</div></div>
         </div>
-        <nav class="nav-section">
-            <div class="nav-label">الرئيسية</div>
-            <div class="nav-item active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> لوحة التحكم</div>
-            <div class="nav-label">الإدارة</div>
-            <div class="nav-item" data-tab="users"><i class="fas fa-users-gear"></i> المستخدمون</div>
-            <div class="nav-item" data-tab="servers"><i class="fas fa-server"></i> السيرفرات</div>
-            <div class="nav-label">الأدوات</div>
-            <div class="nav-item" data-tab="broadcast"><i class="fas fa-bullhorn"></i> إذاعة</div>
-            <div class="nav-item" data-tab="backup"><i class="fas fa-database"></i> النسخ الاحتياطي</div>
-            <div class="nav-item" data-tab="monitor"><i class="fas fa-chart-line"></i> مراقبة الأداء</div>
-            <div class="nav-item" data-tab="settings"><i class="fas fa-sliders-h"></i> إعدادات النظام</div>
-            <div class="nav-item" data-tab="logs"><i class="fas fa-history"></i> سجل الإجراءات</div>
-        </nav>
-        <div class="sidebar-footer"><i class="fas fa-shield-alt"></i> MIKO HOST v6</div>
-    </aside>
-
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
-    <main class="main">
-        <div class="mobile-topbar">
-            <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-            <span style="font-weight:700; color:var(--gold); font-size:0.9rem;">MIKO ADMIN</span>
-            <span id="adminNameMobile" style="font-size:0.75rem; color:#9ca3cf;"></span>
+        <div class="sgrid s2">
+            <div class="sc"><div class="sl"><i class="fas fa-microchip"></i> CPU</div><div class="sv" id="dCpu">—</div><div class="sb"><div class="sbf" id="dCpuB" style="width:0%"></div></div></div>
+            <div class="sc"><div class="sl"><i class="fas fa-memory"></i> RAM</div><div class="sv" id="dRam">—</div><div class="sb"><div class="sbf" id="dRamB" style="width:0%"></div></div></div>
         </div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-chart-area"></i> نمو المستخدمين</div>
+            <div class="cw"><canvas id="growthChart"></canvas></div>
+        </div>
+    </div>
 
-        <!-- DASHBOARD -->
-        <div id="tab-dashboard" class="tab-page active">
-            <div class="page-header"><div class="page-title"><i class="fas fa-chart-pie"></i> لوحة التحكم</div></div>
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-label"><i class="fas fa-users"></i> المستخدمون</div><div class="stat-value" id="totalUsers">—</div></div>
-                <div class="stat-card"><div class="stat-label"><i class="fas fa-circle" style="color:#00ff88;font-size:0.5rem;"></i> نشط</div><div class="stat-value" id="activeServers">—</div></div>
-                <div class="stat-card"><div class="stat-label"><i class="fas fa-server"></i> كل السيرفرات</div><div class="stat-value" id="totalServers">—</div></div>
-                <div class="stat-card"><div class="stat-label"><i class="fas fa-hdd"></i> التخزين</div><div class="stat-value" id="totalDisk">—</div><div class="stat-bar"><div class="stat-bar-fill" id="diskBar" style="width:0%"></div></div></div>
+    <!-- USERS -->
+    <div id="tab-users" class="tab-page">
+        <div class="ptitle"><i class="fas fa-users-gear"></i> إدارة المستخدمين</div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-user-plus"></i> إضافة مستخدم جديد</div>
+            <div class="frow">
+                <div class="fg"><label>اسم المستخدم</label><input id="nUsername" type="text" placeholder="username"></div>
+                <div class="fg"><label>كلمة المرور</label><input id="nPassword" type="password" placeholder="••••••••"></div>
             </div>
-            <div class="stats-grid stats-2">
-                <div class="stat-card"><div class="stat-label"><i class="fas fa-microchip"></i> CPU</div><div class="stat-value" id="cpuVal">—</div><div class="stat-bar"><div class="stat-bar-fill" id="cpuBar" style="width:0%"></div></div></div>
-                <div class="stat-card"><div class="stat-label"><i class="fas fa-memory"></i> RAM</div><div class="stat-value" id="ramVal">—</div><div class="stat-bar"><div class="stat-bar-fill" id="ramBar" style="width:0%"></div></div></div>
+            <div class="frow">
+                <div class="fg"><label>عدد السيرفرات</label><input id="nMaxS" type="number" value="1" min="1"></div>
+                <div class="fg"><label>الصلاحية (أيام)</label><input id="nExpiry" type="number" value="365" min="1"></div>
             </div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-chart-area"></i> نمو المستخدمين (آخر 4 أسابيع)</div>
-                <div class="chart-wrap"><canvas id="growthChart"></canvas></div>
+            <button class="btn bg" onclick="createUser()"><i class="fas fa-plus-circle"></i> إنشاء الحساب</button>
+        </div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-list"></i> قائمة المستخدمين</div>
+            <input class="sin" id="userSearch" type="text" placeholder="🔍 بحث...">
+            <div class="tw">
+                <table>
+                    <thead><tr><th>المستخدم</th><th>كلمة المرور</th><th>الحالة</th><th>السيرفرات</th><th>أيام</th><th>إجراءات</th></tr></thead>
+                    <tbody id="usersList"><tr><td colspan="6" style="text-align:center;padding:20px;color:#555">جاري التحميل...</td></tr></tbody>
+                </table>
             </div>
         </div>
+    </div>
 
-        <!-- USERS -->
-        <div id="tab-users" class="tab-page">
-            <div class="page-header"><div class="page-title"><i class="fas fa-users-gear"></i> إدارة المستخدمين</div></div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-user-plus"></i> إضافة مستخدم جديد</div>
-                <div class="form-row">
-                    <div class="form-group"><label>اسم المستخدم</label><input id="newUsername" type="text" placeholder="username"></div>
-                    <div class="form-group"><label>كلمة المرور</label><input id="newPassword" type="password" placeholder="••••••••"></div>
+    <!-- BANS & RESTRICTIONS -->
+    <div id="tab-bans" class="tab-page">
+        <div class="ptitle"><i class="fas fa-ban"></i> الحظر والتقييد</div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-hammer"></i> حظر مستخدم عبر الجهاز (IP)</div>
+            <p style="color:#8a94b8;font-size:.84rem;margin-bottom:14px">يمنع المستخدم وجهازه من الدخول نهائياً عبر عنوان IP.</p>
+            <div class="frow">
+                <div class="fg"><label>اسم المستخدم</label><input id="banUsername" type="text" placeholder="username"></div>
+                <div class="fg"><label>عنوان IP للجهاز</label><input id="banIp" type="text" placeholder="x.x.x.x"></div>
+            </div>
+            <div class="fg" style="margin-bottom:14px;max-width:400px"><label>سبب الحظر</label><input id="banReason" type="text" placeholder="مثل: انتهاك الشروط"></div>
+            <div class="action-bar">
+                <button class="btn br" onclick="banUser()"><i class="fas fa-ban"></i> حظر الحساب والجهاز</button>
+                <button class="btn bgreen" onclick="unbanUser()"><i class="fas fa-unlock"></i> رفع الحظر</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-user-lock"></i> تقييد حساب</div>
+            <p style="color:#8a94b8;font-size:.84rem;margin-bottom:14px">تقليل صلاحيات المستخدم دون حظره.</p>
+            <div class="frow">
+                <div class="fg"><label>اسم المستخدم</label><input id="restrictUsername" type="text" placeholder="username"></div>
+                <div class="fg"><label>الحد الأقصى للسيرفرات</label><input id="restrictMaxS" type="number" value="1" min="0"></div>
+            </div>
+            <div class="fg" style="margin-bottom:14px;max-width:200px"><label>حجم الملف الأقصى (MB)</label><input id="restrictFileSize" type="number" value="10" min="1"></div>
+            <button class="btn borange" onclick="restrictUser()"><i class="fas fa-user-lock"></i> تطبيق التقييد</button>
+        </div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-star vip-star"></i> نظام VIP</div>
+            <p style="color:#8a94b8;font-size:.84rem;margin-bottom:14px">يحصل عضو VIP على جميع الخطط المدفوعة مجاناً وسيرفرات غير محدودة.</p>
+            <div class="frow">
+                <div class="fg"><label>اسم المستخدم</label><input id="vipUsername" type="text" placeholder="username"></div>
+            </div>
+            <div class="action-bar">
+                <button class="btn byellow" onclick="setVip(true)"><i class="fas fa-crown"></i> ترقية إلى VIP</button>
+                <button class="btn bo" onclick="setVip(false)"><i class="fas fa-minus-circle"></i> إلغاء VIP</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-list-ul"></i> قائمة المحظورين</div>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>المستخدم</th><th>IP المحظور</th><th>السبب</th><th>رفع الحظر</th></tr></thead>
+                    <tbody id="bannedList"><tr><td colspan="4" style="text-align:center;padding:16px;color:#555">جاري التحميل...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- SERVERS -->
+    <div id="tab-servers" class="tab-page">
+        <div class="ptitle"><i class="fas fa-server"></i> إدارة السيرفرات</div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-globe"></i> جميع السيرفرات</div>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>السيرفر</th><th>المالك</th><th>كلمة مرور المالك</th><th>الحالة</th><th>اللغة</th><th>إجراءات</th></tr></thead>
+                    <tbody id="serversList"><tr><td colspan="6" style="text-align:center;padding:20px;color:#555">جاري التحميل...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER FILES -->
+    <div id="tab-userfiles" class="tab-page">
+        <div class="ptitle"><i class="fas fa-folder-open"></i> ملفات المستخدمين</div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-user"></i> اختر المستخدم</div>
+            <div class="frow">
+                <div class="fg"><label>اسم المستخدم</label>
+                    <select id="ufUserSelect" onchange="loadUserServers()">
+                        <option value="">— اختر مستخدماً —</option>
+                    </select>
                 </div>
-                <div class="form-row">
-                    <div class="form-group"><label>عدد السيرفرات</label><input id="maxServers" type="number" value="1" min="1"></div>
-                    <div class="form-group"><label>صلاحية (أيام)</label><input id="expiryDays" type="number" value="365" min="1"></div>
-                </div>
-                <button class="btn btn-gold" onclick="createUser()"><i class="fas fa-plus-circle"></i> إنشاء الحساب</button>
-            </div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-list"></i> قائمة المستخدمين</div>
-                <input class="search-input" id="userSearch" type="text" placeholder="🔍 بحث...">
-                <div class="table-wrap">
-                    <table>
-                        <thead><tr><th>المستخدم</th><th>كلمة المرور</th><th>الصلاحية</th><th>حد السيرفرات</th><th>أيام الصلاحية</th><th>إجراءات</th></tr></thead>
-                        <tbody id="usersList"><tr><td colspan="6" style="text-align:center;padding:20px;color:#666;">جاري التحميل...</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- SERVERS -->
-        <div id="tab-servers" class="tab-page">
-            <div class="page-header"><div class="page-title"><i class="fas fa-server"></i> جميع السيرفرات</div></div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-globe"></i> قائمة السيرفرات</div>
-                <div class="table-wrap">
-                    <table>
-                        <thead><tr><th>السيرفر</th><th>المالك</th><th>الحالة</th><th>اللغة</th><th>التاريخ</th><th>حذف</th></tr></thead>
-                        <tbody id="serversList"><tr><td colspan="6" style="text-align:center;padding:20px;color:#666;">جاري التحميل...</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- BROADCAST -->
-        <div id="tab-broadcast" class="tab-page">
-            <div class="page-header"><div class="page-title"><i class="fas fa-bullhorn"></i> إذاعة للمستخدمين</div></div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-paper-plane"></i> إرسال إشعار لجميع المستخدمين</div>
-                <div class="form-group" style="margin-bottom:12px;"><label>عنوان الإشعار</label><input id="broadcastTitle" type="text" placeholder="مثل: تحديث جديد 🚀"></div>
-                <div class="form-group" style="margin-bottom:16px;"><label>محتوى الرسالة</label><textarea id="broadcastMsg" rows="4" placeholder="اكتب رسالتك هنا..."></textarea></div>
-                <button class="btn btn-gold" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> إرسال الإذاعة</button>
-            </div>
-        </div>
-
-        <!-- BACKUP -->
-        <div id="tab-backup" class="tab-page">
-            <div class="page-header"><div class="page-title"><i class="fas fa-database"></i> النسخ الاحتياطي</div></div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-archive"></i> إدارة النسخ الاحتياطية</div>
-                <p style="color:#8a94b8; font-size:0.86rem; margin-bottom:18px;">أنشئ نسخة احتياطية كاملة تشمل بيانات المستخدمين والسيرفرات والإعدادات.</p>
-                <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                    <button class="btn btn-gold" onclick="createBackup()"><i class="fas fa-save"></i> إنشاء نسخة احتياطية</button>
-                    <button class="btn btn-outline" onclick="restoreBackup()"><i class="fas fa-undo-alt"></i> استعادة نسخة</button>
-                </div>
-                <div id="backupStatus" style="margin-top:16px; font-size:0.85rem;"></div>
-            </div>
-        </div>
-
-        <!-- MONITOR -->
-        <div id="tab-monitor" class="tab-page">
-            <div class="page-header"><div class="page-title"><i class="fas fa-chart-line"></i> مراقبة الأداء</div></div>
-            <div class="stats-grid stats-3" style="margin-bottom:18px;">
-                <div class="stat-card"><div class="stat-label">CPU</div><div class="stat-value" id="monCpu">—</div><div class="stat-bar"><div class="stat-bar-fill" id="monCpuBar" style="width:0%"></div></div></div>
-                <div class="stat-card"><div class="stat-label">RAM</div><div class="stat-value" id="monRam">—</div><div class="stat-bar"><div class="stat-bar-fill" id="monRamBar" style="width:0%"></div></div></div>
-                <div class="stat-card"><div class="stat-label">التخزين</div><div class="stat-value" id="monDisk">—</div><div class="stat-bar"><div class="stat-bar-fill" id="monDiskBar" style="width:0%"></div></div></div>
-            </div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-wave-square"></i> مخطط CPU الحي <span style="font-size:0.7rem; color:#6b7a9f; font-weight:400;">(تحديث كل 5 ثوانٍ)</span></div>
-                <div class="chart-wrap"><canvas id="perfChart"></canvas></div>
-            </div>
-        </div>
-
-        <!-- SETTINGS -->
-        <div id="tab-settings" class="tab-page">
-            <div class="page-header"><div class="page-title"><i class="fas fa-sliders-h"></i> إعدادات النظام</div></div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-cog"></i> الإعدادات العامة</div>
-                <div class="form-row">
-                    <div class="form-group"><label>الحد الأقصى لرفع الملفات (MB)</label><input id="settingFileLimit" type="number" value="100"></div>
-                    <div class="form-group"><label>الحد الافتراضي للسيرفرات لكل مستخدم</label><input id="settingServerLimit" type="number" value="1"></div>
-                </div>
-                <div class="form-group" style="margin-bottom:16px; max-width:280px;"><label>وضع الصيانة</label>
-                    <select id="maintenanceMode"><option value="0">معطل ✅</option><option value="1">مفعّل 🔧</option></select>
-                </div>
-                <button class="btn btn-gold" onclick="saveSettings()"><i class="fas fa-save"></i> حفظ الإعدادات</button>
-            </div>
-        </div>
-
-        <!-- LOGS -->
-        <div id="tab-logs" class="tab-page">
-            <div class="page-header"><div class="page-title"><i class="fas fa-history"></i> سجل الإجراءات</div></div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-scroll"></i> آخر الإجراءات</div>
-                <div class="table-wrap">
-                    <table>
-                        <thead><tr><th>الوقت</th><th>الإجراء</th></tr></thead>
-                        <tbody id="logsList"><tr><td colspan="2" style="text-align:center;padding:20px;color:#666;">جاري التحميل...</td></tr></tbody>
-                    </table>
+                <div class="fg"><label>اختر السيرفر</label>
+                    <select id="ufServerSelect" onchange="loadServerFiles()">
+                        <option value="">— اختر سيرفراً —</option>
+                    </select>
                 </div>
             </div>
         </div>
-    </main>
+        <div class="card" id="ufFilesCard" style="display:none">
+            <div class="ctitle"><i class="fas fa-files"></i> ملفات السيرفر</div>
+            <div class="tw">
+                <table>
+                    <thead><tr><th>الاسم</th><th>الحجم</th><th>النوع</th><th>تنزيل</th></tr></thead>
+                    <tbody id="ufFilesList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- BROADCAST -->
+    <div id="tab-broadcast" class="tab-page">
+        <div class="ptitle"><i class="fas fa-bullhorn"></i> إذاعة للمستخدمين</div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-paper-plane"></i> إرسال إشعار لجميع المستخدمين</div>
+            <div class="fg" style="margin-bottom:12px"><label>عنوان الإشعار</label><input id="bTitle" type="text" placeholder="مثل: تحديث جديد 🚀"></div>
+            <div class="fg" style="margin-bottom:16px"><label>محتوى الرسالة</label><textarea id="bMsg" rows="4" placeholder="اكتب رسالتك هنا..."></textarea></div>
+            <button class="btn bg" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> إرسال الإذاعة</button>
+        </div>
+    </div>
+
+    <!-- MONITOR -->
+    <div id="tab-monitor" class="tab-page">
+        <div class="ptitle"><i class="fas fa-chart-line"></i> مراقبة الأداء</div>
+        <div class="sgrid s3" style="margin-bottom:18px">
+            <div class="sc"><div class="sl">CPU</div><div class="sv" id="mCpu">—</div><div class="sb"><div class="sbf" id="mCpuB" style="width:0%"></div></div></div>
+            <div class="sc"><div class="sl">RAM</div><div class="sv" id="mRam">—</div><div class="sb"><div class="sbf" id="mRamB" style="width:0%"></div></div></div>
+            <div class="sc"><div class="sl">التخزين</div><div class="sv" id="mDisk">—</div><div class="sb"><div class="sbf" id="mDiskB" style="width:0%"></div></div></div>
+        </div>
+        <div class="card"><div class="ctitle"><i class="fas fa-wave-square"></i> CPU الحي <span style="font-size:.68rem;color:#6b7a9f;font-weight:400">(كل 5 ثوانٍ)</span></div><div class="cw"><canvas id="perfChart"></canvas></div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="tab-settings" class="tab-page">
+        <div class="ptitle"><i class="fas fa-sliders-h"></i> إعدادات النظام</div>
+        <div class="card">
+            <div class="ctitle"><i class="fas fa-cog"></i> الإعدادات العامة</div>
+            <div class="frow">
+                <div class="fg"><label>حد رفع الملفات (MB)</label><input id="sFile" type="number" value="100"></div>
+                <div class="fg"><label>حد السيرفرات الافتراضي</label><input id="sServer" type="number" value="1"></div>
+            </div>
+            <div class="fg" style="margin-bottom:16px;max-width:280px"><label>وضع الصيانة</label>
+                <select id="sMaint"><option value="0">معطل ✅</option><option value="1">مفعّل 🔧</option></select>
+            </div>
+            <button class="btn bg" onclick="saveSettings()"><i class="fas fa-save"></i> حفظ الإعدادات</button>
+        </div>
+    </div>
+</main>
 </div>
 
 <!-- MODALS -->
 <div class="modal" id="confirmModal">
-    <div class="modal-box">
-        <div class="modal-title"><i class="fas fa-exclamation-triangle" style="color:var(--red);"></i> تأكيد الإجراء</div>
-        <p id="confirmMsg" style="margin-bottom:18px; color:#b0b8d4; font-size:0.9rem;"></p>
-        <div style="display:flex; gap:10px;">
-            <button class="btn btn-red" id="confirmYes">تأكيد</button>
-            <button class="btn btn-outline" onclick="closeConfirm()">إلغاء</button>
-        </div>
+    <div class="mbox">
+        <div class="mtitle"><i class="fas fa-exclamation-triangle" style="color:var(--red)"></i> تأكيد</div>
+        <p id="confirmMsg" style="margin-bottom:18px;color:#b0b8d4;font-size:.9rem"></p>
+        <div style="display:flex;gap:10px"><button class="btn br" id="confirmYes">تأكيد</button><button class="btn bo" onclick="closeConfirm()">إلغاء</button></div>
     </div>
 </div>
-
 <div class="modal" id="resetPassModal">
-    <div class="modal-box">
-        <div class="modal-title"><i class="fas fa-key"></i> إعادة تعيين كلمة المرور</div>
-        <div class="form-group" style="margin-bottom:10px;"><label>المستخدم</label><input id="resetUsername" type="text" readonly style="opacity:0.55;"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>كلمة المرور الجديدة</label><input id="resetNewPass" type="password" placeholder="أدخل كلمة المرور الجديدة"></div>
-        <div style="display:flex; gap:10px;">
-            <button class="btn btn-gold" onclick="execResetPass()"><i class="fas fa-check"></i> تغيير</button>
-            <button class="btn btn-outline" onclick="document.getElementById('resetPassModal').classList.remove('show')">إلغاء</button>
-        </div>
+    <div class="mbox">
+        <div class="mtitle"><i class="fas fa-key"></i> إعادة تعيين كلمة المرور</div>
+        <div class="fg" style="margin-bottom:10px"><label>المستخدم</label><input id="resetU" type="text" readonly style="opacity:.55"></div>
+        <div class="fg" style="margin-bottom:16px"><label>كلمة المرور الجديدة</label><input id="resetP" type="password" placeholder="أدخل كلمة المرور الجديدة"></div>
+        <div style="display:flex;gap:10px"><button class="btn bg" onclick="execReset()"><i class="fas fa-check"></i> تغيير</button><button class="btn bo" onclick="document.getElementById('resetPassModal').classList.remove('show')">إلغاء</button></div>
     </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-    let confirmCb = null, growthChart = null, perfChart = null, monitorInterval = null;
-    let currentResetUser = '', notifications = [];
+    let confirmCb=null, gChart=null, pChart=null, monInt=null, curResetU='', notifs=[];
 
-    // Toast
-    function toast(msg, type = 'info') {
-        const el = document.getElementById('toast');
-        const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
-        el.style.borderColor = type === 'error' ? 'var(--red)' : 'var(--gold)';
-        el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${msg}`;
-        el.style.display = 'block';
-        clearTimeout(el._t);
-        el._t = setTimeout(() => el.style.display = 'none', 3000);
-    }
-
-    // Confirm
-    function showConfirm(msg, cb) {
-        document.getElementById('confirmMsg').innerText = msg;
-        confirmCb = cb;
-        document.getElementById('confirmModal').classList.add('show');
-    }
-    function closeConfirm() {
-        document.getElementById('confirmModal').classList.remove('show');
-        confirmCb = null;
-    }
-    document.getElementById('confirmYes').onclick = () => { if (confirmCb) confirmCb(); closeConfirm(); };
+    function toast(msg,type='info'){const el=document.getElementById('toast');el.style.borderColor=type==='error'?'var(--red)':'var(--gold)';const icons={success:'fa-check-circle',error:'fa-times-circle',info:'fa-info-circle'};el.innerHTML=`<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;el.style.display='block';clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',3200);}
+    function showConfirm(msg,cb){document.getElementById('confirmMsg').innerText=msg;confirmCb=cb;document.getElementById('confirmModal').classList.add('show');}
+    function closeConfirm(){document.getElementById('confirmModal').classList.remove('show');confirmCb=null;}
+    document.getElementById('confirmYes').onclick=()=>{if(confirmCb)confirmCb();closeConfirm();};
 
     // Notifications
-    function addNotif(title, msg) {
-        notifications.unshift({ title, msg, time: new Date().toLocaleTimeString('ar') });
-        if (notifications.length > 30) notifications.pop();
-        document.getElementById('notifCount').innerText = notifications.length;
-        document.getElementById('notifList').innerHTML = notifications.map(n =>
-            `<div class="notif-item"><strong style="color:var(--gold);">${esc(n.title)}</strong><br><span style="color:#aaa;font-size:0.75rem;">${esc(n.msg)}</span><span class="notif-time">${n.time}</span></div>`
-        ).join('');
+    async function loadNotifs(){
+        try{const d=await fetch('/api/notifications').then(r=>r.json());
+        if(!d.notifications)return;
+        notifs=d.notifications;
+        const unread=notifs.filter(n=>!n.is_read).length;
+        document.getElementById('ncount').innerText=unread||'';
+        document.getElementById('ncount').style.display=unread?'block':'none';
+        document.getElementById('nlist').innerHTML=notifs.length?notifs.map(n=>`
+            <div class="ni ${!n.is_read?'unread':''}" onclick="markRead(${n.id})">
+                <strong style="color:var(--gold);font-size:.8rem">${esc(n.title)}</strong><br>
+                <span style="color:#aaa;white-space:pre-wrap;font-size:.75rem">${esc(n.message)}</span>
+                <span class="ntime">${n.created_at?n.created_at.substring(0,16):''}</span>
+            </div>`).join(''):'<div style="padding:12px;color:#888;text-align:center;font-size:.78rem">لا توجد إشعارات</div>';}catch(e){}
     }
-    document.getElementById('notifBell').onclick = (e) => {
-        e.stopPropagation();
-        document.getElementById('notifDropdown').classList.toggle('show');
-    };
-    document.addEventListener('click', () => document.getElementById('notifDropdown').classList.remove('show'));
+    async function markRead(id){await fetch('/api/notifications/mark_read',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});loadNotifs();}
+    async function markAllRead(){for(const n of notifs)if(!n.is_read)await markRead(n.id);}
+    document.getElementById('nbell').onclick=(e)=>{e.stopPropagation();document.getElementById('ndrop').classList.toggle('show');};
+    document.addEventListener('click',()=>document.getElementById('ndrop').classList.remove('show'));
 
-    // Sidebar nav - this is the key fix
-    function switchTab(name) {
-        document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        const page = document.getElementById('tab-' + name);
-        const item = document.querySelector(`.nav-item[data-tab="${name}"]`);
-        if (page) page.classList.add('active');
-        if (item) item.classList.add('active');
-        // stop monitor if leaving monitor tab
-        if (name !== 'monitor' && monitorInterval) { clearInterval(monitorInterval); monitorInterval = null; }
-        // load data
-        if (name === 'dashboard') loadDashboard();
-        else if (name === 'users') loadUsers();
-        else if (name === 'servers') loadServers();
-        else if (name === 'logs') loadLogs();
-        else if (name === 'monitor') startMonitor();
+    // Sidebar
+    function switchTab(name){
+        document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+        document.querySelectorAll('.ni2').forEach(i=>i.classList.remove('active'));
+        const page=document.getElementById('tab-'+name);const item=document.querySelector(`.ni2[data-tab="${name}"]`);
+        if(page)page.classList.add('active');if(item)item.classList.add('active');
+        if(name!=='monitor'&&monInt){clearInterval(monInt);monInt=null;}
+        if(name==='dashboard')loadDashboard();
+        else if(name==='users')loadUsers();
+        else if(name==='bans'){loadUsers();loadBanned();}
+        else if(name==='servers')loadServers();
+        else if(name==='userfiles')loadUFUsers();
+        else if(name==='monitor')startMonitor();
     }
+    document.querySelectorAll('.ni2').forEach(item=>{ item.onclick=()=>{switchTab(item.dataset.tab);closeSidebar();}; });
+    document.getElementById('hbg').onclick=()=>{document.getElementById('sidebar').classList.add('open');document.getElementById('sovlay').classList.add('show');};
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sovlay').classList.remove('show');}
 
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.onclick = () => { switchTab(item.dataset.tab); closeSidebar(); };
-    });
-
-    // Mobile sidebar
-    document.getElementById('hamburgerBtn').onclick = () => {
-        document.getElementById('sidebar').classList.add('open');
-        document.getElementById('sidebarOverlay').classList.add('show');
-    };
-    function closeSidebar() {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('sidebarOverlay').classList.remove('show');
-    }
-
-    function esc(s) { return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
+    function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);}
 
     // Dashboard
-    async function loadDashboard() {
-        try {
-            const m = await fetch('/api/system/metrics').then(r => r.json());
-            document.getElementById('cpuVal').innerText = m.cpu + '%';
-            document.getElementById('cpuBar').style.width = m.cpu + '%';
-            document.getElementById('ramVal').innerText = m.memory + '%';
-            document.getElementById('ramBar').style.width = m.memory + '%';
-        } catch(e) {}
-        try {
-            const data = await fetch('/api/admin/users').then(r => r.json());
-            if (!data.success) return;
-            document.getElementById('totalUsers').innerText = data.users.length;
-            let total = 0, active = 0, disk = 0;
-            for (const u of data.users) {
-                try {
-                    const sd = await fetch(`/api/servers?user=${u.username}`).then(r => r.json());
-                    if (sd.servers) {
-                        total += sd.servers.length;
-                        active += sd.servers.filter(s => s.status === 'Running').length;
-                        disk += sd.stats?.disk_used || 0;
-                    }
-                } catch(e) {}
-            }
-            document.getElementById('totalServers').innerText = total;
-            document.getElementById('activeServers').innerText = active;
-            const gb = (disk / 1024).toFixed(2);
-            document.getElementById('totalDisk').innerText = gb + ' GB';
-            document.getElementById('diskBar').style.width = Math.min((disk / 1024 / 50) * 100, 100) + '%';
-        } catch(e) {}
-        // Chart
-        if (growthChart) growthChart.destroy();
-        const ctx = document.getElementById('growthChart').getContext('2d');
-        growthChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['أسبوع 1', 'أسبوع 2', 'أسبوع 3', 'أسبوع 4'],
-                datasets: [{ label: 'المستخدمون الجدد', data: [2, 5, 9, 15], borderColor: '#FFD700', backgroundColor: 'rgba(255,215,0,0.07)', fill: true, tension: 0.4, pointBackgroundColor: '#FFD700' }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: '#b0b8d4', font: { family: 'Tajawal' } } } },
-                scales: {
-                    x: { ticks: { color: '#6b7a9f' }, grid: { color: 'rgba(255,215,0,0.04)' } },
-                    y: { ticks: { color: '#6b7a9f' }, grid: { color: 'rgba(255,215,0,0.04)' } }
-                }
-            }
-        });
+    async function loadDashboard(){
+        try{const m=await fetch('/api/system/metrics').then(r=>r.json());document.getElementById('dCpu').innerText=m.cpu+'%';document.getElementById('dCpuB').style.width=m.cpu+'%';document.getElementById('dRam').innerText=m.memory+'%';document.getElementById('dRamB').style.width=m.memory+'%';}catch(e){}
+        try{const d=await fetch('/api/admin/users').then(r=>r.json());if(!d.success)return;
+        document.getElementById('tUsers').innerText=d.users.length;
+        document.getElementById('tBanned').innerText=d.users.filter(u=>u.is_banned).length;
+        let tot=0,act=0;
+        for(const u of d.users){try{const sd=await fetch(`/api/servers?user=${u.username}`).then(r=>r.json());if(sd.servers){tot+=sd.servers.length;act+=sd.servers.filter(s=>s.status==='Running').length;}}catch(e){}}
+        document.getElementById('tServers').innerText=tot;document.getElementById('tActive').innerText=act;}catch(e){}
+        if(gChart)gChart.destroy();
+        const ctx=document.getElementById('growthChart').getContext('2d');
+        gChart=new Chart(ctx,{type:'line',data:{labels:['أسبوع 1','أسبوع 2','أسبوع 3','أسبوع 4'],datasets:[{label:'المستخدمون الجدد',data:[2,5,9,15],borderColor:'#FFD700',backgroundColor:'rgba(255,215,0,.07)',fill:true,tension:.4,pointBackgroundColor:'#FFD700'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#b0b8d4',font:{family:'Tajawal'}}}},scales:{x:{ticks:{color:'#6b7a9f'},grid:{color:'rgba(255,215,0,.04)'}},y:{ticks:{color:'#6b7a9f'},grid:{color:'rgba(255,215,0,.04)'}}}}});
     }
 
     // Users
-    async function loadUsers() {
-        const tbody = document.getElementById('usersList');
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#666;">جاري التحميل...</td></tr>';
-        try {
-            const data = await fetch('/api/admin/users').then(r => r.json());
-            if (!data.success || !data.users.length) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#666;">لا يوجد مستخدمون</td></tr>';
-                return;
-            }
-            tbody.innerHTML = data.users.map(u => `
-                <tr>
-                    <td><strong>${esc(u.username)}</strong></td>
-                    <td>
-                        <span id="pwd_${esc(u.username)}" style="font-family:monospace;font-size:0.73rem;letter-spacing:2px;">••••••••</span>
-                        <button class="icon-btn" onclick="togglePwd('${esc(u.username)}','${esc(u.password||'')}')" title="إظهار"><i class="fas fa-eye"></i></button>
-                        <button class="icon-btn" onclick="showResetPass('${esc(u.username)}')" title="تغيير"><i class="fas fa-key"></i></button>
-                    </td>
-                    <td><span class="badge ${u.is_admin?'badge-admin':'badge-user'}">${u.is_admin?'مسؤول':'مستخدم'}</span></td>
-                    <td><input class="inline-input" type="number" value="${u.max_servers}" style="width:60px;" onchange="updateLimit('${esc(u.username)}',this.value)"></td>
-                    <td><input class="inline-input" type="number" value="${u.expiry_days}" style="width:70px;" onchange="updateExpiry('${esc(u.username)}',this.value)"></td>
-                    <td>
-                        ${!u.is_admin?`<button class="icon-btn" onclick="upgradeUser('${esc(u.username)}')" title="ترقية"><i class="fas fa-crown"></i></button>`:''}
-                        <button class="icon-btn red" onclick="deleteUser('${esc(u.username)}')" title="حذف"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-            document.getElementById('userSearch').oninput = function() {
-                const q = this.value.toLowerCase();
-                tbody.querySelectorAll('tr').forEach(r => r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none');
-            };
-        } catch(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--red);">خطأ في التحميل</td></tr>'; }
+    async function loadUsers(){
+        const tb=document.getElementById('usersList');tb.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:#555">جاري التحميل...</td></tr>';
+        try{const d=await fetch('/api/admin/users').then(r=>r.json());
+        if(!d.success||!d.users.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:#555">لا يوجد مستخدمون</td></tr>';return;}
+        tb.innerHTML=d.users.map(u=>`
+            <tr>
+                <td><strong>${esc(u.username)}</strong> ${u.is_vip?'<span class="badge b-vip">⭐ VIP</span>':''} ${u.is_banned?'<span class="badge b-ban">محظور</span>':''}</td>
+                <td><span id="pwd_${esc(u.username)}" style="font-family:monospace;font-size:.72rem;letter-spacing:2px">••••••••</span>
+                    <button class="ib gold" onclick="togglePwd('${esc(u.username)}','${esc(u.password||'')}')"><i class="fas fa-eye"></i></button>
+                    <button class="ib gold" onclick="showReset('${esc(u.username)}')"><i class="fas fa-key"></i></button></td>
+                <td><span class="badge ${u.is_admin?'b-admin':'b-user'}">${u.is_admin?'مسؤول':'مستخدم'}</span></td>
+                <td><input class="ilin" type="number" value="${u.max_servers}" style="width:60px" onchange="updateLimit('${esc(u.username)}',this.value)"></td>
+                <td><input class="ilin" type="number" value="${u.expiry_days}" style="width:70px" onchange="updateExpiry('${esc(u.username)}',this.value)"></td>
+                <td class="action-bar">
+                    ${!u.is_admin?`<button class="ib gold" title="ترقية VIP" onclick="quickVip('${esc(u.username)}',${!u.is_vip})"><i class="fas fa-crown"></i></button>`:''}
+                    ${!u.is_admin?`<button class="ib ${u.is_banned?'green':'red'}" title="${u.is_banned?'رفع الحظر':'حظر'}" onclick="quickBan('${esc(u.username)}',${!u.is_banned})"><i class="fas fa-${u.is_banned?'unlock':'ban'}"></i></button>`:''}
+                    <button class="ib red" title="حذف" onclick="deleteUser('${esc(u.username)}')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`).join('');
+        document.getElementById('userSearch').oninput=function(){const q=this.value.toLowerCase();tb.querySelectorAll('tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'none');};
+        // also populate VIP/ban user selects
+        const selects=['banUsername','restrictUsername','vipUsername'];
+        }catch(e){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--red)">خطأ في التحميل</td></tr>';}
     }
 
-    function togglePwd(u, p) {
-        const el = document.getElementById('pwd_' + u);
-        el.innerText = el.innerText === '••••••••' ? (p || '(غير محدد)') : '••••••••';
-    }
-    function showResetPass(u) {
-        currentResetUser = u;
-        document.getElementById('resetUsername').value = u;
-        document.getElementById('resetNewPass').value = '';
-        document.getElementById('resetPassModal').classList.add('show');
-    }
-    async function execResetPass() {
-        const p = document.getElementById('resetNewPass').value.trim();
-        if (!p || p.length < 4) { toast('كلمة المرور 4 أحرف على الأقل', 'error'); return; }
-        try {
-            const res = await fetch('/api/admin/reset-password', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username: currentResetUser, new_password: p }) });
-            const d = await res.json();
-            if (d.success) { toast(`تم تغيير كلمة مرور ${currentResetUser}`, 'success'); addNotif('🔐 تغيير كلمة المرور', `${currentResetUser}`); document.getElementById('resetPassModal').classList.remove('show'); loadUsers(); }
-            else toast(d.message || 'فشل', 'error');
-        } catch(e) { toast('خطأ في الاتصال', 'error'); }
+    async function loadBanned(){
+        const tb=document.getElementById('bannedList');
+        try{const d=await fetch('/api/admin/users').then(r=>r.json());
+        const banned=d.users?d.users.filter(u=>u.is_banned):[];
+        if(!banned.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:14px;color:#555">لا يوجد محظورون</td></tr>';return;}
+        tb.innerHTML=banned.map(u=>`<tr><td><strong>${esc(u.username)}</strong></td><td style="font-family:monospace;font-size:.75rem">${esc(u.ban_ip||'—')}</td><td style="color:#8a94b8;font-size:.8rem">${esc(u.ban_reason||'—')}</td><td><button class="btn bgreen" style="padding:4px 12px;font-size:.72rem" onclick="doUnban('${esc(u.username)}')"><i class="fas fa-unlock"></i> رفع الحظر</button></td></tr>`).join('');
+        }catch(e){}
     }
 
-    async function createUser() {
-        const username = document.getElementById('newUsername').value.trim();
-        const password = document.getElementById('newPassword').value.trim();
-        const max_servers = parseInt(document.getElementById('maxServers').value) || 1;
-        const expiry_days = parseInt(document.getElementById('expiryDays').value) || 365;
-        if (!username || !password) { toast('أدخل اسم المستخدم وكلمة المرور', 'error'); return; }
-        try {
-            const res = await fetch('/api/admin/create-user', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username, password, max_servers, expiry_days }) });
-            const d = await res.json();
-            if (d.success) { toast('✅ تم إنشاء الحساب', 'success'); addNotif('👤 مستخدم جديد', username); document.getElementById('newUsername').value=''; document.getElementById('newPassword').value=''; loadUsers(); }
-            else toast(d.message || 'فشل الإنشاء', 'error');
-        } catch(e) { toast('خطأ في الاتصال', 'error'); }
+    function togglePwd(u,p){const el=document.getElementById('pwd_'+u);el.innerText=el.innerText==='••••••••'?(p||'(غير محدد)'):'••••••••';}
+    function showReset(u){curResetU=u;document.getElementById('resetU').value=u;document.getElementById('resetP').value='';document.getElementById('resetPassModal').classList.add('show');}
+    async function execReset(){
+        const p=document.getElementById('resetP').value.trim();if(!p||p.length<4){toast('كلمة المرور 4 أحرف على الأقل','error');return;}
+        try{const r=await fetch('/api/admin/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:curResetU,new_password:p})});const d=await r.json();
+        if(d.success){toast(`تم تغيير كلمة مرور ${curResetU}`,'success');document.getElementById('resetPassModal').classList.remove('show');loadUsers();}else toast(d.message||'فشل','error');}catch(e){toast('خطأ','error');}
+    }
+    async function createUser(){
+        const username=document.getElementById('nUsername').value.trim(),password=document.getElementById('nPassword').value.trim(),max_servers=parseInt(document.getElementById('nMaxS').value)||1,expiry_days=parseInt(document.getElementById('nExpiry').value)||365;
+        if(!username||!password){toast('أدخل اسم المستخدم وكلمة المرور','error');return;}
+        try{const r=await fetch('/api/admin/create-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password,max_servers,expiry_days})});const d=await r.json();
+        if(d.success){toast('✅ تم إنشاء الحساب','success');document.getElementById('nUsername').value='';document.getElementById('nPassword').value='';loadUsers();}else toast(d.message||'فشل','error');}catch(e){toast('خطأ','error');}
+    }
+    async function updateLimit(u,v){try{await fetch('/api/admin/update-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,max_servers:parseInt(v)})});toast(`تم تحديث حد ${u}`,'success');}catch(e){}}
+    async function updateExpiry(u,v){try{await fetch('/api/admin/update-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,expiry_days:parseInt(v)})});toast(`تم تحديث صلاحية ${u}`,'success');}catch(e){}}
+    async function deleteUser(u){showConfirm(`حذف المستخدم "${u}" نهائياً؟`,async()=>{try{const r=await fetch('/api/admin/delete-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});const d=await r.json();if(d.success){toast('تم الحذف','success');loadUsers();}else toast(d.message||'فشل','error');}catch(e){toast('خطأ','error');}});}
+    async function quickVip(u,vip){await fetch('/api/admin/set-vip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,vip})});toast(vip?`تم ترقية ${u} إلى VIP ⭐`:`تم إلغاء VIP لـ ${u}`,'success');loadUsers();}
+    async function quickBan(u,ban){
+        if(ban){const ip=prompt(`أدخل IP جهاز ${u} للحظر:`)||'';await fetch('/api/admin/ban-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,ban_ip:ip,reason:'حظر سريع'})});toast(`تم حظر ${u}`,'success');}
+        else{await fetch('/api/admin/unban-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});toast(`تم رفع الحظر عن ${u}`,'success');}
+        loadUsers();loadBanned();
     }
 
-    async function updateLimit(u, v) {
-        try { await fetch('/api/admin/update-user', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username:u, max_servers:parseInt(v) }) }); toast(`تم تحديث حد ${u}`, 'success'); } catch(e) {}
+    // Ban/unban from bans tab
+    async function banUser(){
+        const u=document.getElementById('banUsername').value.trim(),ip=document.getElementById('banIp').value.trim(),reason=document.getElementById('banReason').value.trim();
+        if(!u){toast('أدخل اسم المستخدم','error');return;}
+        try{const r=await fetch('/api/admin/ban-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,ban_ip:ip,reason:reason||'حظر من المسؤول'})});const d=await r.json();
+        if(d.success){toast(`تم حظر ${u} 🔨`,'success');loadBanned();loadUsers();}else toast(d.message||'فشل','error');}catch(e){toast('خطأ','error');}
     }
-    async function updateExpiry(u, v) {
-        try { await fetch('/api/admin/update-user', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username:u, expiry_days:parseInt(v) }) }); toast(`تم تحديث صلاحية ${u}`, 'success'); } catch(e) {}
+    async function unbanUser(){
+        const u=document.getElementById('banUsername').value.trim();if(!u){toast('أدخل اسم المستخدم','error');return;}
+        try{const r=await fetch('/api/admin/unban-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});const d=await r.json();
+        if(d.success){toast(`تم رفع الحظر عن ${u} ✅`,'success');loadBanned();loadUsers();}else toast(d.message||'فشل','error');}catch(e){toast('خطأ','error');}
     }
-    async function upgradeUser(u) {
-        showConfirm(`ترقية "${u}" إلى صلاحيات غير محدودة؟`, async () => {
-            try { const r = await fetch('/api/admin/upgrade-user', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username:u }) }); const d = await r.json(); if(d.success){toast(`تم ترقية ${u}`,'success');loadUsers();}else toast(d.message||'فشل','error'); } catch(e){toast('خطأ','error');}
-        });
+    async function doUnban(u){await fetch('/api/admin/unban-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});toast(`تم رفع الحظر عن ${u}`,'success');loadBanned();loadUsers();}
+    async function restrictUser(){
+        const u=document.getElementById('restrictUsername').value.trim(),ms=parseInt(document.getElementById('restrictMaxS').value)||1,fs=parseInt(document.getElementById('restrictFileSize').value)||10;
+        if(!u){toast('أدخل اسم المستخدم','error');return;}
+        try{const r=await fetch('/api/admin/restrict-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,max_servers:ms,max_file_size_mb:fs})});const d=await r.json();
+        if(d.success){toast(`تم تقييد ${u}`,'success');loadUsers();}else toast(d.message||'فشل','error');}catch(e){toast('خطأ','error');}
     }
-    async function deleteUser(u) {
-        showConfirm(`حذف المستخدم "${u}" نهائياً؟ لا يمكن التراجع.`, async () => {
-            try { const r = await fetch('/api/admin/delete-user', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username:u }) }); const d = await r.json(); if(d.success){toast('تم الحذف','success');loadUsers();}else toast(d.message||'فشل','error'); } catch(e){toast('خطأ','error');}
-        });
+    async function setVip(vip){
+        const u=document.getElementById('vipUsername').value.trim();if(!u){toast('أدخل اسم المستخدم','error');return;}
+        try{const r=await fetch('/api/admin/set-vip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,vip})});const d=await r.json();
+        if(d.success){toast(vip?`تم ترقية ${u} إلى VIP ⭐`:`تم إلغاء VIP لـ ${u}`,'success');loadUsers();}else toast(d.message||'فشل','error');}catch(e){toast('خطأ','error');}
     }
 
     // Servers
-    async function loadServers() {
-        const tbody = document.getElementById('serversList');
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#666;">جاري التحميل...</td></tr>';
-        try {
-            const data = await fetch('/api/admin/users').then(r => r.json());
-            let all = [];
-            for (const u of data.users) {
-                try { const sd = await fetch(`/api/servers?user=${u.username}`).then(r => r.json()); if(sd.servers) sd.servers.forEach(s => all.push({...s, ownerName:u.username})); } catch(e) {}
-            }
-            if (!all.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#666;">لا توجد سيرفرات</td></tr>'; return; }
-            tbody.innerHTML = all.map(s => `
-                <tr>
-                    <td><strong>${esc(s.title||s.name)}</strong></td>
-                    <td>${esc(s.ownerName)}</td>
-                    <td><span class="badge ${s.status==='Running'?'badge-on':'badge-off'}">${s.status==='Running'?'● نشط':'○ متوقف'}</span></td>
-                    <td>${esc(s.language||'python')}</td>
-                    <td>${s.created_at?s.created_at.substring(0,10):'—'}</td>
-                    <td><button class="icon-btn red" onclick="delServer('${esc(s.folder)}')"><i class="fas fa-trash"></i></button></td>
-                </tr>
-            `).join('');
-        } catch(e) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--red);">خطأ في التحميل</td></tr>'; }
+    async function loadServers(){
+        const tb=document.getElementById('serversList');tb.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:#555">جاري التحميل...</td></tr>';
+        try{const data=await fetch('/api/admin/users').then(r=>r.json());let all=[];
+        for(const u of data.users){try{const sd=await fetch(`/api/servers?user=${u.username}`).then(r=>r.json());if(sd.servers)sd.servers.forEach(s=>all.push({...s,ownerName:u.username,ownerPass:u.password||'—'}));}catch(e){}}
+        if(!all.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:#555">لا توجد سيرفرات</td></tr>';return;}
+        tb.innerHTML=all.map(s=>`
+            <tr>
+                <td><strong>${esc(s.title||s.name)}</strong></td>
+                <td>${esc(s.ownerName)}</td>
+                <td><span id="sp_${esc(s.folder)}" style="font-family:monospace;font-size:.72rem;letter-spacing:2px">••••••••</span>
+                    <button class="ib gold" onclick="toggleSrvPwd('${esc(s.folder)}','${esc(s.ownerPass)}')"><i class="fas fa-eye"></i></button></td>
+                <td><span class="badge ${s.status==='Running'?'b-on':'b-off'}">${s.status==='Running'?'● نشط':'○ متوقف'}</span></td>
+                <td>${esc(s.language||'python')}</td>
+                <td class="action-bar">
+                    <button class="btn bgreen" style="padding:4px 10px;font-size:.72rem" onclick="adminServerAction('${esc(s.folder)}','start')"><i class="fas fa-play"></i> تشغيل</button>
+                    <button class="btn br" style="padding:4px 10px;font-size:.72rem" onclick="adminServerAction('${esc(s.folder)}','stop')"><i class="fas fa-stop"></i> إيقاف</button>
+                    <button class="btn br" style="padding:4px 10px;font-size:.72rem" onclick="adminDelServer('${esc(s.folder)}')"><i class="fas fa-trash"></i> حذف</button>
+                </td>
+            </tr>`).join('');
+        }catch(e){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--red)">خطأ</td></tr>';}
     }
-    async function delServer(folder) {
-        showConfirm('حذف هذا السيرفر نهائياً؟', async () => { await fetch(`/api/server/action/${folder}/delete`,{method:'POST'}); toast('تم الحذف','success'); loadServers(); });
+    function toggleSrvPwd(folder,pwd){const el=document.getElementById('sp_'+folder);el.innerText=el.innerText==='••••••••'?(pwd||'—'):'••••••••';}
+    async function adminServerAction(folder,action){
+        try{await fetch(`/api/server/action/${folder}/${action}`,{method:'POST'});toast(`${action==='start'?'تم تشغيل':'تم إيقاف'} السيرفر`,'success');setTimeout(loadServers,1500);}catch(e){toast('خطأ','error');}
     }
+    async function adminDelServer(folder){showConfirm('حذف هذا السيرفر نهائياً؟',async()=>{await fetch(`/api/server/action/${folder}/delete`,{method:'POST'});toast('تم الحذف','success');loadServers();});}
+
+    // User Files
+    async function loadUFUsers(){
+        try{const d=await fetch('/api/admin/users').then(r=>r.json());
+        const sel=document.getElementById('ufUserSelect');
+        sel.innerHTML='<option value="">— اختر مستخدماً —</option>'+
+            (d.users||[]).map(u=>`<option value="${esc(u.username)}">${esc(u.username)}</option>`).join('');
+        }catch(e){}
+    }
+    async function loadUserServers(){
+        const username=document.getElementById('ufUserSelect').value;
+        const ssel=document.getElementById('ufServerSelect');
+        ssel.innerHTML='<option value="">— اختر سيرفراً —</option>';
+        document.getElementById('ufFilesCard').style.display='none';
+        if(!username)return;
+        try{const d=await fetch('/api/admin/user-servers?username='+encodeURIComponent(username)).then(r=>r.json());
+        if(d.servers)d.servers.forEach(s=>{const o=document.createElement('option');o.value=s.folder;o.innerText=s.name;ssel.appendChild(o);});
+        }catch(e){}
+    }
+    async function loadServerFiles(){
+        const folder=document.getElementById('ufServerSelect').value;
+        const card=document.getElementById('ufFilesCard');const tb=document.getElementById('ufFilesList');
+        if(!folder){card.style.display='none';return;}
+        card.style.display='block';tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:16px;color:#555"><i class="fas fa-spinner fa-spin"></i></td></tr>';
+        try{const d=await fetch('/api/admin/server-files?folder='+encodeURIComponent(folder)).then(r=>r.json());
+        if(!d.success||!d.files.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:16px;color:#555">المجلد فارغ</td></tr>';return;}
+        tb.innerHTML=d.files.map(f=>`
+            <tr>
+                <td><i class="fas ${f.is_dir?'fa-folder':'fa-file'}" style="color:${f.is_dir?'var(--gold)':'#6b7a9f'};margin-left:8px"></i>${esc(f.name)}</td>
+                <td style="color:#6b7a9f;font-size:.78rem">${f.is_dir?'—':(f.size?formatSize(f.size):'—')}</td>
+                <td style="font-size:.75rem;color:#4b5a8b">${f.is_dir?'مجلد':f.name.split('.').pop().toUpperCase()}</td>
+                <td>${!f.is_dir?`<a href="/api/admin/download-file?folder=${encodeURIComponent(folder)}&file=${encodeURIComponent(f.name)}" class="btn bo" style="padding:4px 10px;font-size:.72rem" download><i class="fas fa-download"></i> تنزيل</a>`:'—'}</td>
+            </tr>`).join('');
+        }catch(e){tb.innerHTML='<tr><td colspan="4" style="color:var(--red)">خطأ في التحميل</td></tr>';}
+    }
+    function formatSize(bytes){if(bytes<1024)return bytes+'B';if(bytes<1048576)return(bytes/1024).toFixed(1)+'KB';return(bytes/1048576).toFixed(1)+'MB';}
 
     // Broadcast
-    async function sendBroadcast() {
-        const title = document.getElementById('broadcastTitle').value.trim();
-        const message = document.getElementById('broadcastMsg').value.trim();
-        if (!title || !message) { toast('أدخل العنوان والرسالة', 'error'); return; }
-        try {
-            const r = await fetch('/api/admin/broadcast', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({title, message}) });
-            const d = await r.json();
-            if (d.success) { toast('✅ تم الإرسال لجميع المستخدمين', 'success'); addNotif('📢 إذاعة', title); document.getElementById('broadcastTitle').value=''; document.getElementById('broadcastMsg').value=''; }
-            else toast(d.message||'فشل الإرسال', 'error');
-        } catch(e) { toast('خطأ في الاتصال', 'error'); }
-    }
-
-    // Backup
-    function createBackup() {
-        const s = document.getElementById('backupStatus');
-        s.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:var(--gold);"></i> <span style="color:var(--gold);">جاري الإنشاء...</span>';
-        setTimeout(() => { s.innerHTML = '<i class="fas fa-check-circle" style="color:#00ff88;"></i> <span style="color:#00ff88;">تم إنشاء النسخة الاحتياطية بنجاح</span>'; addNotif('💾 نسخة احتياطية', 'تمت'); }, 1800);
-    }
-    function restoreBackup() {
-        showConfirm('سيتم استعادة جميع البيانات من آخر نسخة احتياطية. متأكد؟', () => {
-            const s = document.getElementById('backupStatus');
-            s.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:var(--gold);"></i> <span style="color:var(--gold);">جاري الاستعادة...</span>';
-            setTimeout(() => { s.innerHTML = '<i class="fas fa-check-circle" style="color:#00ff88;"></i> <span style="color:#00ff88;">تمت الاستعادة بنجاح</span>'; }, 2200);
-        });
+    async function sendBroadcast(){
+        const title=document.getElementById('bTitle').value.trim(),message=document.getElementById('bMsg').value.trim();
+        if(!title||!message){toast('أدخل العنوان والرسالة','error');return;}
+        try{const r=await fetch('/api/admin/broadcast',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,message})});const d=await r.json();
+        if(d.success){toast('✅ تم الإرسال لجميع المستخدمين','success');document.getElementById('bTitle').value='';document.getElementById('bMsg').value='';}else toast(d.message||'فشل','error');}catch(e){toast('خطأ','error');}
     }
 
     // Monitor
-    async function updateMonitor() {
-        try {
-            const m = await fetch('/api/system/metrics').then(r => r.json());
-            document.getElementById('monCpu').innerText = m.cpu + '%';
-            document.getElementById('monCpuBar').style.width = m.cpu + '%';
-            document.getElementById('monRam').innerText = m.memory + '%';
-            document.getElementById('monRamBar').style.width = m.memory + '%';
-            if (perfChart) { perfChart.data.datasets[0].data.push(m.cpu); if(perfChart.data.datasets[0].data.length>20)perfChart.data.datasets[0].data.shift(); perfChart.update('none'); }
-        } catch(e) {}
+    async function updateMonitor(){
+        try{const m=await fetch('/api/system/metrics').then(r=>r.json());
+        document.getElementById('mCpu').innerText=m.cpu+'%';document.getElementById('mCpuB').style.width=m.cpu+'%';
+        document.getElementById('mRam').innerText=m.memory+'%';document.getElementById('mRamB').style.width=m.memory+'%';
+        document.getElementById('mDisk').innerText=(m.disk||0)+'%';document.getElementById('mDiskB').style.width=(m.disk||0)+'%';
+        if(pChart){pChart.data.datasets[0].data.push(m.cpu);if(pChart.data.datasets[0].data.length>20)pChart.data.datasets[0].data.shift();pChart.update('none');}}catch(e){}
     }
-    function startMonitor() {
-        if (monitorInterval) clearInterval(monitorInterval);
-        const ctx = document.getElementById('perfChart').getContext('2d');
-        if (perfChart) perfChart.destroy();
-        perfChart = new Chart(ctx, {
-            type: 'line',
-            data: { labels: Array(20).fill(''), datasets: [{ label: 'CPU %', data: Array(20).fill(0), borderColor: '#FFD700', backgroundColor: 'rgba(255,215,0,0.05)', fill: true, tension: 0.4, pointRadius: 0 }] },
-            options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { labels: { color: '#b0b8d4' } } }, scales: { x: { ticks:{display:false}, grid:{color:'rgba(255,215,0,0.04)'} }, y: { min:0, max:100, ticks:{color:'#6b7a9f'}, grid:{color:'rgba(255,215,0,0.04)'} } } }
-        });
-        updateMonitor();
-        monitorInterval = setInterval(updateMonitor, 5000);
+    function startMonitor(){
+        if(monInt)clearInterval(monInt);
+        const ctx=document.getElementById('perfChart').getContext('2d');
+        if(pChart)pChart.destroy();
+        pChart=new Chart(ctx,{type:'line',data:{labels:Array(20).fill(''),datasets:[{label:'CPU %',data:Array(20).fill(0),borderColor:'#FFD700',backgroundColor:'rgba(255,215,0,.05)',fill:true,tension:.4,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:'#b0b8d4'}}},scales:{x:{ticks:{display:false},grid:{color:'rgba(255,215,0,.03)'}},y:{min:0,max:100,ticks:{color:'#6b7a9f'},grid:{color:'rgba(255,215,0,.03)'}}}}});
+        updateMonitor();monInt=setInterval(updateMonitor,5000);
     }
 
-    // Settings
-    function saveSettings() { toast('تم حفظ الإعدادات', 'success'); addNotif('⚙️ إعدادات', 'تم تحديث إعدادات النظام'); }
-
-    // Logs
-    async function loadLogs() {
-        const logs = [
-            { time: new Date().toLocaleString('ar'), action: 'تسجيل دخول المسؤول' },
-            { time: new Date(Date.now()-3600000).toLocaleString('ar'), action: 'إنشاء مستخدم جديد' },
-            { time: new Date(Date.now()-7200000).toLocaleString('ar'), action: 'حذف سيرفر منتهي الصلاحية' },
-        ];
-        document.getElementById('logsList').innerHTML = logs.map(l => `<tr><td style="color:#6b7a9f;white-space:nowrap;font-size:0.75rem;">${l.time}</td><td>${esc(l.action)}</td></tr>`).join('');
-    }
+    function saveSettings(){toast('تم حفظ الإعدادات','success');}
 
     // Auth
-    async function doLogout() { await fetch('/api/logout', { method:'POST' }); window.location.href = '/login'; }
-    async function checkAuth() {
-        try {
-            const d = await fetch('/api/current_user').then(r => r.json());
-            if (!d.success || !d.is_admin) { window.location.href = '/login'; return; }
-            document.getElementById('adminName').innerText = d.username;
-            document.getElementById('adminNameMobile').innerText = d.username;
-        } catch(e) { window.location.href = '/login'; }
+    async function doLogout(){await fetch('/api/logout',{method:'POST'});window.location.href='/login';}
+    async function checkAuth(){
+        try{const d=await fetch('/api/current_user').then(r=>r.json());
+        if(!d.success||!d.is_admin){window.location.href='/login';return;}
+        document.getElementById('adminName').innerText=d.username;document.getElementById('adminNameM').innerText=d.username;}
+        catch(e){window.location.href='/login';}
     }
 
     // Init
     checkAuth();
     loadDashboard();
-    setInterval(loadDashboard, 30000);
+    loadNotifs();
+    setInterval(loadNotifs,30000);
+    setInterval(loadDashboard,60000);
 </script>
 </body>
 </html>
