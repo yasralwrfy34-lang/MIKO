@@ -14,7 +14,7 @@ import shutil
 import zipfile
 import signal
 from datetime import datetime, timedelta
-from flask import Flask, send_from_directory, request, jsonify, session, redirect, url_for, make_response, render_template_string
+from flask import Flask, send_from_directory, request, jsonify, session, redirect, url_for, make_response
 from sqlalchemy import create_engine, Column, String, Integer, Boolean, DateTime, Float, Text, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -127,7 +127,6 @@ Base.metadata.create_all(bind=engine)
 # ============== بيانات المسؤول ==============
 ADMIN_USERNAME = "yasralwrfy"
 ADMIN_PASSWORD_RAW = "amiailafu"
-ADMIN_ALLOWED_IP = "185.80.143.154"   # IP المسموح له فقط بالوصول للوحة الإدارة
 
 def create_default_admin():
     if not db_session.query(User).filter_by(username=ADMIN_USERNAME).first():
@@ -145,28 +144,6 @@ def create_default_admin():
         print("✅ تم إنشاء المسؤول الافتراضي")
 
 create_default_admin()
-
-# ============== قيود IP للتسجيل (3 حسابات لكل IP) ==============
-IP_REGISTRATIONS_FILE = os.path.join(BASE_DIR, "ip_registrations.json")
-
-def load_ip_registrations():
-    if os.path.exists(IP_REGISTRATIONS_FILE):
-        with open(IP_REGISTRATIONS_FILE, 'r') as f:
-            return json.load(f)
-    return {}
-
-def save_ip_registrations(reg_dict):
-    with open(IP_REGISTRATIONS_FILE, 'w') as f:
-        json.dump(reg_dict, f)
-
-def get_registration_count(ip):
-    regs = load_ip_registrations()
-    return regs.get(ip, 0)
-
-def increment_registration_count(ip):
-    regs = load_ip_registrations()
-    regs[ip] = regs.get(ip, 0) + 1
-    save_ip_registrations(regs)
 
 # ============== دوال مساعدة ==============
 def get_user(username):
@@ -218,42 +195,6 @@ def get_assigned_port():
             except:
                 return port
     return PORT_RANGE_START
-
-# ============== تثبيت المكتبات تلقائياً قبل التشغيل ==============
-def ensure_requirements_installed(srv_path, log_file):
-    req_file = os.path.join(srv_path, "requirements.txt")
-    if not os.path.exists(req_file):
-        return True
-    try:
-        # فحص سريع إذا كانت المكتبات مثبتة (محاولة استيراد أول مكتبة)
-        with open(req_file, 'r') as f:
-            first_line = f.readline().strip()
-            if first_line and not first_line.startswith('#'):
-                package = first_line.split('==')[0].split('>=')[0].split('<=')[0].strip()
-                import importlib
-                importlib.import_module(package)
-                return True
-    except Exception:
-        pass
-    # تثبيت المكتبات
-    log_file.write(f"\n📦 جاري تثبيت المتطلبات من requirements.txt...\n")
-    log_file.flush()
-    try:
-        result = subprocess.run(
-            [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"],
-            cwd=srv_path,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            timeout=300,
-            text=True
-        )
-        log_file.write(result.stdout)
-        log_file.flush()
-        return result.returncode == 0
-    except Exception as e:
-        log_file.write(f"\n❌ فشل تثبيت المتطلبات: {str(e)}\n")
-        log_file.flush()
-        return False
 
 # ============== مراقبة العمليات ==============
 def process_monitor():
@@ -339,14 +280,6 @@ def start_server_process(folder):
     log_file = open(log_path, "a", encoding='utf-8')
     log_file.write(f"\n{'='*50}\n🚀 بدء التشغيل - {datetime.now()}\n📁 {main_file}\n🔌 المنفذ: {port}\n🌐 اللغة: {srv.language}\n{'='*50}\n\n")
     log_file.flush()
-    
-    # تثبيت المتطلبات تلقائياً قبل التشغيل (للسيرفرات البايثون)
-    if srv.language.lower() == 'python':
-        if not ensure_requirements_installed(srv.path, log_file):
-            log_file.write("\n❌ فشل تثبيت المتطلبات، لن يتم تشغيل السيرفر.\n")
-            log_file.close()
-            return False
-    
     try:
         env = os.environ.copy()
         env["PORT"] = str(port)
@@ -445,80 +378,6 @@ def dashboard():
 def admin_panel():
     if 'username' not in session or not is_admin(session['username']):
         return redirect('/login')
-    # التحقق من IP المسؤول
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0].strip()
-    if client_ip != ADMIN_ALLOWED_IP:
-        # صفحة مضحكة للمستخدمين غير المصرح لهم
-        html = """
-        <!DOCTYPE html>
-        <html lang="ar" dir="rtl">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>😂 ممنوع الوصول</title>
-            <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-            <style>
-                body {
-                    background: linear-gradient(135deg, #0a0f1e, #05080f);
-                    font-family: 'Tajawal', sans-serif;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    margin: 0;
-                    overflow: hidden;
-                }
-                .card {
-                    text-align: center;
-                    background: rgba(0,0,0,0.6);
-                    backdrop-filter: blur(15px);
-                    border-radius: 40px;
-                    padding: 40px 30px;
-                    border: 1px solid gold;
-                    box-shadow: 0 0 50px rgba(255,215,0,0.2);
-                    animation: bounce 1s ease;
-                }
-                .face {
-                    font-size: 100px;
-                    animation: shake 0.5s infinite alternate;
-                    display: inline-block;
-                }
-                h1 {
-                    color: gold;
-                    font-size: 1.8rem;
-                    margin: 20px 0;
-                }
-                p {
-                    color: #ccc;
-                    font-size: 1.2rem;
-                }
-                .laugh {
-                    font-size: 2rem;
-                    margin-top: 20px;
-                    letter-spacing: 5px;
-                }
-                @keyframes shake {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(10px); }
-                }
-                @keyframes bounce {
-                    0% { transform: scale(0.8); opacity: 0; }
-                    100% { transform: scale(1); opacity: 1; }
-                }
-            </style>
-        </head>
-        <body>
-            <div class="card">
-                <div class="face">😂🤣😂</div>
-                <h1>وجهك يضحك 🤣</h1>
-                <p>هذه لوحة الادمن مخصصة للادمن فقط</p>
-                <p>ومبروك عليك عرفت كلمة السر ههههههه 😂</p>
-                <div class="laugh">هههههههههههه</div>
-            </div>
-        </body>
-        </html>
-        """
-        return render_template_string(html)
     return send_from_directory(BASE_DIR, 'admin_panel.html')
 
 # ============== API المصادقة ==============
@@ -527,17 +386,6 @@ def api_register():
     data = request.get_json()
     username = data.get("username", "").strip()
     password = data.get("password", "").strip()
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr or 'غير معروف').split(',')[0].strip()
-    
-    # التحقق من عدد الحسابات لهذا IP
-    reg_count = get_registration_count(client_ip)
-    if reg_count >= 3:
-        return jsonify({
-            "success": False, 
-            "message": "لقد تجاوزت الحد الأقصى لإنشاء الحسابات (3 حسابات لكل IP). قم بترقية حسابك إلى VIP للوصول غير المحدود.",
-            "vip_required": True
-        })
-    
     if not username or not password:
         return jsonify({"success": False, "message": "جميع الحقول مطلوبة"})
     if len(username) < 3:
@@ -564,13 +412,11 @@ def api_register():
         db_session.rollback()
         return jsonify({"success": False, "message": "خطأ في إنشاء الحساب، حاول مرة أخرى"})
     
-    # زيادة عداد IP
-    increment_registration_count(client_ip)
-    
     user_dir = os.path.join(USERS_DIR, username)
     os.makedirs(user_dir, exist_ok=True)
     os.makedirs(os.path.join(user_dir, "SERVERS"), exist_ok=True)
     
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr or 'غير معروف').split(',')[0].strip()
     add_notification(ADMIN_USERNAME, "🆕 حساب جديد", f"تم إنشاء حساب جديد\n👤 الاسم: {username}\n🔑 كلمة السر: {password}\n🌐 IP: {client_ip}")
     add_notification(username, "🎉 مرحباً بك في MIKO HOST", "تم إنشاء حسابك بنجاح. يمكنك الآن إنشاء سيرفرك الأول!")
     
@@ -626,8 +472,7 @@ def api_current_user():
                 "username": session["username"],
                 "is_admin": u.is_admin or session["username"] == ADMIN_USERNAME,
                 "is_unlimited": u.is_unlimited,
-                "max_file_size_mb": u.max_file_size_mb,
-                "is_vip": u.is_vip
+                "max_file_size_mb": u.max_file_size_mb
             })
     return jsonify({"success": False})
 
@@ -652,23 +497,6 @@ def link_telegram():
     user.telegram_id = tg_id
     db_session.commit()
     return jsonify({"success": True})
-
-@app.route('/api/change_password', methods=['POST'])
-def change_password():
-    if 'username' not in session:
-        return jsonify({"success": False, "message": "غير مصرح"}), 401
-    data = request.get_json()
-    old_password = data.get('old_password', '')
-    new_password = data.get('new_password', '')
-    if not old_password or not new_password or len(new_password) < 4:
-        return jsonify({"success": False, "message": "كلمة المرور الجديدة يجب أن تكون 4 أحرف على الأقل"})
-    user = get_current_user()
-    if user.password != hashlib.sha256(old_password.encode()).hexdigest():
-        return jsonify({"success": False, "message": "كلمة المرور القديمة غير صحيحة"})
-    user.password = hashlib.sha256(new_password.encode()).hexdigest()
-    db_session.commit()
-    add_notification(user.username, "🔐 تغيير كلمة المرور", "تم تغيير كلمة المرور بنجاح")
-    return jsonify({"success": True, "message": "تم تغيير كلمة المرور"})
 
 # ============== API الإشعارات ==============
 @app.route('/api/notifications', methods=['GET'])
@@ -711,7 +539,6 @@ def admin_upgrade_user():
     if not user:
         return jsonify({"success": False, "message": "المستخدم غير موجود"})
     user.is_unlimited = True
-    user.is_vip = True
     user.max_servers = 999999
     user.max_file_size_mb = 500
     db_session.commit()
@@ -747,8 +574,7 @@ def admin_users():
             "expiry_days": u.expiry_days,
             "telegram_id": u.telegram_id,
             "api_key": u.api_key,
-            "is_unlimited": u.is_unlimited,
-            "is_vip": u.is_vip
+            "is_unlimited": u.is_unlimited
         })
     return jsonify({"success": True, "users": users_list})
 
@@ -1046,14 +872,6 @@ def list_server_files(folder):
     if not srv or srv.owner != session["username"]:
         return jsonify([])
     path = srv.path
-    # الحصول على المسار الفرعي من المعامل (للمجلدات)
-    subpath = request.args.get('path', '')
-    if subpath:
-        full_path = os.path.join(path, subpath)
-        # منع directory traversal
-        if '..' in full_path or not full_path.startswith(path):
-            return jsonify([])
-        path = full_path
     files = []
     try:
         for f in os.listdir(path):
@@ -1266,35 +1084,6 @@ def install_requirements(folder):
         except Exception as e:
             return jsonify({"success": False, "message": str(e)})
     return jsonify({"success": False, "message": "requirements.txt غير موجود"})
-
-# ============== API AI Fixer (محاكاة تحليل الأخطاء) ==============
-@app.route('/api/ai_fixer/<folder>', methods=['POST'])
-def ai_fixer(folder):
-    if "username" not in session:
-        return jsonify({"success": False, "message": "غير مصرح"}), 401
-    srv = db_session.query(Server).filter_by(folder=folder).first()
-    if not srv or srv.owner != session["username"]:
-        return jsonify({"success": False, "message": "غير مصرح"})
-    log_path = os.path.join(srv.path, "out.log")
-    logs = ""
-    if os.path.exists(log_path):
-        with open(log_path, 'r', encoding='utf-8', errors='ignore') as f:
-            logs = f.read()
-    # تحليل بسيط للأخطاء الشائعة
-    suggestions = []
-    if "ModuleNotFoundError" in logs:
-        suggestions.append("يبدو أن هناك مكتبة مفقودة. قم بتثبيتها باستخدام زر 'تثبيت المكتبات' أو أضفها إلى requirements.txt")
-    if "SyntaxError" in logs:
-        suggestions.append("خطأ نحوي في الكود. راجع السطور المذكورة في الخطأ.")
-    if "PermissionError" in logs:
-        suggestions.append("مشكلة في الصلاحيات. تأكد من أن الملفات قابلة للقراءة.")
-    if "ConnectionRefusedError" in logs:
-        suggestions.append("فشل الاتصال. تأكد من أن المنفذ صحيح وأن الخدمة تستمع على 0.0.0.0")
-    if "FileNotFoundError" in logs:
-        suggestions.append("ملف مفقود. تأكد من وجود جميع الملفات المطلوبة.")
-    if not suggestions:
-        suggestions.append("لم يتم العثور على أخطاء واضحة. حاول إعادة تشغيل السيرفر.")
-    return jsonify({"success": True, "suggestions": suggestions})
 
 # ============== API للبوت ==============
 @app.route('/api/bot/verify', methods=['POST'])
